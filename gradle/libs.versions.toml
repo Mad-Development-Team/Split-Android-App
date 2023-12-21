@@ -1,12 +1,14 @@
 [versions]
 agp = "8.1.3"
 org-jetbrains-kotlin-android = "1.9.0"
-core-ktx = "1.9.0"
+core-ktx = "1.12.0"
 junit = "4.13.2"
 androidx-test-ext-junit = "1.1.5"
 espresso-core = "3.5.1"
 appcompat = "1.6.1"
-material = "1.10.0"
+material = "1.11.0"
+compose-bom = "2023.01.00"
+activity-compose = "1.8.2"
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -15,6 +17,12 @@ androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+compose-bom = { group = " andoridx.compose", name = "compose-bom", version.ref = "compose-bom" }
+compose-material = { group = "androidx.compose.material3", name = "material3" }
+compose-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+compose-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
+activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity-compose" }
 
 [plugins]
 com-android-application = { id = "com.android.application", version.ref = "agp" }

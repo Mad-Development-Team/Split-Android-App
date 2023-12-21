@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.madteam.split"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.madteam.split"
@@ -31,6 +31,12 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    buildFeatures {
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.3"
+    }
 }
 
 dependencies {
@@ -38,6 +44,15 @@ dependencies {
     implementation(libs.core.ktx)
     implementation(libs.appcompat)
     implementation(libs.material)
+
+    //Compose implementations
+    implementation(libs.compose.bom)
+    implementation(libs.compose.material)
+    implementation(libs.compose.tooling.preview)
+    implementation(libs.material.icons.extended)
+    implementation(libs.activity.compose)
+    debugImplementation(libs.compose.tooling)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
