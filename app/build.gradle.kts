@@ -46,11 +46,12 @@ dependencies {
     implementation(libs.material)
 
     //Compose implementations
-    implementation(libs.compose.bom)
+    implementation(platform(libs.compose.bom))
     implementation(libs.compose.material)
     implementation(libs.compose.tooling.preview)
     implementation(libs.material.icons.extended)
     implementation(libs.activity.compose)
+    implementation(libs.compose.foundations)
     debugImplementation(libs.compose.tooling)
 
     testImplementation(libs.junit)
