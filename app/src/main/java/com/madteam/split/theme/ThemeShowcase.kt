@@ -29,20 +29,6 @@ import androidx.compose.ui.unit.dp
 
 @Preview(showBackground = true)
 @Composable
-fun ThemeShowcase() {
-    SplitTheme {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(24.dp)
-                .verticalScroll(rememberScrollState())
-        ) {
-            ColorsShowcase()
-        }
-    }
-}
-
-@Composable
 fun ColorsShowcase() {
 
     val textNeutralColorsList = listOf(
@@ -112,9 +98,80 @@ fun ColorsShowcase() {
             textUnderlined = true
         ),
     )
+    val borderNeutralColorsList = listOf(
+        ThemeShowcaseItem(
+            colorTitle = "Default",
+            baseColor = "Grey/300",
+            borderColor = SplitTheme.colors.neutral.borderDefault
+        ),
+        ThemeShowcaseItem(
+            colorTitle = "Medium",
+            baseColor = "Grey/600",
+            borderColor = SplitTheme.colors.neutral.borderMedium
+        ),
+        ThemeShowcaseItem(
+            colorTitle = "Strong",
+            baseColor = "Base/Black",
+            borderColor = SplitTheme.colors.neutral.borderStrong
+        ),
+        ThemeShowcaseItem(
+            colorTitle = "Disabled",
+            baseColor = "Grey/400",
+            borderColor = SplitTheme.colors.neutral.borderDisabled
+        ),
+        ThemeShowcaseItem(
+            colorTitle = "Extra Weak",
+            baseColor = "Base/White",
+            borderColor = SplitTheme.colors.neutral.borderExtraWeak,
+            backgroundColor = SplitTheme.colors.neutral.backgroundHeavy
+        ),
+    )
+    val backgroundNeutralColorsList = listOf(
+        ThemeShowcaseItem(
+            colorTitle = "Heavy",
+            baseColor = "Base/Black",
+            backgroundColor = SplitTheme.colors.neutral.backgroundHeavy
+        ),
+        ThemeShowcaseItem(
+            colorTitle = "Dark",
+            baseColor = "Grey/900",
+            backgroundColor = SplitTheme.colors.neutral.backgroundDark
+        ),
+        ThemeShowcaseItem(
+            colorTitle = "Medium",
+            baseColor = "Grey/400",
+            backgroundColor = SplitTheme.colors.neutral.backgroundMedium
+        ),
+        ThemeShowcaseItem(
+            colorTitle = "Extra Weak",
+            baseColor = "Base/White",
+            backgroundColor = SplitTheme.colors.neutral.backgroundExtraWeak,
+            borderColor = SplitTheme.colors.neutral.borderMedium
+        ),
+    )
+    val backgroundPrimaryColorsList = listOf(
+        ThemeShowcaseItem(
+            colorTitle = "Strong",
+            baseColor = "Blue/900",
+            backgroundColor = SplitTheme.colors.primary.backgroundStrong
+        ),
+        ThemeShowcaseItem(
+            colorTitle = "Medium",
+            baseColor = "Blue/500",
+            backgroundColor = SplitTheme.colors.primary.backgroundMedium
+        ),
+        ThemeShowcaseItem(
+            colorTitle = "Weak",
+            baseColor = "Blue/300",
+            backgroundColor = SplitTheme.colors.primary.backgroundWeak
+        ),
+    )
 
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp)
+            .verticalScroll(rememberScrollState())
     ) {
         Text(
             text = "Text",
@@ -229,6 +286,239 @@ fun ColorsShowcase() {
                 )
             }
         }
+        Spacer(modifier = Modifier.padding(8.dp))
+        Text(
+            text = "Primary",
+            style = SplitTheme.typography.heading.m
+        )
+        Spacer(modifier = Modifier.padding(16.dp))
+        Row {
+            ShowcaseItem(
+                backgroundColor = SplitTheme.colors.neutral.backgroundExtraWeak,
+                borderColor = SplitTheme.colors.neutral.borderMedium,
+                iconColor = SplitTheme.colors.primary.iconDefault,
+                colorTitle = "Default",
+                baseColor = "Blue/500"
+            )
+        }
+        Spacer(modifier = Modifier.padding(8.dp))
+        Text(
+            text = "Error",
+            style = SplitTheme.typography.heading.m
+        )
+        Spacer(modifier = Modifier.padding(16.dp))
+        Row {
+            ShowcaseItem(
+                backgroundColor = SplitTheme.colors.neutral.backgroundExtraWeak,
+                borderColor = SplitTheme.colors.neutral.borderMedium,
+                iconColor = SplitTheme.colors.error.iconDefault,
+                colorTitle = "Default",
+                baseColor = "Red/700"
+            )
+        }
+        Spacer(modifier = Modifier.padding(8.dp))
+        Text(
+            text = "Success",
+            style = SplitTheme.typography.heading.m
+        )
+        Spacer(modifier = Modifier.padding(16.dp))
+        Row {
+            ShowcaseItem(
+                backgroundColor = SplitTheme.colors.neutral.backgroundExtraWeak,
+                borderColor = SplitTheme.colors.neutral.borderMedium,
+                iconColor = SplitTheme.colors.success.iconDefault,
+                colorTitle = "Default",
+                baseColor = "Green/900"
+            )
+        }
+        Spacer(modifier = Modifier.padding(16.dp))
+        Text(
+            text = "Border",
+            style = SplitTheme.typography.heading.l
+        )
+        Spacer(modifier = Modifier.padding(8.dp))
+        Text(
+            text = "Neutral",
+            style = SplitTheme.typography.heading.m
+        )
+        Spacer(modifier = Modifier.padding(16.dp))
+        LazyRow(
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            itemsIndexed(borderNeutralColorsList) { _, item ->
+                ShowcaseItem(
+                    backgroundColor = item.backgroundColor ?: SplitTheme.colors.neutral.backgroundExtraWeak,
+                    borderColor = item.borderColor ?: SplitTheme.colors.neutral.borderMedium,
+                    textColor = item.textColor ?: SplitTheme.colors.neutral.textTitle,
+                    itemText = item.itemText ?: "",
+                    colorTitle = item.colorTitle,
+                    baseColor = item.baseColor
+                )
+            }
+        }
+        Spacer(modifier = Modifier.padding(8.dp))
+        Text(
+            text = "Error",
+            style = SplitTheme.typography.heading.m
+        )
+        Spacer(modifier = Modifier.padding(16.dp))
+        Row {
+            ShowcaseItem(
+                backgroundColor = SplitTheme.colors.neutral.backgroundExtraWeak,
+                borderColor = SplitTheme.colors.error.borderDefault,
+                colorTitle = "Default",
+                baseColor = "Red/900",
+                itemText = ""
+            )
+        }
+        Spacer(modifier = Modifier.padding(8.dp))
+        Text(
+            text = "Success",
+            style = SplitTheme.typography.heading.m
+        )
+        Spacer(modifier = Modifier.padding(16.dp))
+        Row {
+            ShowcaseItem(
+                backgroundColor = SplitTheme.colors.neutral.backgroundExtraWeak,
+                borderColor = SplitTheme.colors.success.borderDefault,
+                colorTitle = "Default",
+                baseColor = "Green/900",
+                itemText = ""
+            )
+        }
+        Spacer(modifier = Modifier.padding(16.dp))
+        Text(
+            text = "Background",
+            style = SplitTheme.typography.heading.l
+        )
+        Spacer(modifier = Modifier.padding(8.dp))
+        Text(
+            text = "Neutral",
+            style = SplitTheme.typography.heading.m
+        )
+        Spacer(modifier = Modifier.padding(16.dp))
+        LazyRow(
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            itemsIndexed(backgroundNeutralColorsList) { _, item ->
+                ShowcaseItem(
+                    backgroundColor = item.backgroundColor ?: SplitTheme.colors.neutral.backgroundExtraWeak,
+                    borderColor = item.backgroundColor ?: SplitTheme.colors.neutral.borderMedium,
+                    textColor = item.textColor ?: SplitTheme.colors.neutral.textTitle,
+                    textUnderlined = item.textUnderlined,
+                    itemText = item.itemText ?: "",
+                    colorTitle = item.colorTitle,
+                    baseColor = item.baseColor
+                )
+            }
+        }
+        Spacer(modifier = Modifier.padding(8.dp))
+        Text(
+            text = "Primary",
+            style = SplitTheme.typography.heading.m
+        )
+        Spacer(modifier = Modifier.padding(16.dp))
+        LazyRow(
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            itemsIndexed(backgroundPrimaryColorsList) { _, item ->
+                ShowcaseItem(
+                    backgroundColor = item.backgroundColor ?: SplitTheme.colors.neutral.backgroundExtraWeak,
+                    borderColor = item.backgroundColor ?: SplitTheme.colors.neutral.borderMedium,
+                    textColor = item.textColor ?: SplitTheme.colors.neutral.textTitle,
+                    textUnderlined = item.textUnderlined,
+                    itemText = item.itemText ?: "",
+                    colorTitle = item.colorTitle,
+                    baseColor = item.baseColor
+                )
+            }
+        }
+        Spacer(modifier = Modifier.padding(8.dp))
+        Text(
+            text = "Secondary",
+            style = SplitTheme.typography.heading.m
+        )
+        Spacer(modifier = Modifier.padding(16.dp))
+        Row {
+            ShowcaseItem(
+                backgroundColor = SplitTheme.colors.secondary.backgroundMedium,
+                borderColor = SplitTheme.colors.secondary.backgroundMedium,
+                colorTitle = "Medium",
+                baseColor = "Magnolia/900",
+                itemText = ""
+            )
+        }
+        Spacer(modifier = Modifier.padding(8.dp))
+        Text(
+            text = "Error",
+            style = SplitTheme.typography.heading.m
+        )
+        Spacer(modifier = Modifier.padding(16.dp))
+        Row {
+            ShowcaseItem(
+                backgroundColor = SplitTheme.colors.error.backgroundDefault,
+                borderColor = SplitTheme.colors.error.backgroundDefault,
+                colorTitle = "Default",
+                baseColor = "Red/300",
+                itemText = ""
+            )
+        }
+        Spacer(modifier = Modifier.padding(8.dp))
+        Text(
+            text = "Success",
+            style = SplitTheme.typography.heading.m
+        )
+        Spacer(modifier = Modifier.padding(16.dp))
+        Row {
+            ShowcaseItem(
+                backgroundColor = SplitTheme.colors.success.backgroundDefault,
+                borderColor = SplitTheme.colors.success.backgroundDefault,
+                colorTitle = "Default",
+                baseColor = "Green/300",
+                itemText = ""
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun TypesShowcase(){
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp)
+            .verticalScroll(rememberScrollState())
+    ) {
+        Text(text = "DisplayL", style = SplitTheme.typography.display.l)
+        Spacer(modifier = Modifier.padding(8.dp))
+        Text(text = "DisplayM", style = SplitTheme.typography.display.m)
+        Spacer(modifier = Modifier.padding(8.dp))
+        Text(text = "DisplayS", style = SplitTheme.typography.display.s)
+        Spacer(modifier = Modifier.padding(16.dp))
+        Text(text = "HeadingL", style = SplitTheme.typography.heading.l)
+        Spacer(modifier = Modifier.padding(8.dp))
+        Text(text = "HeadingM", style = SplitTheme.typography.heading.m)
+        Spacer(modifier = Modifier.padding(8.dp))
+        Text(text = "HeadingS", style = SplitTheme.typography.heading.s)
+        Spacer(modifier = Modifier.padding(8.dp))
+        Text(text = "HeadingXS", style = SplitTheme.typography.heading.xs)
+        Spacer(modifier = Modifier.padding(8.dp))
+        Text(text = "HeadingXXS", style = SplitTheme.typography.heading.xxs)
+        Spacer(modifier = Modifier.padding(16.dp))
+        Text(text = "BodyXXL", style = SplitTheme.typography.body.xxl)
+        Spacer(modifier = Modifier.padding(8.dp))
+        Text(text = "BodyXL", style = SplitTheme.typography.body.xl)
+        Spacer(modifier = Modifier.padding(8.dp))
+        Text(text = "BodyL", style = SplitTheme.typography.body.l)
+        Spacer(modifier = Modifier.padding(8.dp))
+        Text(text = "BodyM", style = SplitTheme.typography.body.m)
+        Spacer(modifier = Modifier.padding(16.dp))
+        Text(text = "TextLinkL", style = SplitTheme.typography.textLink.l)
+        Spacer(modifier = Modifier.padding(8.dp))
+        Text(text = "TextLinkM", style = SplitTheme.typography.textLink.m)
+        Spacer(modifier = Modifier.padding(8.dp))
+        Text(text = "TextLinkS", style = SplitTheme.typography.textLink.s)
     }
 }
 
