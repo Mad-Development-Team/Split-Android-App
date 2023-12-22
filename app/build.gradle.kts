@@ -47,11 +47,13 @@ dependencies {
 
     //Compose implementations
     implementation(platform(libs.compose.bom))
-    implementation(libs.compose.material)
+    implementation(libs.compose.material3)
     implementation(libs.compose.tooling.preview)
+    implementation(libs.compose.tooling)
     implementation(libs.material.icons.extended)
     implementation(libs.activity.compose)
     implementation(libs.compose.foundations)
+    implementation(libs.androidx.ui.tooling.preview.android)
     debugImplementation(libs.compose.tooling)
 
     testImplementation(libs.junit)

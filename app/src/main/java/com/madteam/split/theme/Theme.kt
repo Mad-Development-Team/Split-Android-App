@@ -30,5 +30,14 @@ fun SplitTheme(
             content()
         }
     }
+}
 
+object SplitTheme {
+    val colors: SplitColors
+        @Composable
+        get() = LocalSplitColors.current
+
+    val typography: SplitTypes
+        @Composable
+        get() = LocalSplitTypography.current
 }
