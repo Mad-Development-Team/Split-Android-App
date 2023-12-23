@@ -1,4 +1,4 @@
-package com.madteam.split.theme
+package com.madteam.split.ui.theme
 
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font

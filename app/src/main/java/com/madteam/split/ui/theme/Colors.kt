@@ -1,4 +1,4 @@
-package com.madteam.split.theme
+package com.madteam.split.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

@@ -1,4 +1,4 @@
-package com.madteam.split.theme
+package com.madteam.split.ui.theme
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.staticCompositionLocalOf
