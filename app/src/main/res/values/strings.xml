@@ -15,4 +15,6 @@
     <string name="welcome_screen_third_caption_fourth_phase">to pay for you.</string>
     <string name="google_icon_description">Google icon</string>
     <string name="continue_with_google">Continue with Google</string>
+    <string name="welcome_to_split">Welcome to Split</string>
+    <string name="or_continue_with_email">Or continue with email</string>
 </resources>

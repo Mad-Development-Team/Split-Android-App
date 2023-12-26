@@ -101,7 +101,7 @@ fun WelcomeContent(
                 contentDescription = stringResource(id = R.string.split_logo_description)
             )
             Text(
-                text = "Welcome to Split",
+                text = stringResource(id = R.string.welcome_to_split),
                 style = SplitTheme.typography.heading.s,
                 color = SplitTheme.colors.neutral.textTitle
             )
@@ -137,7 +137,7 @@ fun WelcomeContent(
             )
             Spacer(modifier = Modifier.size(16.dp))
             Text(
-                text = "Or continue with email",
+                text = stringResource(id = R.string.or_continue_with_email),
                 style = SplitTheme.typography.textLink.l,
                 color = SplitTheme.colors.neutral.textLinkDefault
             )
