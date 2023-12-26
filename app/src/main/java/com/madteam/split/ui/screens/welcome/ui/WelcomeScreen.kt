@@ -1,6 +1,8 @@
 package com.madteam.split.ui.screens.welcome.ui
 
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -31,6 +34,8 @@ import com.madteam.split.ui.screens.welcome.state.WelcomeScreenUIEvent
 import com.madteam.split.ui.screens.welcome.state.WelcomeScreenUIState
 import com.madteam.split.ui.screens.welcome.viewmodel.WelcomeViewModel
 import com.madteam.split.ui.theme.SplitTheme
+
+private const val PROGRESS_ANIMATION_DURATION_IN_MILLIS = 1000
 
 @Composable
 fun WelcomeScreen(
@@ -83,7 +88,7 @@ fun WelcomeContent(
                 modifier = Modifier
                     .size(48.dp),
                 painter = painterResource(id = R.drawable.ds_split_logo_black),
-                contentDescription = "TODO: Add content description"//TODO: Add content description
+                contentDescription = stringResource(id = R.string.split_logo_description)
             )
             Text(
                 text = "Welcome to Split",
@@ -111,19 +116,20 @@ fun WelcomeScreenProgressIndicator(
     currentPhase: Int,
     phaseSeconds: Int
 ) {
-    val progressAnimation by animateFloatAsState(
-        targetValue = calculateProgress(
-            phase = currentPhase,
-            currentPhase = currentPhase,
-            phaseSeconds = phaseSeconds
-        ),
-        label = "progressIndicatorAnimation"
-    )
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         repeat(totalPhases) { phase ->
+            val progressAnimation by animateFloatAsState(
+                targetValue = calculateProgress(
+                    phase = phase,
+                    currentPhase = currentPhase,
+                    phaseSeconds = phaseSeconds
+                ),
+                animationSpec = tween(durationMillis = PROGRESS_ANIMATION_DURATION_IN_MILLIS, easing = LinearEasing),
+                label = "progressIndicatorAnimation"
+            )
             LinearProgressIndicator(
                 modifier = Modifier
                     .weight(1f / totalPhases)
