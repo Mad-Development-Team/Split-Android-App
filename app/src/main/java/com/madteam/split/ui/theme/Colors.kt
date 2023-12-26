@@ -48,6 +48,33 @@ data class SplitColors(
     val success: Success = Success()
 )
 
+val splitColorsDark = SplitColors(
+    neutral = Neutral(
+        textTitle = White,
+        textHeavy = Grey200,
+        textBody = Grey200,
+        textStrong = Grey300,
+        textMedium = Grey600,
+        textExtraWeak = Black,
+        textDisabled = Grey500,
+        textLinkDefault = Blue500,
+        textLinkHover = Blue900,
+        textLinkDisabled = Grey400,
+        textLinkExtraWeak = Black,
+        iconHeavy = White,
+        iconExtraWeak = Black,
+        borderDefault = Grey600,
+        borderMedium = Grey400,
+        borderStrong = White,
+        borderDisabled = Grey800,
+        borderExtraWeak = Black,
+        backgroundHeavy = White,
+        backgroundDark = Grey400,
+        backgroundMedium = Grey900,
+        backgroundExtraWeak = Black
+    )
+)
+
 data class Neutral(
     val textTitle: Color = Black,
     val textHeavy: Color = Grey900,
