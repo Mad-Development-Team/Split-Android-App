@@ -2,6 +2,7 @@ package com.madteam.split.ui.screens.welcome.ui
 
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.snap
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -161,8 +162,12 @@ fun WelcomeScreenProgressIndicator(
                     currentPhase = currentPhase,
                     phaseSeconds = phaseSeconds
                 ),
-                animationSpec = tween(durationMillis = PROGRESS_ANIMATION_DURATION_IN_MILLIS, easing = LinearEasing),
-                label = "progressIndicatorAnimation"
+                animationSpec = if (currentPhase == 0 && phaseSeconds == 0) {
+                    snap()
+                } else {
+                    tween(durationMillis = 1000, easing = LinearEasing)
+                },
+                label = "progressIndicatorAnimation_$phase"
             )
             LinearProgressIndicator(
                 modifier = Modifier
