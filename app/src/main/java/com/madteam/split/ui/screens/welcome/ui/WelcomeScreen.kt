@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -23,6 +24,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -37,6 +39,7 @@ import com.madteam.split.R
 import com.madteam.split.ui.screens.welcome.state.WelcomeScreenUIEvent
 import com.madteam.split.ui.screens.welcome.state.WelcomeScreenUIState
 import com.madteam.split.ui.screens.welcome.viewmodel.WelcomeViewModel
+import com.madteam.split.ui.theme.SecondaryLargeButton
 import com.madteam.split.ui.theme.SplitTheme
 
 private const val PROGRESS_ANIMATION_DURATION_IN_MILLIS = 1000
@@ -55,8 +58,9 @@ fun WelcomeScreen(
         containerColor = SplitTheme.colors.neutral.backgroundExtraWeak
     ) {
         Box(
-            modifier = Modifier.padding(it),
-            contentAlignment = Alignment.Center
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(it)
         ) {
             WelcomeContent(
                 state = welcomeScreenUIState
@@ -91,7 +95,8 @@ fun WelcomeContent(
             Image(
                 modifier = Modifier
                     .size(48.dp),
-                painter = painterResource(id = R.drawable.ds_split_logo_black),
+                painter = painterResource(id = R.drawable.ds_split_logo),
+                colorFilter = ColorFilter.tint(SplitTheme.colors.neutral.iconHeavy),
                 contentDescription = stringResource(id = R.string.split_logo_description)
             )
             Text(
@@ -104,15 +109,36 @@ fun WelcomeContent(
         WelcomeScreenCaption(
             currentPhase = state.progressPhase
         )
+        Spacer(modifier = Modifier.size(68.dp))
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center,
             modifier = Modifier
-                .fillMaxSize()
-                .align(Alignment.End)
+                .fillMaxWidth()
         ) {
             WelcomeScreenAnimation(
                 currentPhase = state.progressPhase
+            )
+        }
+        Column(
+            modifier = Modifier
+                .fillMaxHeight()
+                .padding(vertical = 24.dp),
+            verticalArrangement = Arrangement.Bottom,
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            SecondaryLargeButton(
+                onClick = {},
+                text = R.string.continue_with_google,
+                icon = R.drawable.ds_ic_google_solid,
+                iconTint = SplitTheme.colors.neutral.iconExtraWeak,
+                iconDescription = R.string.google_icon_description
+            )
+            Spacer(modifier = Modifier.size(16.dp))
+            Text(
+                text = "Or continue with email",
+                style = SplitTheme.typography.textLink.l,
+                color = SplitTheme.colors.neutral.textLinkDefault
             )
         }
     }
@@ -207,9 +233,9 @@ fun WelcomeScreenAnimation(
         spec = LottieCompositionSpec.RawRes(
             when (currentPhase) {
                 0 -> R.raw.welcome_screen_animation_first_phase
-                1 -> R.raw.welcome_screen_animation_first_phase
-                2 -> R.raw.welcome_screen_animation_first_phase
-                3 -> R.raw.welcome_screen_animation_first_phase
+                1 -> R.raw.welcome_screen_animation_second_phase
+                2 -> R.raw.welcome_screen_animation_third_phase
+                3 -> R.raw.welcome_screen_animation_fourth_phase
                 else -> R.raw.welcome_screen_animation_first_phase
             }
         )
