@@ -165,7 +165,10 @@ fun WelcomeScreenProgressIndicator(
                 animationSpec = if (currentPhase == 0 && phaseSeconds == 0) {
                     snap()
                 } else {
-                    tween(durationMillis = 1000, easing = LinearEasing)
+                    tween(
+                        durationMillis = PROGRESS_ANIMATION_DURATION_IN_MILLIS,
+                        easing = LinearEasing
+                    )
                 },
                 label = "progressIndicatorAnimation_$phase"
             )
