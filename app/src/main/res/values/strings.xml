@@ -1,3 +1,20 @@
 <resources>
     <string name="app_name">Split</string>
+    <string name="split_logo_description">Split app logo</string>
+    <string name="welcome_screen_first_caption_first_phase">No more excuses!</string>
+    <string name="welcome_screen_first_caption_second_phase">Pay once,</string>
+    <string name="welcome_screen_first_caption_third_phase">See in what</string>
+    <string name="welcome_screen_first_caption_fourth_phase">Relax yourself,</string>
+    <string name="welcome_screen_second_caption_first_phase">Share your group expenses,</string>
+    <string name="welcome_screen_second_caption_second_phase">Pay everyone,</string>
+    <string name="welcome_screen_second_caption_third_phase">and how much</string>
+    <string name="welcome_screen_second_caption_fourth_phase">Split will remember</string>
+    <string name="welcome_screen_third_caption_first_phase">Quick, easy and free.</string>
+    <string name="welcome_screen_third_caption_second_phase">SIMPLE.</string>
+    <string name="welcome_screen_third_caption_third_phase">you spend the money.</string>
+    <string name="welcome_screen_third_caption_fourth_phase">to pay for you.</string>
+    <string name="google_icon_description">Google icon</string>
+    <string name="continue_with_google">Continue with Google</string>
+    <string name="welcome_to_split">Welcome to Split</string>
+    <string name="or_continue_with_email">Or continue with email</string>
 </resources>

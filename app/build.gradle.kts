@@ -2,6 +2,8 @@
 plugins {
     alias(libs.plugins.com.android.application)
     alias(libs.plugins.org.jetbrains.kotlin.android)
+    alias(libs.plugins.com.google.dagger.hilt.android)
+    alias(libs.plugins.devtools.ksp)
 }
 
 android {
@@ -54,7 +56,19 @@ dependencies {
     implementation(libs.activity.compose)
     implementation(libs.compose.foundations)
     implementation(libs.androidx.ui.tooling.preview.android)
+    implementation(libs.constraintlayout)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.lifecycle.ktx)
+    implementation(libs.androidx.lifecycle.runtime.compose)
     debugImplementation(libs.compose.tooling)
+
+    //Lottie
+    implementation(libs.compose.lottie)
+
+    //Dagger hilt
+    implementation(libs.hilt.android)
+    implementation(libs.androidx.hilt.navigation.compose)
+    ksp(libs.hilt.android.compiler)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
