@@ -57,6 +57,9 @@ dependencies {
     implementation(libs.compose.foundations)
     implementation(libs.androidx.ui.tooling.preview.android)
     implementation(libs.constraintlayout)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.lifecycle.ktx)
+    implementation(libs.androidx.lifecycle.runtime.compose)
     debugImplementation(libs.compose.tooling)
 
     //Dagger hilt

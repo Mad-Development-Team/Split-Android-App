@@ -1,26 +1,47 @@
 package com.madteam.split.ui.screens.welcome.ui
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.madteam.split.R
+import com.madteam.split.ui.screens.welcome.state.WelcomeScreenUIEvent
+import com.madteam.split.ui.screens.welcome.state.WelcomeScreenUIState
+import com.madteam.split.ui.screens.welcome.viewmodel.WelcomeViewModel
 import com.madteam.split.ui.theme.SplitTheme
 
 @Composable
-fun WelcomeScreen() {
+fun WelcomeScreen(
+    viewModel: WelcomeViewModel = hiltViewModel()
+) {
+    val welcomeScreenUIState by viewModel.welcomeScreenUIState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.onEvent(WelcomeScreenUIEvent.OnStart)
+    }
+
     Scaffold(
         containerColor = SplitTheme.colors.neutral.backgroundExtraWeak
     ) {
@@ -28,18 +49,31 @@ fun WelcomeScreen() {
             modifier = Modifier.padding(it),
             contentAlignment = Alignment.Center
         ) {
-            WelcomeContent()
+            WelcomeContent(
+                state = welcomeScreenUIState
+            )
         }
     }
 }
 
 @Composable
-fun WelcomeContent() {
+fun WelcomeContent(
+    state: WelcomeScreenUIState
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(24.dp)
+            .padding(
+                horizontal = 24.dp
+            )
     ) {
+        Spacer(modifier = Modifier.size(8.dp))
+        WelcomeScreenProgressIndicator(
+            totalPhases = state.totalPhases,
+            currentPhase = state.progressPhase,
+            phaseSeconds = state.progressSeconds
+        )
+        Spacer(modifier = Modifier.size(24.dp))
         Row(
             modifier = Modifier
                 .fillMaxWidth(),
@@ -56,7 +90,58 @@ fun WelcomeContent() {
                 style = SplitTheme.typography.heading.s,
                 color = SplitTheme.colors.neutral.textTitle
             )
+
         }
+        Text(
+            text = "Phase: ${state.progressPhase}",
+            style = SplitTheme.typography.heading.s,
+            color = SplitTheme.colors.neutral.textTitle
+        )
+        Text(
+            text = "Seconds: ${state.progressSeconds} ",
+            style = SplitTheme.typography.heading.s,
+            color = SplitTheme.colors.neutral.textTitle
+        )
+    }
+}
+
+@Composable
+fun WelcomeScreenProgressIndicator(
+    totalPhases: Int,
+    currentPhase: Int,
+    phaseSeconds: Int
+) {
+    val progressAnimation by animateFloatAsState(
+        targetValue = calculateProgress(
+            phase = currentPhase,
+            currentPhase = currentPhase,
+            phaseSeconds = phaseSeconds
+        ),
+        label = "progressIndicatorAnimation"
+    )
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        repeat(totalPhases) { phase ->
+            LinearProgressIndicator(
+                modifier = Modifier
+                    .weight(1f / totalPhases)
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(20.dp)),
+                trackColor = SplitTheme.colors.neutral.backgroundMedium,
+                color = SplitTheme.colors.primary.backgroundStrong,
+                progress = { progressAnimation }
+            )
+        }
+    }
+}
+
+private fun calculateProgress(phase: Int, currentPhase: Int, phaseSeconds: Int): Float {
+    return when {
+        phase < currentPhase -> 1f
+        phase == currentPhase -> phaseSeconds / 5f
+        else -> 0f
     }
 }
 
