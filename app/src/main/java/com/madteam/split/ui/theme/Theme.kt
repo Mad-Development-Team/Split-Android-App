@@ -1,11 +1,12 @@
 package com.madteam.split.ui.theme
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.staticCompositionLocalOf
 
 val LocalSplitColors = staticCompositionLocalOf { SplitColors() }
+val LocalSplitColorsDark = staticCompositionLocalOf { splitColorsDark }
 val LocalSplitTypography = staticCompositionLocalOf { SplitTypes() }
 
 @Composable
@@ -14,12 +15,12 @@ fun SplitTheme(
     content: @Composable () -> Unit
 ) {
     val splitColorsLight = SplitColors()
-    val splitColorsDark = SplitColors() //TODO: Change when dark theme is ready to implement
+    val splitColorsDark = splitColorsDark
     val splitTypography = SplitTypes()
 
     if (darkTheme) {
         CompositionLocalProvider {
-            LocalSplitColors.provides(splitColorsDark)
+            LocalSplitColorsDark.provides(splitColorsDark)
             LocalSplitTypography.provides(splitTypography)
             content()
         }
@@ -35,7 +36,11 @@ fun SplitTheme(
 object SplitTheme {
     val colors: SplitColors
         @Composable
-        get() = LocalSplitColors.current
+        get() = if (isSystemInDarkTheme()) {
+            LocalSplitColorsDark.current
+        } else {
+            LocalSplitColors.current
+        }
 
     val typography: SplitTypes
         @Composable
