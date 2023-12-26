@@ -1,4 +1,16 @@
 <resources>
     <string name="app_name">Split</string>
     <string name="split_logo_description">Split app logo</string>
+    <string name="welcome_screen_first_caption_first_phase">First caption 1st phase</string>
+    <string name="welcome_screen_first_caption_second_phase">First caption 2nd phase</string>
+    <string name="welcome_screen_first_caption_third_phase">First caption 3rd phase</string>
+    <string name="welcome_screen_first_caption_fourth_phase">First caption 4th phase</string>
+    <string name="welcome_screen_second_caption_first_phase">Second caption 1st phase</string>
+    <string name="welcome_screen_second_caption_second_phase">Second caption 2nd phase</string>
+    <string name="welcome_screen_second_caption_third_phase">Second caption 3rd phase</string>
+    <string name="welcome_screen_second_caption_fourth_phase">Second caption 4th phase</string>
+    <string name="welcome_screen_third_caption_first_phase">Third caption 1st phase</string>
+    <string name="welcome_screen_third_caption_second_phase">Third caption 2nd phase</string>
+    <string name="welcome_screen_third_caption_third_phase">Third caption 3rd phase</string>
+    <string name="welcome_screen_third_caption_fourth_phase">Third caption 4th phase</string>
 </resources>

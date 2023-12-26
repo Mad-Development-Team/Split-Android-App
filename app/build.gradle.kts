@@ -62,6 +62,9 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.compose)
     debugImplementation(libs.compose.tooling)
 
+    //Lottie
+    implementation(libs.compose.lottie)
+
     //Dagger hilt
     implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)

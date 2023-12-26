@@ -29,6 +29,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.madteam.split.R
 import com.madteam.split.ui.screens.welcome.state.WelcomeScreenUIEvent
 import com.madteam.split.ui.screens.welcome.state.WelcomeScreenUIState
@@ -95,18 +99,22 @@ fun WelcomeContent(
                 style = SplitTheme.typography.heading.s,
                 color = SplitTheme.colors.neutral.textTitle
             )
-
         }
-        Text(
-            text = "Phase: ${state.progressPhase}",
-            style = SplitTheme.typography.heading.s,
-            color = SplitTheme.colors.neutral.textTitle
+        Spacer(modifier = Modifier.size(16.dp))
+        WelcomeScreenCaption(
+            currentPhase = state.progressPhase
         )
-        Text(
-            text = "Seconds: ${state.progressSeconds} ",
-            style = SplitTheme.typography.heading.s,
-            color = SplitTheme.colors.neutral.textTitle
-        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .fillMaxSize()
+                .align(Alignment.End)
+        ) {
+            WelcomeScreenAnimation(
+                currentPhase = state.progressPhase
+            )
+        }
     }
 }
 
@@ -141,6 +149,77 @@ fun WelcomeScreenProgressIndicator(
             )
         }
     }
+}
+
+@Composable
+fun WelcomeScreenCaption(
+    currentPhase: Int
+) {
+    val firstCaption = when (currentPhase) {
+        0 -> stringResource(id = R.string.welcome_screen_first_caption_first_phase)
+        1 -> stringResource(id = R.string.welcome_screen_first_caption_second_phase)
+        2 -> stringResource(id = R.string.welcome_screen_first_caption_third_phase)
+        3 -> stringResource(id = R.string.welcome_screen_first_caption_fourth_phase)
+        else -> ""
+    }
+    val secondCaption = when (currentPhase) {
+        0 -> stringResource(id = R.string.welcome_screen_second_caption_first_phase)
+        1 -> stringResource(id = R.string.welcome_screen_second_caption_second_phase)
+        2 -> stringResource(id = R.string.welcome_screen_second_caption_third_phase)
+        3 -> stringResource(id = R.string.welcome_screen_second_caption_fourth_phase)
+        else -> ""
+    }
+    val thirdCaption = when (currentPhase) {
+        0 -> stringResource(id = R.string.welcome_screen_third_caption_first_phase)
+        1 -> stringResource(id = R.string.welcome_screen_third_caption_second_phase)
+        2 -> stringResource(id = R.string.welcome_screen_third_caption_third_phase)
+        3 -> stringResource(id = R.string.welcome_screen_third_caption_fourth_phase)
+        else -> ""
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        Text(
+            text = firstCaption,
+            style = SplitTheme.typography.heading.l,
+            color = SplitTheme.colors.neutral.textTitle
+        )
+        Text(
+            text = secondCaption,
+            style = SplitTheme.typography.heading.l,
+            color = SplitTheme.colors.neutral.textTitle
+        )
+        Text(
+            text = thirdCaption,
+            style = SplitTheme.typography.heading.l,
+            color = SplitTheme.colors.neutral.textTitle
+        )
+    }
+}
+
+@Composable
+fun WelcomeScreenAnimation(
+    currentPhase: Int
+) {
+    val animation by rememberLottieComposition(
+        spec = LottieCompositionSpec.RawRes(
+            when (currentPhase) {
+                0 -> R.raw.welcome_screen_animation_first_phase
+                1 -> R.raw.welcome_screen_animation_first_phase
+                2 -> R.raw.welcome_screen_animation_first_phase
+                3 -> R.raw.welcome_screen_animation_first_phase
+                else -> R.raw.welcome_screen_animation_first_phase
+            }
+        )
+    )
+    LottieAnimation(
+        composition = animation,
+        iterations = LottieConstants.IterateForever,
+        modifier = Modifier
+            .size(300.dp)
+    )
 }
 
 private fun calculateProgress(phase: Int, currentPhase: Int, phaseSeconds: Int): Float {
