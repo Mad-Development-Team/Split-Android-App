@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.madteam.split.ui.screens.signin.email.ui.SignInEmailScreen
 import com.madteam.split.ui.screens.welcome.ui.WelcomeScreen
 
 @Composable
@@ -14,7 +15,10 @@ fun Navigation() {
         startDestination = Screens.WelcomeScreen.route
     ) {
         composable(Screens.WelcomeScreen.route) {
-            WelcomeScreen()
+            WelcomeScreen(navController = navController)
+        }
+        composable(Screens.SignInEmailScreen.route) {
+            SignInEmailScreen(navController = navController)
         }
     }
 }

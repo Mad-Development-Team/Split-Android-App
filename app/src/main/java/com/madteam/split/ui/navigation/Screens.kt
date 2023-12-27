@@ -4,4 +4,5 @@ sealed class Screens(
     val route: String
 ){
     data object WelcomeScreen : Screens("welcome_screen")
+    data object SignInEmailScreen: Screens("sign_in_email_screen")
 }
