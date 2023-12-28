@@ -32,6 +32,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.madteam.split.R
 import com.madteam.split.ui.navigation.Screens
+import com.madteam.split.ui.screens.signup.email.state.SignUpUIEvent
 import com.madteam.split.ui.screens.signup.email.state.SignUpUIState
 import com.madteam.split.ui.screens.signup.email.viewmodel.SignUpViewModel
 import com.madteam.split.ui.theme.DSBasicTextField
@@ -39,8 +40,9 @@ import com.madteam.split.ui.theme.DSCheckBoxTextWithLink
 import com.madteam.split.ui.theme.DSEmailTextField
 import com.madteam.split.ui.theme.DSPasswordTextField
 import com.madteam.split.ui.theme.PrimaryLargeButton
-import com.madteam.split.ui.theme.SecondaryLargeButton
 import com.madteam.split.ui.theme.SplitTheme
+
+private const val POLICIES_URL = "https://www.google.com"
 
 @Composable
 fun SignUpScreen(
@@ -59,7 +61,23 @@ fun SignUpScreen(
         ) {
             SignUpScreenContent(
                 state = state,
-                navigateBack = navController::popBackStack
+                navigateBack = navController::popBackStack,
+                navigateTo = navController::navigate,
+                nameChanged = { name ->
+                    viewModel.onEvent(SignUpUIEvent.OnNameChanged(name))
+                },
+                emailChanged = { email ->
+                    viewModel.onEvent(SignUpUIEvent.OnEmailChanged(email))
+                },
+                passwordChanged = { password ->
+                    viewModel.onEvent(SignUpUIEvent.OnPasswordChanged(password))
+                },
+                confirmPasswordChanged = { confirmPassword ->
+                    viewModel.onEvent(SignUpUIEvent.OnConfirmPasswordChanged(confirmPassword))
+                },
+                isTermsAndConditionsCheckedChanged = {
+                    viewModel.onEvent(SignUpUIEvent.OnTermsAndConditionsChecked)
+                }
             )
         }
     }
@@ -68,7 +86,13 @@ fun SignUpScreen(
 @Composable
 fun SignUpScreenContent(
     state: SignUpUIState,
-    navigateBack: () -> Unit
+    navigateBack: () -> Unit,
+    navigateTo: (String) -> Unit,
+    nameChanged: (String) -> Unit,
+    emailChanged: (String) -> Unit,
+    passwordChanged: (String) -> Unit,
+    confirmPasswordChanged: (String) -> Unit,
+    isTermsAndConditionsCheckedChanged: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -109,23 +133,41 @@ fun SignUpScreenContent(
             Spacer(modifier = Modifier.size(24.dp))
             DSBasicTextField(
                 value = state.name,
-                onValueChange = { /* TODO:  */},
-                placeholder = R.string.enter_your_name
+                onValueChange = { nameChanged(it) },
+                placeholder = R.string.enter_your_name,
+                supportingText = if (state.name.isNotEmpty() && !state.isNameValid) {
+                    R.string.sign_up_name_supporting_text_rules
+                } else {
+                    R.string.sign_up_name_supporting_text
+                },
+                isError = !state.isNameValid && state.name.isNotEmpty(),
+                isSuccess = state.isNameValid && state.name.isNotEmpty()
             )
+            Spacer(modifier = Modifier.size(8.dp))
             DSEmailTextField(
                 value = state.email,
-                onValueChange = { /* TODO:  */},
-                placeholder = R.string.enter_your_email
+                onValueChange = { emailChanged(it) },
+                placeholder = R.string.enter_your_email,
+                supportingText = R.string.sign_up_email_supporting_text
             )
+            Spacer(modifier = Modifier.size(8.dp))
             DSPasswordTextField(
                 value = state.password,
-                onValueChange = { /* TODO:  */},
+                onValueChange = { passwordChanged(it) },
                 placeholder = R.string.enter_your_password
             )
+            Spacer(modifier = Modifier.size(8.dp))
             DSPasswordTextField(
                 value = state.confirmPassword,
-                onValueChange = { /* TODO:  */},
+                onValueChange = { confirmPasswordChanged(it) },
                 placeholder = R.string.repeat_password
+            )
+            Spacer(modifier = Modifier.size(16.dp))
+            DSCheckBoxTextWithLink(
+                checked = state.isTermsAndConditionsChecked,
+                onCheckedChange = { isTermsAndConditionsCheckedChanged() },
+                text = R.string.accept_terms_and_policy,
+                link = POLICIES_URL
             )
         }
         Column(
@@ -135,21 +177,14 @@ fun SignUpScreenContent(
             verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            DSCheckBoxTextWithLink(
-                checked = true,
-                onCheckedChange = { /*TODO*/ },
-                text = R.string.accept_terms_and_policy,
-                link = "https://www.google.com"
-            )
-            Spacer(modifier = Modifier.size(48.dp))
             PrimaryLargeButton(
-                onClick = {},
+                onClick = { /* TODO: Do sign up */ },
                 text = R.string.continue_text
             )
             Spacer(modifier = Modifier.size(16.dp))
             Text(
                 modifier = Modifier
-                    .clickable { /* TODO: Navigate to sign in with email */ },
+                    .clickable { navigateTo(Screens.SignInEmailScreen.route) },
                 text = stringResource(id = R.string.already_have_an_account),
                 style = SplitTheme.typography.textLink.l,
                 color = SplitTheme.colors.neutral.textLinkDefault

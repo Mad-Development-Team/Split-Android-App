@@ -57,7 +57,11 @@ fun DSCheckBoxTextWithLink(
                 } else {
                     0.dp
                 },
-                color = SplitTheme.colors.error.iconDefault,
+                color = if (isError) {
+                    SplitTheme.colors.error.borderDefault
+                } else {
+                    Color.Transparent
+                },
                 shape = RoundedCornerShape(20.dp)
             )
     ) {
