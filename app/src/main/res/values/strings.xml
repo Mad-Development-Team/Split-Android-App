@@ -27,4 +27,6 @@
     <string name="not_registered_yet">Not registered yet?</string>
     <string name="error_icon_description">Error icon</string>
     <string name="success_icon_description">Success icon</string>
+    <string name="forgot_password_description">Don\'t worry, we\'ve all been there. Just enter your email and follow the instructions to reset your password.</string>
+    <string name="send">Send</string>
 </resources>

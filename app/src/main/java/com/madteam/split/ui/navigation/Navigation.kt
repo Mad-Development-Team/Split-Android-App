@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.madteam.split.ui.screens.forgotpassword.ui.ForgotPasswordScreen
 import com.madteam.split.ui.screens.signin.email.ui.SignInEmailScreen
 import com.madteam.split.ui.screens.welcome.ui.WelcomeScreen
 
@@ -63,6 +64,24 @@ fun Navigation() {
             }
         ) {
             SignInEmailScreen(navController = navController)
+        }
+
+        composable(
+            route = Screens.ForgotPasswordScreen.route,
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left,
+                    animationSpec = tween(DEFAULT_ANIMATION_DURATION_IN_MILLIS)
+                )
+            },
+            popExitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Right,
+                    animationSpec = tween(DEFAULT_ANIMATION_DURATION_IN_MILLIS)
+                )
+            }
+        ) {
+            ForgotPasswordScreen(navController = navController)
         }
     }
 }
