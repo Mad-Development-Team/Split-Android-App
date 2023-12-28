@@ -15,12 +15,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.madteam.split.R
 
 @Composable
 fun DSTextField(
     modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
+    @StringRes placeholder: Int,
     @StringRes supportingText: Int? = null,
 ) {
     TextField(
@@ -35,7 +37,7 @@ fun DSTextField(
         ),
         textStyle = SplitTheme.typography.body.l,
         placeholder = {
-            Text(text = "Label", style = SplitTheme.typography.body.l, color = SplitTheme.colors.neutral.textMedium)
+            Text(text = stringResource(id = placeholder), style = SplitTheme.typography.body.l, color = SplitTheme.colors.neutral.textMedium)
         },
         singleLine = true,
         shape = RoundedCornerShape(20.dp),
@@ -58,6 +60,7 @@ fun DSTextFieldPreview() {
     DSTextField(
         value = text,
         onValueChange = { text = it },
+        placeholder = R.string.email_placeholder,
         supportingText = null
     )
 }

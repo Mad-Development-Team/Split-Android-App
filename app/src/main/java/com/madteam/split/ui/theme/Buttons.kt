@@ -28,9 +28,9 @@ fun SecondaryLargeButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     @StringRes text: Int,
-    @DrawableRes icon: Int,
-    @StringRes iconDescription: Int,
-    iconTint: Color
+    @DrawableRes icon: Int? = null,
+    @StringRes iconDescription: Int? = null,
+    iconTint: Color? = null
 ) {
     ElevatedButton(
         modifier = modifier
@@ -51,13 +51,63 @@ fun SecondaryLargeButton(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            Icon(
-                painter = painterResource(id = icon),
-                contentDescription = stringResource(id = iconDescription),
-                tint = iconTint,
-                modifier = Modifier.size(24.dp)
+            if (icon != null && iconDescription != null && iconTint != null) {
+                Icon(
+                    painter = painterResource(id = icon),
+                    contentDescription = stringResource(id = iconDescription),
+                    tint = iconTint,
+                    modifier = Modifier.size(24.dp)
+                )
+                Spacer(modifier = Modifier.size(8.dp))
+            }
+            Text(
+                text = stringResource(id = text),
+                color = SplitTheme.colors.neutral.textExtraWeak,
+                style = SplitTheme.typography.body.xxl,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
-            Spacer(modifier = Modifier.size(8.dp))
+        }
+    }
+}
+
+@Composable
+fun PrimaryLargeButton(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+    @StringRes text: Int,
+    @DrawableRes icon: Int? = null,
+    @StringRes iconDescription: Int? = null,
+    iconTint: Color? = null
+) {
+    ElevatedButton(
+        modifier = modifier
+            .fillMaxWidth(),
+        shape = RoundedCornerShape(40.dp),
+        colors = ButtonDefaults.elevatedButtonColors(
+            containerColor = SplitTheme.colors.primary.backgroundStrong
+        ),
+        elevation = ButtonDefaults.elevatedButtonElevation(
+            defaultElevation = 4.dp,
+            pressedElevation = 2.dp
+        ),
+        onClick = { onClick() }
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            if (icon != null && iconDescription != null && iconTint != null) {
+                Icon(
+                    painter = painterResource(id = icon),
+                    contentDescription = stringResource(id = iconDescription),
+                    tint = iconTint,
+                    modifier = Modifier.size(24.dp)
+                )
+                Spacer(modifier = Modifier.size(8.dp))
+            }
             Text(
                 text = stringResource(id = text),
                 color = SplitTheme.colors.neutral.textExtraWeak,
@@ -73,6 +123,18 @@ fun SecondaryLargeButton(
 @Composable
 fun SecondaryLargeButtonPreview() {
     SecondaryLargeButton(
+        onClick = {},
+        text = R.string.continue_with_google,
+        icon = R.drawable.ds_ic_google_solid,
+        iconTint = SplitTheme.colors.neutral.iconExtraWeak,
+        iconDescription = R.string.google_icon_description
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PrimaryLargeButtonPreview() {
+    PrimaryLargeButton(
         onClick = {},
         text = R.string.continue_with_google,
         icon = R.drawable.ds_ic_google_solid,

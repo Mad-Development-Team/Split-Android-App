@@ -20,4 +20,9 @@
     <string name="icon_back_description">Icon of an arrow to go back</string>
     <string name="welcome_back">Welcome back</string>
     <string name="welcome_back_email_password_description">Enter the email and password associated with your account</string>
+    <string name="email_placeholder">Email</string>
+    <string name="password_placeholder">Password</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="continue_text">Continue</string>
+    <string name="not_registered_yet">Not registered yet?</string>
 </resources>
