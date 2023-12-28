@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.madteam.split.ui.screens.forgotpassword.ui.ForgotPasswordScreen
 import com.madteam.split.ui.screens.signin.email.ui.SignInEmailScreen
+import com.madteam.split.ui.screens.signup.email.ui.SignUpScreen
 import com.madteam.split.ui.screens.welcome.ui.WelcomeScreen
 
 private const val DEFAULT_ANIMATION_DURATION_IN_MILLIS = 500
@@ -56,6 +57,12 @@ fun Navigation() {
                     else -> null
                 }
             },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Right,
+                    animationSpec = tween(DEFAULT_ANIMATION_DURATION_IN_MILLIS)
+                )
+            },
             popExitTransition = {
                 slideOutOfContainer(
                     AnimatedContentTransitionScope.SlideDirection.Right,
@@ -82,6 +89,12 @@ fun Navigation() {
             }
         ) {
             ForgotPasswordScreen(navController = navController)
+        }
+
+        composable(
+            route = Screens.ForgotPasswordScreen.route
+        ) {
+            SignUpScreen(navController = navController)
         }
     }
 }

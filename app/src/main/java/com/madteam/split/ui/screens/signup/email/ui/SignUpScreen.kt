@@ -1,10 +1,12 @@
-package com.madteam.split.ui.screens.forgotpassword.ui
+package com.madteam.split.ui.screens.signup.email.ui
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -28,25 +30,23 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.airbnb.lottie.compose.LottieAnimation
-import com.airbnb.lottie.compose.LottieCompositionSpec
-import com.airbnb.lottie.compose.LottieConstants
-import com.airbnb.lottie.compose.rememberLottieComposition
 import com.madteam.split.R
-import com.madteam.split.ui.screens.forgotpassword.state.ForgotPasswordUIEvent
-import com.madteam.split.ui.screens.forgotpassword.state.ForgotPasswordUIState
-import com.madteam.split.ui.screens.forgotpassword.viewmodel.ForgotPasswordViewModel
+import com.madteam.split.ui.navigation.Screens
+import com.madteam.split.ui.screens.signup.email.state.SignUpUIState
+import com.madteam.split.ui.screens.signup.email.viewmodel.SignUpViewModel
+import com.madteam.split.ui.theme.DSBasicTextField
 import com.madteam.split.ui.theme.DSEmailTextField
+import com.madteam.split.ui.theme.DSPasswordTextField
 import com.madteam.split.ui.theme.PrimaryLargeButton
+import com.madteam.split.ui.theme.SecondaryLargeButton
 import com.madteam.split.ui.theme.SplitTheme
 
 @Composable
-fun ForgotPasswordScreen(
+fun SignUpScreen(
     navController: NavController,
-    viewModel: ForgotPasswordViewModel = hiltViewModel()
+    viewModel: SignUpViewModel = hiltViewModel()
 ) {
-
-    val state by viewModel.forgotPasswordUIState.collectAsStateWithLifecycle()
+    val state by viewModel.signUpUIState.collectAsStateWithLifecycle()
 
     Scaffold(
         containerColor = SplitTheme.colors.neutral.backgroundExtraWeak
@@ -56,21 +56,16 @@ fun ForgotPasswordScreen(
                 .fillMaxSize()
                 .padding(it)
         ) {
-            ForgotPasswordContent(
-                state = state,
-                onEmailChanged = { viewModel.onEvent(ForgotPasswordUIEvent.EmailChanged(it)) },
-                navigateBack = navController::popBackStack
+            SignUpScreenContent(
+                state = state
             )
         }
     }
-
 }
 
 @Composable
-fun ForgotPasswordContent(
-    state: ForgotPasswordUIState,
-    onEmailChanged: (String) -> Unit,
-    navigateBack: () -> Unit
+fun SignUpScreenContent(
+    state: SignUpUIState
 ) {
     Column(
         modifier = Modifier
@@ -81,7 +76,7 @@ fun ForgotPasswordContent(
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.Start
         ) {
-            IconButton(onClick = { navigateBack() }) {
+            IconButton(onClick = { /* TODO: Add navigate back */ }) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     tint = SplitTheme.colors.neutral.iconHeavy,
@@ -93,13 +88,8 @@ fun ForgotPasswordContent(
             modifier = Modifier
                 .padding(horizontal = 24.dp)
         ) {
-            val animation by rememberLottieComposition(
-                spec = LottieCompositionSpec.RawRes(
-                    R.raw.handling_keys_animation
-                )
-            )
             Text(
-                text = stringResource(id = R.string.forgot_password),
+                text = stringResource(id = R.string.welcome),
                 style = SplitTheme.typography.display.m,
                 color = SplitTheme.colors.neutral.textTitle,
                 maxLines = 2,
@@ -108,30 +98,52 @@ fun ForgotPasswordContent(
             )
             Spacer(modifier = Modifier.size(4.dp))
             Text(
-                text = stringResource(id = R.string.forgot_password_description),
+                text = stringResource(id = R.string.sign_up_description),
                 style = SplitTheme.typography.body.l,
                 color = SplitTheme.colors.neutral.textBody,
                 textAlign = TextAlign.Justify
             )
             Spacer(modifier = Modifier.size(24.dp))
-            LottieAnimation(
-                composition = animation,
-                iterations = LottieConstants.IterateForever,
-                modifier = Modifier
-                    .size(300.dp)
-                    .align(alignment = Alignment.CenterHorizontally)
+            DSBasicTextField(
+                value = state.name,
+                onValueChange = { /* TODO:  */},
+                placeholder = R.string.enter_your_name
             )
-            Spacer(modifier = Modifier.size(24.dp))
             DSEmailTextField(
                 value = state.email,
-                onValueChange = { onEmailChanged(it) },
+                onValueChange = { /* TODO:  */},
                 placeholder = R.string.enter_your_email
             )
-            Spacer(modifier = Modifier.size(24.dp))
+            DSPasswordTextField(
+                value = state.password,
+                onValueChange = { /* TODO:  */},
+                placeholder = R.string.enter_your_password
+            )
+            DSPasswordTextField(
+                value = state.confirmPassword,
+                onValueChange = { /* TODO:  */},
+                placeholder = R.string.repeat_password
+            )
+        }
+        Column(
+            modifier = Modifier
+                .fillMaxHeight()
+                .padding(24.dp),
+            verticalArrangement = Arrangement.Bottom,
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Spacer(modifier = Modifier.size(48.dp))
             PrimaryLargeButton(
-                onClick = { /*TODO*/ },
-                text = R.string.send
-                //TODO: Add enabled state for the buttons
+                onClick = {},
+                text = R.string.continue_text
+            )
+            Spacer(modifier = Modifier.size(16.dp))
+            Text(
+                modifier = Modifier
+                    .clickable { /* TODO: Navigate to sign in with email */ },
+                text = stringResource(id = R.string.already_have_an_account),
+                style = SplitTheme.typography.textLink.l,
+                color = SplitTheme.colors.neutral.textLinkDefault
             )
         }
     }
@@ -139,8 +151,8 @@ fun ForgotPasswordContent(
 
 @Preview
 @Composable
-fun ForgotPasswordScreenPreview() {
-    ForgotPasswordScreen(
+fun SignUpScreenPreview() {
+    SignUpScreen(
         navController = rememberNavController()
     )
 }

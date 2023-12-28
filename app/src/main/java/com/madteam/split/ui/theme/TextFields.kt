@@ -1,6 +1,7 @@
 package com.madteam.split.ui.theme
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -40,7 +41,8 @@ private fun DSTextField(
     @StringRes supportingText: Int? = null,
 ) {
     TextField(
-        modifier = modifier,
+        modifier = modifier
+            .fillMaxWidth(),
         value = value,
         enabled = enabled,
         keyboardOptions = keyboardOptions,
@@ -116,6 +118,34 @@ fun DSEmailTextField(
         enabled = enabled,
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Email
+        ),
+        maxLines = 1,
+        isError = isError,
+        isSuccess = isSuccess,
+        visualTransformation = VisualTransformation.None
+    )
+}
+
+@Composable
+fun DSBasicTextField(
+    modifier: Modifier = Modifier,
+    value: String,
+    onValueChange: (String) -> Unit,
+    enabled: Boolean = true,
+    isError: Boolean = false,
+    isSuccess: Boolean = false,
+    @StringRes placeholder: Int,
+    @StringRes supportingText: Int? = null,
+) {
+    DSTextField(
+        modifier = modifier,
+        value = value,
+        onValueChange = { onValueChange(it) },
+        placeholder = placeholder,
+        supportingText = supportingText,
+        enabled = enabled,
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Text
         ),
         maxLines = 1,
         isError = isError,

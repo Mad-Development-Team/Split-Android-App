@@ -29,4 +29,9 @@
     <string name="success_icon_description">Success icon</string>
     <string name="forgot_password_description">Don\'t worry, we\'ve all been there. Just enter your email and follow the instructions to reset your password.</string>
     <string name="send">Send</string>
+    <string name="welcome">Welcome</string>
+    <string name="sign_up_description">Sign up to enjoy all the benefits completely free.</string>
+    <string name="enter_your_name">Enter your name</string>
+    <string name="repeat_password">Repeat password</string>
+    <string name="already_have_an_account">Already have an account?</string>
 </resources>

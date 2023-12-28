@@ -119,7 +119,6 @@ fun SignInEmailContent(
             )
             Spacer(modifier = Modifier.size(24.dp))
             DSEmailTextField(
-                modifier = Modifier.fillMaxWidth(),
                 value = state.emailValue,
                 onValueChange = { onEmailChanged(it) },
                 placeholder = R.string.enter_your_email,
@@ -127,7 +126,6 @@ fun SignInEmailContent(
                 enabled = true,
             )
             DSPasswordTextField(
-                modifier = Modifier.fillMaxWidth(),
                 value = state.passwordValue,
                 onValueChange = { onPasswordChanged(it) },
                 placeholder = R.string.enter_your_password,
