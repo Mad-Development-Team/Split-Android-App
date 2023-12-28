@@ -157,7 +157,8 @@ fun SignInEmailContent(
             Text(
                 text = stringResource(id = R.string.not_registered_yet),
                 style = SplitTheme.typography.textLink.l,
-                color = SplitTheme.colors.neutral.textLinkDefault
+                color = SplitTheme.colors.neutral.textLinkDefault,
+                modifier = Modifier.clickable { navigateTo(Screens.SignUpScreen.route)  }
             )
         }
     }

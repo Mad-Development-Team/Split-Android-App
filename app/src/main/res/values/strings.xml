@@ -34,4 +34,5 @@
     <string name="enter_your_name">Enter your name</string>
     <string name="repeat_password">Repeat password</string>
     <string name="already_have_an_account">Already have an account?</string>
+    <string name="accept_terms_and_policy">I have read and agree with the [Terms and conditions]</string>
 </resources>

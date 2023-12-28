@@ -35,6 +35,7 @@ import com.madteam.split.ui.navigation.Screens
 import com.madteam.split.ui.screens.signup.email.state.SignUpUIState
 import com.madteam.split.ui.screens.signup.email.viewmodel.SignUpViewModel
 import com.madteam.split.ui.theme.DSBasicTextField
+import com.madteam.split.ui.theme.DSCheckBoxTextWithLink
 import com.madteam.split.ui.theme.DSEmailTextField
 import com.madteam.split.ui.theme.DSPasswordTextField
 import com.madteam.split.ui.theme.PrimaryLargeButton
@@ -57,7 +58,8 @@ fun SignUpScreen(
                 .padding(it)
         ) {
             SignUpScreenContent(
-                state = state
+                state = state,
+                navigateBack = navController::popBackStack
             )
         }
     }
@@ -65,7 +67,8 @@ fun SignUpScreen(
 
 @Composable
 fun SignUpScreenContent(
-    state: SignUpUIState
+    state: SignUpUIState,
+    navigateBack: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -76,7 +79,7 @@ fun SignUpScreenContent(
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.Start
         ) {
-            IconButton(onClick = { /* TODO: Add navigate back */ }) {
+            IconButton(onClick = { navigateBack() }) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     tint = SplitTheme.colors.neutral.iconHeavy,
@@ -132,6 +135,12 @@ fun SignUpScreenContent(
             verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+            DSCheckBoxTextWithLink(
+                checked = true,
+                onCheckedChange = { /*TODO*/ },
+                text = R.string.accept_terms_and_policy,
+                link = "https://www.google.com"
+            )
             Spacer(modifier = Modifier.size(48.dp))
             PrimaryLargeButton(
                 onClick = {},

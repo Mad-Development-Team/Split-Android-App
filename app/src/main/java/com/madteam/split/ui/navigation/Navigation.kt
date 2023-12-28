@@ -92,7 +92,7 @@ fun Navigation() {
         }
 
         composable(
-            route = Screens.ForgotPasswordScreen.route
+            route = Screens.SignUpScreen.route
         ) {
             SignUpScreen(navController = navController)
         }
