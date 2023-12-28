@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
@@ -114,6 +116,7 @@ fun SignUpScreenContent(
         Column(
             modifier = Modifier
                 .padding(horizontal = 24.dp)
+                .verticalScroll(rememberScrollState())
         ) {
             Text(
                 text = stringResource(id = R.string.welcome),
@@ -148,26 +151,38 @@ fun SignUpScreenContent(
                 value = state.email,
                 onValueChange = { emailChanged(it) },
                 placeholder = R.string.enter_your_email,
-                supportingText = R.string.sign_up_email_supporting_text
+                supportingText = if (state.email.isNotEmpty() && !state.isEmailValid) {
+                    R.string.sign_up_email_supporting_text_rules
+                } else {
+                    R.string.sign_up_email_supporting_text
+                },
+                isError = !state.isEmailValid && state.email.isNotEmpty(),
+                isSuccess = state.isEmailValid && state.email.isNotEmpty()
             )
             Spacer(modifier = Modifier.size(8.dp))
             DSPasswordTextField(
                 value = state.password,
                 onValueChange = { passwordChanged(it) },
-                placeholder = R.string.enter_your_password
+                placeholder = R.string.enter_your_password,
+                isError = !state.isPasswordValid && state.password.isNotEmpty(),
+                isSuccess = state.isPasswordValid && state.password.isNotEmpty()
             )
-            Spacer(modifier = Modifier.size(8.dp))
+            Spacer(modifier = Modifier.size(4.dp))
             DSPasswordTextField(
                 value = state.confirmPassword,
                 onValueChange = { confirmPasswordChanged(it) },
-                placeholder = R.string.repeat_password
+                placeholder = R.string.repeat_password,
+                supportingText = R.string.sign_up_password_supporting_text_rules,
+                isError = !state.isConfirmPasswordValid && state.confirmPassword.isNotEmpty(),
+                isSuccess = state.isConfirmPasswordValid && state.confirmPassword.isNotEmpty()
             )
             Spacer(modifier = Modifier.size(16.dp))
             DSCheckBoxTextWithLink(
                 checked = state.isTermsAndConditionsChecked,
                 onCheckedChange = { isTermsAndConditionsCheckedChanged() },
                 text = R.string.accept_terms_and_policy,
-                link = POLICIES_URL
+                link = POLICIES_URL,
+                isError = state.isTermsAndConditionsError
             )
         }
         Column(
@@ -179,7 +194,12 @@ fun SignUpScreenContent(
         ) {
             PrimaryLargeButton(
                 onClick = { /* TODO: Do sign up */ },
-                text = R.string.continue_text
+                text = R.string.continue_text,
+                enabled = state.isNameValid
+                        && state.isEmailValid
+                        && state.isPasswordValid
+                        && state.isConfirmPasswordValid
+                        && state.isTermsAndConditionsChecked
             )
             Spacer(modifier = Modifier.size(16.dp))
             Text(

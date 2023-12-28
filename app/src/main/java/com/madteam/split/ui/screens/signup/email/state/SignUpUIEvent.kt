@@ -6,5 +6,6 @@ sealed class SignUpUIEvent{
     data class OnPasswordChanged(val password: String) : SignUpUIEvent()
     data class OnConfirmPasswordChanged(val confirmPassword: String) : SignUpUIEvent()
     data object OnTermsAndConditionsChecked : SignUpUIEvent()
+    data object OnSignUpClicked : SignUpUIEvent()
 
 }

@@ -38,4 +38,6 @@
     <string name="sign_up_name_supporting_text">This is how your friends will see you. You can change it later.</string>
     <string name="sign_up_email_supporting_text">You will have to confirm it later.</string>
     <string name="sign_up_name_supporting_text_rules">Name must be between 3 and 20 characters and only contain letters or numbers.</string>
+    <string name="sign_up_email_supporting_text_rules">Introduce a valid email.</string>
+    <string name="sign_up_password_supporting_text_rules">Password must have minimum 8 characters, uppercase, lowercase and a number.</string>
 </resources>

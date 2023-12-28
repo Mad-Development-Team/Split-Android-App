@@ -27,6 +27,7 @@ import com.madteam.split.R
 fun SecondaryLargeButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
+    enabled: Boolean = true,
     @StringRes text: Int,
     @DrawableRes icon: Int? = null,
     @StringRes iconDescription: Int? = null,
@@ -35,13 +36,15 @@ fun SecondaryLargeButton(
     ElevatedButton(
         modifier = modifier
             .fillMaxWidth(),
+        enabled = enabled,
         shape = RoundedCornerShape(40.dp),
         colors = ButtonDefaults.elevatedButtonColors(
             containerColor = SplitTheme.colors.neutral.backgroundHeavy
         ),
         elevation = ButtonDefaults.elevatedButtonElevation(
             defaultElevation = 4.dp,
-            pressedElevation = 2.dp
+            pressedElevation = 2.dp,
+            disabledElevation = 0.dp
         ),
         onClick = { onClick() }
     ) {
@@ -75,6 +78,7 @@ fun SecondaryLargeButton(
 fun PrimaryLargeButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
+    enabled: Boolean = true,
     @StringRes text: Int,
     @DrawableRes icon: Int? = null,
     @StringRes iconDescription: Int? = null,
@@ -84,12 +88,15 @@ fun PrimaryLargeButton(
         modifier = modifier
             .fillMaxWidth(),
         shape = RoundedCornerShape(40.dp),
+        enabled = enabled,
         colors = ButtonDefaults.elevatedButtonColors(
-            containerColor = SplitTheme.colors.primary.backgroundStrong
+            containerColor = SplitTheme.colors.primary.backgroundStrong,
+            disabledContainerColor = SplitTheme.colors.neutral.backgroundMedium,
         ),
         elevation = ButtonDefaults.elevatedButtonElevation(
             defaultElevation = 4.dp,
-            pressedElevation = 2.dp
+            pressedElevation = 2.dp,
+            disabledElevation = 0.dp
         ),
         onClick = { onClick() }
     ) {
@@ -127,7 +134,8 @@ fun SecondaryLargeButtonPreview() {
         text = R.string.continue_with_google,
         icon = R.drawable.ds_ic_google_solid,
         iconTint = SplitTheme.colors.neutral.iconExtraWeak,
-        iconDescription = R.string.google_icon_description
+        iconDescription = R.string.google_icon_description,
+        enabled = false
     )
 }
 
@@ -139,6 +147,7 @@ fun PrimaryLargeButtonPreview() {
         text = R.string.continue_with_google,
         icon = R.drawable.ds_ic_google_solid,
         iconTint = SplitTheme.colors.neutral.iconExtraWeak,
-        iconDescription = R.string.google_icon_description
+        iconDescription = R.string.google_icon_description,
+        enabled = false
     )
 }

@@ -8,5 +8,8 @@ data class SignUpUIState(
     val password: String = "",
     val isPasswordValid: Boolean = false,
     val confirmPassword: String = "",
+    val isConfirmPasswordValid: Boolean = false,
     val isTermsAndConditionsChecked: Boolean = false,
+    val isTermsAndConditionsError: Boolean = false,
+    val isFormValid: Boolean = false,
 )
