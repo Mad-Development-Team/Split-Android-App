@@ -86,6 +86,7 @@ fun SignInEmailContent(
             IconButton(onClick = { navigateBack() }) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    tint = SplitTheme.colors.neutral.iconHeavy,
                     contentDescription = stringResource(id = R.string.icon_back_description)
                 )
             }
