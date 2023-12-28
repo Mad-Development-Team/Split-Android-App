@@ -32,7 +32,8 @@ import com.madteam.split.R
 import com.madteam.split.ui.screens.signin.email.state.SignInEmailUIEvent
 import com.madteam.split.ui.screens.signin.email.state.SignInEmailUIState
 import com.madteam.split.ui.screens.signin.email.viewmodel.SignInEmailViewModel
-import com.madteam.split.ui.theme.DSTextField
+import com.madteam.split.ui.theme.DSEmailTextField
+import com.madteam.split.ui.theme.DSPasswordTextField
 import com.madteam.split.ui.theme.PrimaryLargeButton
 import com.madteam.split.ui.theme.SplitTheme
 
@@ -111,17 +112,21 @@ fun SignInEmailContent(
                 textAlign = TextAlign.Justify
             )
             Spacer(modifier = Modifier.size(24.dp))
-            DSTextField(
+            DSEmailTextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = state.emailValue,
-                placeholder = R.string.email_placeholder,
-                onValueChange = { onEmailChanged(it) }
+                onValueChange = { onEmailChanged(it) },
+                placeholder = R.string.enter_your_email,
+                isError = false,
+                enabled = true,
             )
-            DSTextField(
+            DSPasswordTextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = state.passwordValue,
-                placeholder = R.string.password_placeholder,
-                onValueChange = { onPasswordChanged(it) }
+                onValueChange = { onPasswordChanged(it) },
+                placeholder = R.string.enter_your_password,
+                isError = false,
+                enabled = true,
             )
             Text(
                 modifier = Modifier
