@@ -64,7 +64,11 @@ fun SignUpScreen(
             SignUpScreenContent(
                 state = state,
                 navigateBack = navController::popBackStack,
-                navigateTo = navController::navigate,
+                popUpTo = { route ->
+                    navController.navigate(route = route){
+                        popUpTo(Screens.WelcomeScreen.route) { inclusive = false }
+                    }
+                },
                 nameChanged = { name ->
                     viewModel.onEvent(SignUpUIEvent.OnNameChanged(name))
                 },
@@ -89,7 +93,7 @@ fun SignUpScreen(
 fun SignUpScreenContent(
     state: SignUpUIState,
     navigateBack: () -> Unit,
-    navigateTo: (String) -> Unit,
+    popUpTo: (String) -> Unit,
     nameChanged: (String) -> Unit,
     emailChanged: (String) -> Unit,
     passwordChanged: (String) -> Unit,
@@ -211,7 +215,7 @@ fun SignUpScreenContent(
             Spacer(modifier = Modifier.size(16.dp))
             Text(
                 modifier = Modifier
-                    .clickable { navigateTo(Screens.SignInEmailScreen.route) },
+                    .clickable { popUpTo(Screens.SignInEmailScreen.route) },
                 text = stringResource(id = R.string.already_have_an_account),
                 style = SplitTheme.typography.textLink.l,
                 color = SplitTheme.colors.neutral.textLinkDefault

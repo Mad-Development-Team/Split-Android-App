@@ -116,10 +116,32 @@ fun Navigation() {
                 EnterTransition.None
             },
             exitTransition = {
-                ExitTransition.None
+                when (targetState.destination.route) {
+                    Screens.WelcomeScreen.route -> {
+                        slideOutOfContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Right,
+                            animationSpec = tween(DEFAULT_ANIMATION_DURATION_IN_MILLIS)
+                        )
+                    }
+
+                    else -> {
+                        ExitTransition.None
+                    }
+                }
             },
             popExitTransition = {
-                ExitTransition.None
+                when (targetState.destination.route) {
+                    Screens.WelcomeScreen.route -> {
+                        slideOutOfContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Right,
+                            animationSpec = tween(DEFAULT_ANIMATION_DURATION_IN_MILLIS)
+                        )
+                    }
+
+                    else -> {
+                        ExitTransition.None
+                    }
+                }
             }
         ) {
             SignUpScreen(navController = navController)

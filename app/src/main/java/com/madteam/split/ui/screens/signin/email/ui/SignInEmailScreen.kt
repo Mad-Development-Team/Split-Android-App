@@ -66,6 +66,11 @@ fun SignInEmailScreen(
                     viewModel.onEvent(SignInEmailUIEvent.OnPasswordChanged(password))
                 },
                 navigateBack = navController::popBackStack,
+                popUpTo = { route ->
+                    navController.navigate(route = route){
+                        popUpTo(Screens.WelcomeScreen.route) { inclusive = false }
+                    }
+                },
                 navigateTo = navController::navigate
             )
         }
@@ -79,6 +84,7 @@ fun SignInEmailContent(
     onEmailChanged: (String) -> Unit,
     onPasswordChanged: (String) -> Unit,
     navigateBack: () -> Unit,
+    popUpTo: (String) -> Unit,
     navigateTo: (String) -> Unit
 ) {
     Column(
@@ -159,7 +165,7 @@ fun SignInEmailContent(
                 text = stringResource(id = R.string.not_registered_yet),
                 style = SplitTheme.typography.textLink.l,
                 color = SplitTheme.colors.neutral.textLinkDefault,
-                modifier = Modifier.clickable { navigateTo(Screens.SignUpScreen.route)  }
+                modifier = Modifier.clickable { popUpTo(Screens.SignUpScreen.route)  }
             )
         }
     }
