@@ -68,7 +68,12 @@ fun SignInEmailScreen(
                     viewModel.onEvent(SignInEmailUIEvent.OnPasswordChanged(password))
                 },
                 navigateBack = navController::popBackStack,
-                popUpTo = navController::navigateWithPopUpTo,
+                popUpTo = { route ->
+                    navController.navigateWithPopUpTo(
+                        route = route,
+                        popUpTo = Screens.WelcomeScreen.route
+                    )
+                },
                 navigateTo = navController::navigate
             )
         }

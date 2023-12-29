@@ -64,7 +64,12 @@ fun SignUpScreen(
             SignUpScreenContent(
                 state = state,
                 navigateBack = navController::popBackStack,
-                popUpTo = navController::navigateWithPopUpTo,
+                popUpTo = { route ->
+                    navController.navigateWithPopUpTo(
+                        route = route,
+                        popUpTo = Screens.WelcomeScreen.route
+                    )
+                },
                 nameChanged = { name ->
                     viewModel.onEvent(SignUpUIEvent.OnNameChanged(name))
                 },

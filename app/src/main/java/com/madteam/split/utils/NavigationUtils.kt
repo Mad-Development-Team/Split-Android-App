@@ -1,14 +1,14 @@
 package com.madteam.split.utils
 
-import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 
 fun NavController.navigateWithPopUpTo(
     route: String,
-    inclusive: Boolean = false
+    inclusive: Boolean = false,
+    popUpTo: String
 ) {
     navigate(route) {
-        popUpTo(route) {
+        popUpTo(popUpTo) {
             this.inclusive = inclusive
         }
     }
