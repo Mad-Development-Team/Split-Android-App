@@ -34,7 +34,7 @@
     <string name="enter_your_name">Enter your name</string>
     <string name="repeat_password">Repeat password</string>
     <string name="already_have_an_account">Already have an account?</string>
-    <string name="accept_terms_and_policy">I have read and agree with the [Terms and conditions]</string>
+    <string name="accept_terms_and_policy">I have read and agree with the [Terms and conditions](https://google.com)</string>
     <string name="sign_up_name_supporting_text">This is how your friends will see you. You can change it later.</string>
     <string name="sign_up_email_supporting_text">You will have to confirm it later.</string>
     <string name="sign_up_name_supporting_text_rules">Name must be between 3 and 20 characters and only contain letters or numbers.</string>

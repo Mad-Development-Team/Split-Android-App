@@ -45,8 +45,6 @@ import com.madteam.split.ui.theme.DSPasswordTextField
 import com.madteam.split.ui.theme.PrimaryLargeButton
 import com.madteam.split.ui.theme.SplitTheme
 
-private const val POLICIES_URL = "https://www.google.com"
-
 @Composable
 fun SignUpScreen(
     navController: NavController,
@@ -194,7 +192,6 @@ fun SignUpScreenContent(
                 checked = state.isTermsAndConditionsChecked,
                 onCheckedChange = { isTermsAndConditionsCheckedChanged() },
                 text = R.string.accept_terms_and_policy,
-                link = POLICIES_URL,
                 isError = state.isTermsAndConditionsError
             )
         }

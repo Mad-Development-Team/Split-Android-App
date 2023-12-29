@@ -18,6 +18,7 @@ ksp = "1.9.10-1.0.13"
 lifecycleCompose = "2.6.2"
 lottieCompose = "6.1.0"
 navigationCompose = "2.7.6"
+markdownCompose = "0.3.7"
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -43,6 +44,7 @@ androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-
 androidx-lifecycle-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleCompose" }
 androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycleCompose" }
 compose-lottie = { module = "com.airbnb.android:lottie-compose", version.ref = "lottieCompose" }
+markdown-compose = { module = "com.github.jeziellago:compose-markdown", version.ref = "markdownCompose"}
 
 [plugins]
 com-android-application = { id = "com.android.application", version.ref = "agp" }

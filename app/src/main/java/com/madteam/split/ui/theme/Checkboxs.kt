@@ -26,6 +26,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.madteam.split.R
+import dev.jeziellago.compose.markdowntext.MarkdownText
 
 private const val LINK_START_CHAR = '['
 private const val LINK_END_CHAR = ']'
@@ -38,7 +39,6 @@ fun DSCheckBoxTextWithLink(
     isError: Boolean = false,
     onCheckedChange: () -> Unit,
     @StringRes text: Int,
-    link: String
 ) {
     Box(
         modifier = modifier
@@ -72,33 +72,6 @@ fun DSCheckBoxTextWithLink(
             horizontalArrangement = Arrangement.Center
         ) {
             val uriHandler = LocalUriHandler.current
-            val linkStyle = SpanStyle(
-                color = if (isError) {
-                    SplitTheme.colors.error.textDefault
-                } else {
-                    SplitTheme.colors.neutral.textLinkDefault
-                },
-                textDecoration = TextDecoration.Underline
-            )
-            val textStyle = SpanStyle(
-                color = if (isError) {
-                    SplitTheme.colors.error.textDefault
-                } else {
-                    SplitTheme.colors.neutral.textBody
-                }
-            )
-            val string = stringResource(id = text)
-            val annotatedString = buildAnnotatedString {
-                pushStringAnnotation(tag = "link", annotation = link)
-                withStyle(style = textStyle) {
-                    append(string)
-                }
-                addStyle(
-                    style = linkStyle,
-                    start = string.indexOf(LINK_START_CHAR),
-                    end = string.lastIndexOf(LINK_END_CHAR) + 1
-                )
-            }
             Checkbox(
                 checked = checked,
                 enabled = enabled,
@@ -112,14 +85,18 @@ fun DSCheckBoxTextWithLink(
                     },
                 )
             )
-            ClickableText(
-                text = annotatedString,
+            MarkdownText(
+                markdown = stringResource(id = text),
                 style = SplitTheme.typography.body.l,
-                onClick = { offset ->
-                    annotatedString.getStringAnnotations(tag = "link", start = offset, end = offset).firstOrNull()
-                        ?.let {
-                            uriHandler.openUri(it.item)
-                        }
+                fontResource = R.font.poppins_regular,
+                linkColor = SplitTheme.colors.neutral.textLinkDefault,
+                onLinkClicked = { link ->
+                    uriHandler.openUri(link)
+                },
+                color = if (isError) {
+                    SplitTheme.colors.error.textDefault
+                } else {
+                    SplitTheme.colors.neutral.textBody
                 }
             )
         }
@@ -134,6 +111,5 @@ fun DSCheckBoxTextWithLinkPreview() {
         isError = true,
         onCheckedChange = {},
         text = R.string.accept_terms_and_policy,
-        link = "https://www.google.com"
     )
 }
