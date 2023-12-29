@@ -5,6 +5,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.snap
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,7 +21,6 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,12 +32,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.madteam.split.R
-import com.madteam.split.ui.screens.welcome.state.WelcomeScreenUIEvent
+import com.madteam.split.ui.navigation.Screens
 import com.madteam.split.ui.screens.welcome.state.WelcomeScreenUIState
 import com.madteam.split.ui.screens.welcome.viewmodel.WelcomeViewModel
 import com.madteam.split.ui.theme.SecondaryLargeButton
@@ -47,13 +49,10 @@ private const val PROGRESS_ANIMATION_DURATION_IN_MILLIS = 1000
 
 @Composable
 fun WelcomeScreen(
-    viewModel: WelcomeViewModel = hiltViewModel()
+    viewModel: WelcomeViewModel = hiltViewModel(),
+    navController: NavController
 ) {
     val welcomeScreenUIState by viewModel.welcomeScreenUIState.collectAsStateWithLifecycle()
-
-    LaunchedEffect(Unit) {
-        viewModel.onEvent(WelcomeScreenUIEvent.OnStart)
-    }
 
     Scaffold(
         containerColor = SplitTheme.colors.neutral.backgroundExtraWeak
@@ -64,7 +63,8 @@ fun WelcomeScreen(
                 .padding(it)
         ) {
             WelcomeContent(
-                state = welcomeScreenUIState
+                state = welcomeScreenUIState,
+                navigateTo = navController::navigate
             )
         }
     }
@@ -72,7 +72,8 @@ fun WelcomeScreen(
 
 @Composable
 fun WelcomeContent(
-    state: WelcomeScreenUIState
+    state: WelcomeScreenUIState,
+    navigateTo: (String) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -137,6 +138,8 @@ fun WelcomeContent(
             )
             Spacer(modifier = Modifier.size(16.dp))
             Text(
+                modifier = Modifier
+                    .clickable { navigateTo(Screens.SignInEmailScreen.route) },
                 text = stringResource(id = R.string.or_continue_with_email),
                 style = SplitTheme.typography.textLink.l,
                 color = SplitTheme.colors.neutral.textLinkDefault
@@ -267,5 +270,7 @@ private fun calculateProgress(phase: Int, currentPhase: Int, phaseSeconds: Int):
 @Preview(showBackground = true)
 @Composable
 fun WelcomeScreenPreview() {
-    WelcomeScreen()
+    WelcomeScreen(
+        navController = rememberNavController()
+    )
 }

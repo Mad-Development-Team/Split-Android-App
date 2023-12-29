@@ -1,7 +1,6 @@
 package com.madteam.split.ui.screens.welcome.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.madteam.split.ui.screens.welcome.state.WelcomeScreenUIEvent
 import com.madteam.split.ui.screens.welcome.state.WelcomeScreenUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -25,12 +24,8 @@ class WelcomeViewModel @Inject constructor(
 
     private val scope = CoroutineScope(Dispatchers.Main)
 
-    fun onEvent(event: WelcomeScreenUIEvent) {
-        when (event) {
-            WelcomeScreenUIEvent.OnStart -> {
-                startProgress()
-            }
-        }
+    init {
+        startProgress()
     }
 
     private fun startProgress() {
@@ -46,11 +41,17 @@ class WelcomeViewModel @Inject constructor(
                     }
                 }
                 delay(1000)
-                _welcomeScreenUIState.value = _welcomeScreenUIState.value.copy(
-                    progressPhase = 0,
-                    progressSeconds = 0
-                )
+                resetProgress()
             }
+        }
+    }
+
+    private fun resetProgress() {
+        scope.launch {
+            _welcomeScreenUIState.value = _welcomeScreenUIState.value.copy(
+                progressPhase = 0,
+                progressSeconds = 0
+            )
         }
     }
 
