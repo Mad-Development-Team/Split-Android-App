@@ -1,6 +1,8 @@
 package com.madteam.split.ui.navigation
 
 import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
@@ -48,11 +50,16 @@ fun Navigation() {
             route = Screens.SignInEmailScreen.route,
             enterTransition = {
                 when (initialState.destination.route) {
-                    Screens.WelcomeScreen.route ->
+                    Screens.WelcomeScreen.route -> {
                         slideIntoContainer(
                             AnimatedContentTransitionScope.SlideDirection.Left,
                             animationSpec = tween(DEFAULT_ANIMATION_DURATION_IN_MILLIS)
                         )
+                    }
+
+                    Screens.SignUpScreen.route -> {
+                        EnterTransition.None
+                    }
 
                     else -> null
                 }
@@ -61,7 +68,13 @@ fun Navigation() {
                 when (targetState.destination.route) {
                     Screens.ForgotPasswordScreen.route -> {
                         null
-                    } else -> {
+                    }
+
+                    Screens.SignUpScreen.route -> {
+                        ExitTransition.None
+                    }
+
+                    else -> {
                         slideOutOfContainer(
                             AnimatedContentTransitionScope.SlideDirection.Right,
                             animationSpec = tween(DEFAULT_ANIMATION_DURATION_IN_MILLIS)
@@ -98,7 +111,16 @@ fun Navigation() {
         }
 
         composable(
-            route = Screens.SignUpScreen.route
+            route = Screens.SignUpScreen.route,
+            enterTransition = {
+                EnterTransition.None
+            },
+            exitTransition = {
+                ExitTransition.None
+            },
+            popExitTransition = {
+                ExitTransition.None
+            }
         ) {
             SignUpScreen(navController = navController)
         }

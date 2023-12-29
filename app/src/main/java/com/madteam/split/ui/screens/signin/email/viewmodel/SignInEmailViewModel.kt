@@ -3,6 +3,7 @@ package com.madteam.split.ui.screens.signin.email.viewmodel
 import androidx.lifecycle.ViewModel
 import com.madteam.split.ui.screens.signin.email.state.SignInEmailUIEvent
 import com.madteam.split.ui.screens.signin.email.state.SignInEmailUIState
+import com.madteam.split.ui.utils.validateEmail
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -28,7 +29,8 @@ class SignInEmailViewModel @Inject constructor(
 
     private fun updateEmailValue(emailValue: String) {
         _signInEmailUIState.value = _signInEmailUIState.value.copy(
-            emailValue = emailValue
+            emailValue = emailValue,
+            isEmailValid = validateEmail(emailValue)
         )
     }
 

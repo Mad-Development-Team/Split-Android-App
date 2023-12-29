@@ -144,7 +144,8 @@ fun SignInEmailContent(
             Spacer(modifier = Modifier.size(24.dp))
             PrimaryLargeButton(
                 onClick = { /*TODO*/ },
-                text = R.string.continue_text
+                text = R.string.continue_text,
+                enabled = state.isEmailValid && state.passwordValue.isNotEmpty()
             )
         }
         Row(
