@@ -125,13 +125,20 @@ fun ForgotPasswordContent(
             DSEmailTextField(
                 value = state.email,
                 onValueChange = { onEmailChanged(it) },
-                placeholder = R.string.enter_your_email
+                placeholder = R.string.enter_your_email,
+                supportingText = if (state.email.isNotEmpty() && !state.isEmailValid) {
+                    R.string.sign_up_email_supporting_text_rules
+                } else {
+                    null
+                },
+                isError = !state.isEmailValid && state.email.isNotEmpty(),
+                isSuccess = state.isEmailValid && state.email.isNotEmpty()
             )
             Spacer(modifier = Modifier.size(24.dp))
             PrimaryLargeButton(
                 onClick = { /*TODO*/ },
-                text = R.string.send
-                //TODO: Add enabled state for the buttons
+                text = R.string.send,
+                enabled = state.isEmailValid
             )
         }
     }
