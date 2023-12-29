@@ -172,7 +172,14 @@ fun SignUpScreenContent(
                 value = state.confirmPassword,
                 onValueChange = { confirmPasswordChanged(it) },
                 placeholder = R.string.repeat_password,
-                supportingText = R.string.sign_up_password_supporting_text_rules,
+                supportingText = if (state.isPasswordValid
+                    && !state.isConfirmPasswordValid
+                    && state.confirmPassword.isNotEmpty()
+                ) {
+                    R.string.sign_up_confirm_password_error
+                } else {
+                    R.string.sign_up_password_supporting_text_rules
+                },
                 isError = !state.isConfirmPasswordValid && state.confirmPassword.isNotEmpty(),
                 isSuccess = state.isConfirmPasswordValid && state.confirmPassword.isNotEmpty()
             )

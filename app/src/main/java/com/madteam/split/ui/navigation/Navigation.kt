@@ -58,10 +58,16 @@ fun Navigation() {
                 }
             },
             exitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Right,
-                    animationSpec = tween(DEFAULT_ANIMATION_DURATION_IN_MILLIS)
-                )
+                when (targetState.destination.route) {
+                    Screens.ForgotPasswordScreen.route -> {
+                        null
+                    } else -> {
+                        slideOutOfContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Right,
+                            animationSpec = tween(DEFAULT_ANIMATION_DURATION_IN_MILLIS)
+                        )
+                    }
+                }
             },
             popExitTransition = {
                 slideOutOfContainer(
