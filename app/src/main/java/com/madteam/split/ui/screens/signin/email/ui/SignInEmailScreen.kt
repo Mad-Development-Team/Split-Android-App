@@ -41,6 +41,7 @@ import com.madteam.split.ui.theme.DSEmailTextField
 import com.madteam.split.ui.theme.DSPasswordTextField
 import com.madteam.split.ui.theme.PrimaryLargeButton
 import com.madteam.split.ui.theme.SplitTheme
+import com.madteam.split.utils.navigateWithPopUpTo
 
 @Composable
 fun SignInEmailScreen(
@@ -67,11 +68,7 @@ fun SignInEmailScreen(
                     viewModel.onEvent(SignInEmailUIEvent.OnPasswordChanged(password))
                 },
                 navigateBack = navController::popBackStack,
-                popUpTo = { route ->
-                    navController.navigate(route = route){
-                        popUpTo(Screens.WelcomeScreen.route) { inclusive = false }
-                    }
-                },
+                popUpTo = navController::navigateWithPopUpTo,
                 navigateTo = navController::navigate
             )
         }
