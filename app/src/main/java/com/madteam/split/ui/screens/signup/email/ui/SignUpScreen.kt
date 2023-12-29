@@ -24,6 +24,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -176,6 +177,7 @@ fun SignUpScreenContent(
                 value = state.confirmPassword,
                 onValueChange = { confirmPasswordChanged(it) },
                 placeholder = R.string.repeat_password,
+                imeAction = ImeAction.Done,
                 supportingText = if (state.isPasswordValid
                     && !state.isConfirmPasswordValid
                     && state.confirmPassword.isNotEmpty()

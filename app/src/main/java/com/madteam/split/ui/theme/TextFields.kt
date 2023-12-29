@@ -3,6 +3,7 @@ package com.madteam.split.ui.theme
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
@@ -18,7 +19,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -40,12 +43,18 @@ private fun DSTextField(
     @StringRes placeholder: Int,
     @StringRes supportingText: Int? = null,
 ) {
+    val focusManager = LocalFocusManager.current
     TextField(
         modifier = modifier
             .fillMaxWidth(),
         value = value,
         enabled = enabled,
         keyboardOptions = keyboardOptions,
+        keyboardActions = KeyboardActions(
+            onDone = {
+                focusManager.clearFocus()
+            }
+        ),
         maxLines = maxLines,
         visualTransformation = visualTransformation,
         onValueChange = { onValueChange(it) },
@@ -106,6 +115,7 @@ fun DSEmailTextField(
     enabled: Boolean = true,
     isError: Boolean = false,
     isSuccess: Boolean = false,
+    imeAction: ImeAction = ImeAction.Next,
     @StringRes placeholder: Int,
     @StringRes supportingText: Int? = null,
 ) {
@@ -117,7 +127,8 @@ fun DSEmailTextField(
         supportingText = supportingText,
         enabled = enabled,
         keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Email
+            keyboardType = KeyboardType.Email,
+            imeAction = imeAction
         ),
         maxLines = 1,
         isError = isError,
@@ -134,6 +145,7 @@ fun DSBasicTextField(
     enabled: Boolean = true,
     isError: Boolean = false,
     isSuccess: Boolean = false,
+    imeAction: ImeAction = ImeAction.Next,
     @StringRes placeholder: Int,
     @StringRes supportingText: Int? = null,
 ) {
@@ -145,7 +157,8 @@ fun DSBasicTextField(
         supportingText = supportingText,
         enabled = enabled,
         keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Text
+            keyboardType = KeyboardType.Text,
+            imeAction = imeAction
         ),
         maxLines = 1,
         isError = isError,
@@ -162,6 +175,7 @@ fun DSPasswordTextField(
     enabled: Boolean = true,
     isError: Boolean = false,
     isSuccess: Boolean = false,
+    imeAction: ImeAction = ImeAction.Next,
     @StringRes placeholder: Int,
     @StringRes supportingText: Int? = null,
 ) {
@@ -173,7 +187,8 @@ fun DSPasswordTextField(
         supportingText = supportingText,
         enabled = enabled,
         keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Password
+            keyboardType = KeyboardType.Password,
+            imeAction = imeAction
         ),
         maxLines = 1,
         isError = isError,
