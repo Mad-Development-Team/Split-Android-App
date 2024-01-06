@@ -5,6 +5,5 @@ sealed class AuthResult<T>(
 ) {
     class Authorized<T>(data: T? = null) : AuthResult<T>(data)
     class Unauthorized<T> : AuthResult<T>()
-    class Un<T>(data: T? = null) : AuthResult<T>(data)
-
+    class UnknownError<T> : AuthResult<T>()
 }

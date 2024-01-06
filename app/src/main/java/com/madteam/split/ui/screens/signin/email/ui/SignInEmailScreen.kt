@@ -67,6 +67,9 @@ fun SignInEmailScreen(
                 onPasswordChanged = { password ->
                     viewModel.onEvent(SignInEmailUIEvent.OnPasswordChanged(password))
                 },
+                onSignInClicked = {
+                    viewModel.onEvent(SignInEmailUIEvent.OnSignInClicked)
+                },
                 navigateBack = navController::popBackStack,
                 popUpTo = { route ->
                     navController.navigateWithPopUpTo(
@@ -86,6 +89,7 @@ fun SignInEmailContent(
     state: SignInEmailUIState,
     onEmailChanged: (String) -> Unit,
     onPasswordChanged: (String) -> Unit,
+    onSignInClicked: () -> Unit,
     navigateBack: () -> Unit,
     popUpTo: (String) -> Unit,
     navigateTo: (String) -> Unit
@@ -153,7 +157,9 @@ fun SignInEmailContent(
             )
             Spacer(modifier = Modifier.size(24.dp))
             PrimaryLargeButton(
-                onClick = { /*TODO*/ },
+                onClick = {
+                    onSignInClicked()
+                },
                 text = R.string.continue_text,
                 enabled = state.isEmailValid && state.passwordValue.isNotEmpty()
             )
