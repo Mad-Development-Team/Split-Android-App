@@ -45,4 +45,5 @@
     <string name="received_an_invitation">Received an invitation?</string>
     <string name="or">or</string>
     <string name="create_a_new_group">Create a new group</string>
+    <string name="loading">Loading</string>
 </resources>
