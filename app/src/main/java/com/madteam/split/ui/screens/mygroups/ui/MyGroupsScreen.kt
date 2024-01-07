@@ -20,16 +20,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.madteam.split.R
+import com.madteam.split.ui.navigation.Screens
+import com.madteam.split.ui.screens.mygroups.state.MyGroupsUIEvent
+import com.madteam.split.ui.screens.mygroups.viewmodel.MyGroupsViewModel
 import com.madteam.split.ui.theme.PrimaryLargeButton
 import com.madteam.split.ui.theme.SecondaryLargeButton
 import com.madteam.split.ui.theme.SplitTheme
+import com.madteam.split.utils.navigateWithPopUpTo
 
 @Composable
 fun MyGroupsScreen(
-    navController: NavController
+    navController: NavController,
+    viewModel: MyGroupsViewModel = hiltViewModel()
 ) {
 
     Scaffold(
@@ -40,13 +46,24 @@ fun MyGroupsScreen(
                 .fillMaxSize()
                 .padding(it)
         ) {
-            MyGroupsContent()
+            MyGroupsContent(
+                onCreateNewGroupClick = {
+                    viewModel.onEvent(MyGroupsUIEvent.OnCreateNewGroupClick)
+                    navController.navigateWithPopUpTo(
+                        route = Screens.WelcomeScreen.route,
+                        popUpTo = Screens.MyGroupsScreen.route,
+                        inclusive = true
+                    )
+                }
+            )
         }
     }
 }
 
 @Composable
-fun MyGroupsContent() {
+fun MyGroupsContent(
+    onCreateNewGroupClick: () -> Unit = {}
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -67,7 +84,9 @@ fun MyGroupsContent() {
         )
         Spacer(modifier = Modifier.size(16.dp))
         SecondaryLargeButton(
-            onClick = { /*TODO*/ },
+            onClick = {
+                onCreateNewGroupClick()
+            },
             text = R.string.create_a_new_group
         )
     }

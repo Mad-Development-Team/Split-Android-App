@@ -75,9 +75,16 @@ fun SignInEmailScreen(
                     viewModel.onEvent(SignInEmailUIEvent.OnSignInClicked)
                 },
                 navigateBack = navController::popBackStack,
-                popUpTo = { route ->
+                popUpToGroups = {
                     navController.navigateWithPopUpTo(
-                        route = route,
+                        route = Screens.MyGroupsScreen.route,
+                        popUpTo = Screens.SignInEmailScreen.route,
+                        inclusive = true
+                    )
+                },
+                popUpToSignUp = {
+                    navController.navigateWithPopUpTo(
+                        route = Screens.SignUpScreen.route,
                         popUpTo = Screens.WelcomeScreen.route
                     )
                 },
@@ -95,7 +102,8 @@ fun SignInEmailContent(
     onPasswordChanged: (String) -> Unit,
     onSignInClicked: () -> Unit,
     navigateBack: () -> Unit,
-    popUpTo: (String) -> Unit,
+    popUpToGroups: () -> Unit,
+    popUpToSignUp: () -> Unit,
     navigateTo: (String) -> Unit
 ) {
     val context = LocalContext.current
@@ -103,7 +111,7 @@ fun SignInEmailContent(
     LaunchedEffect(state.authResult) {
         when (state.authResult) {
             is AuthResult.Authorized -> {
-                popUpTo(Screens.MyGroupsScreen.route)
+                popUpToGroups()
             }
 
             is AuthResult.Unauthorized -> {
@@ -209,7 +217,7 @@ fun SignInEmailContent(
                 text = stringResource(id = R.string.not_registered_yet),
                 style = SplitTheme.typography.textLink.l,
                 color = SplitTheme.colors.neutral.textLinkDefault,
-                modifier = Modifier.clickable { popUpTo(Screens.SignUpScreen.route)  }
+                modifier = Modifier.clickable { popUpToSignUp()  }
             )
         }
     }
