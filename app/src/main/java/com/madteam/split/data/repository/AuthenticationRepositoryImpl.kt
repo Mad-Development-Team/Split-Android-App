@@ -82,4 +82,14 @@ class AuthenticationRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun signOut() {
+        return try {
+            prefs.edit()
+                .remove("jwt")
+                .apply()
+        } catch (e: Exception) {
+            println(e.message)
+        }
+    }
+
 }

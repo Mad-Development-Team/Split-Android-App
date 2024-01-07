@@ -13,4 +13,5 @@ interface AuthenticationRepository {
         password: String
     ): AuthResult<Unit>
     suspend fun authenticate(): AuthResult<Unit>
+    suspend fun signOut()
 }

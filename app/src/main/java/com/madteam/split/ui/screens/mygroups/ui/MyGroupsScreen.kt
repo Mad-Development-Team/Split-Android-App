@@ -20,13 +20,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.madteam.split.R
 import com.madteam.split.ui.theme.PrimaryLargeButton
 import com.madteam.split.ui.theme.SecondaryLargeButton
 import com.madteam.split.ui.theme.SplitTheme
 
 @Composable
-fun MyGroupsScreen() {
+fun MyGroupsScreen(
+    navController: NavController
+) {
 
     Scaffold(
         containerColor = SplitTheme.colors.neutral.backgroundExtraWeak
@@ -101,5 +105,7 @@ fun MyGroupsTopBar() {
 @Preview
 @Composable
 fun MyGroupsScreenPreview() {
-    MyGroupsScreen()
+    MyGroupsScreen(
+        navController = rememberNavController()
+    )
 }

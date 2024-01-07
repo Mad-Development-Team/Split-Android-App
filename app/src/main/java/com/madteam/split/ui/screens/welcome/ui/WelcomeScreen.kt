@@ -1,5 +1,6 @@
 package com.madteam.split.ui.screens.welcome.ui
 
+import android.widget.Toast
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.snap
@@ -21,11 +22,13 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -39,11 +42,13 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.madteam.split.R
+import com.madteam.split.data.model.AuthResult
 import com.madteam.split.ui.navigation.Screens
 import com.madteam.split.ui.screens.welcome.state.WelcomeScreenUIState
 import com.madteam.split.ui.screens.welcome.viewmodel.WelcomeViewModel
 import com.madteam.split.ui.theme.SecondaryLargeButton
 import com.madteam.split.ui.theme.SplitTheme
+import com.madteam.split.utils.navigateWithPopUpTo
 
 private const val PROGRESS_ANIMATION_DURATION_IN_MILLIS = 1000
 
@@ -64,7 +69,13 @@ fun WelcomeScreen(
         ) {
             WelcomeContent(
                 state = welcomeScreenUIState,
-                navigateTo = navController::navigate
+                navigateTo = navController::navigate,
+                popUpTo = { route ->
+                    navController.navigateWithPopUpTo(
+                        route = route,
+                        popUpTo = Screens.WelcomeScreen.route
+                    )
+                }
             )
         }
     }
@@ -73,8 +84,39 @@ fun WelcomeScreen(
 @Composable
 fun WelcomeContent(
     state: WelcomeScreenUIState,
-    navigateTo: (String) -> Unit
+    navigateTo: (String) -> Unit,
+    popUpTo: (String) -> Unit
 ) {
+    val context = LocalContext.current
+
+    LaunchedEffect(state.isAuthenticated) {
+        when (state.isAuthenticated) {
+            is AuthResult.Authorized -> {
+                popUpTo(Screens.MyGroupsScreen.route)
+            }
+
+            is AuthResult.Unauthorized -> {
+                Toast.makeText(
+                    context,
+                    "Unauthorized",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+            is AuthResult.UnknownError -> {
+                Toast.makeText(
+                    context,
+                    "Unknown error",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+            else -> {
+                //Do nothing
+            }
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()

@@ -1,6 +1,8 @@
 package com.madteam.split.ui.screens.welcome.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.madteam.split.data.repository.AuthenticationRepository
 import com.madteam.split.ui.screens.welcome.state.WelcomeScreenUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -16,7 +18,7 @@ private const val SECONDS_PER_PHASE = 5
 
 @HiltViewModel
 class WelcomeViewModel @Inject constructor(
-
+    private val authenticationRepository: AuthenticationRepository
 ) : ViewModel() {
 
     private val _welcomeScreenUIState = MutableStateFlow(WelcomeScreenUIState())
@@ -25,7 +27,17 @@ class WelcomeViewModel @Inject constructor(
     private val scope = CoroutineScope(Dispatchers.Main)
 
     init {
+        checkIfUserIsAuthenticated()
         startProgress()
+    }
+
+    private fun checkIfUserIsAuthenticated() {
+        viewModelScope.launch {
+            val result = authenticationRepository.authenticate()
+            _welcomeScreenUIState.value = _welcomeScreenUIState.value.copy(
+                isAuthenticated = result
+            )
+        }
     }
 
     private fun startProgress() {

@@ -1,5 +1,6 @@
 package com.madteam.split.ui.screens.signin.email.ui
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,10 +19,12 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
@@ -33,6 +36,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.madteam.split.R
+import com.madteam.split.data.model.AuthResult
 import com.madteam.split.ui.navigation.Screens
 import com.madteam.split.ui.screens.signin.email.state.SignInEmailUIEvent
 import com.madteam.split.ui.screens.signin.email.state.SignInEmailUIState
@@ -94,6 +98,36 @@ fun SignInEmailContent(
     popUpTo: (String) -> Unit,
     navigateTo: (String) -> Unit
 ) {
+    val context = LocalContext.current
+
+    LaunchedEffect(state.authResult) {
+        when (state.authResult) {
+            is AuthResult.Authorized -> {
+                popUpTo(Screens.MyGroupsScreen.route)
+            }
+
+            is AuthResult.Unauthorized -> {
+                Toast.makeText(
+                    context,
+                    "Unauthorized",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+            is AuthResult.UnknownError -> {
+                Toast.makeText(
+                   context,
+                    "Unknown error",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+            else -> {
+                //Do nothing
+            }
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
