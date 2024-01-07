@@ -81,6 +81,7 @@ fun MyGroupsContent(
                 .align(Alignment.CenterHorizontally),
             text = stringResource(id = R.string.or),
             style = SplitTheme.typography.body.xxl,
+            color = SplitTheme.colors.neutral.textTitle
         )
         Spacer(modifier = Modifier.size(16.dp))
         SecondaryLargeButton(
@@ -114,6 +115,7 @@ fun MyGroupsTopBar() {
                 modifier = Modifier
                     .size(48.dp),
                 imageVector = Icons.Default.AccountCircle,
+                tint = SplitTheme.colors.neutral.iconHeavy,
                 contentDescription = null
             )
         }
