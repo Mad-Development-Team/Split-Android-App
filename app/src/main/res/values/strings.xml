@@ -52,4 +52,6 @@
     <string name="wrong_credentials_title">Invalid credentials</string>
     <string name="wrong_credentials_text">No user found with this email and password, try again or reset your password.</string>
     <string name="try_again">Try again</string>
+    <string name="email_already_exists_title">Already forgot us?</string>
+    <string name="email_already_exists_text">This email is already associated with an account. Try signing in or recover your password</string>
 </resources>

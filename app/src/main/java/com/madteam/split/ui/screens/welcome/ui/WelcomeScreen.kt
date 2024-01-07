@@ -42,13 +42,13 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.madteam.split.R
-import com.madteam.split.data.model.AuthResult
+import com.madteam.split.data.model.utils.AuthResult
 import com.madteam.split.ui.navigation.Screens
 import com.madteam.split.ui.screens.welcome.state.WelcomeScreenUIState
 import com.madteam.split.ui.screens.welcome.viewmodel.WelcomeViewModel
 import com.madteam.split.ui.theme.SecondaryLargeButton
 import com.madteam.split.ui.theme.SplitTheme
-import com.madteam.split.utils.navigateWithPopUpTo
+import com.madteam.split.utils.ui.navigateWithPopUpTo
 
 private const val PROGRESS_ANIMATION_DURATION_IN_MILLIS = 1000
 

@@ -2,7 +2,7 @@ package com.madteam.split.ui.screens.signin.email.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.madteam.split.data.model.AuthResult
+import com.madteam.split.data.model.utils.AuthResult
 import com.madteam.split.data.repository.AuthenticationRepository
 import com.madteam.split.ui.screens.signin.email.state.SignInEmailUIEvent
 import com.madteam.split.ui.screens.signin.email.state.SignInEmailUIState

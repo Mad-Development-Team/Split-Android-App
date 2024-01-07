@@ -2,6 +2,7 @@ package com.madteam.split.di.authentication
 
 import android.content.SharedPreferences
 import com.madteam.split.api.AuthenticationApi
+import com.madteam.split.data.config.LinksConstants.BASE_API_URL
 import com.madteam.split.data.repository.AuthenticationRepository
 import com.madteam.split.data.repository.AuthenticationRepositoryImpl
 import dagger.Module
@@ -21,7 +22,7 @@ object AuthModule {
     @Singleton
     fun provideAuthApi() : AuthenticationApi {
         return Retrofit.Builder()
-            .baseUrl("https://split-backend-vm-withered-fog-6481-dark-rain-1829.fly.dev/") //TODO: Change the urls to a unique file
+            .baseUrl(BASE_API_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create()

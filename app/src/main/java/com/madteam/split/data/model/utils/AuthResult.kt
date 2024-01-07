@@ -1,4 +1,4 @@
-package com.madteam.split.data.model
+package com.madteam.split.data.model.utils
 
 sealed class AuthResult<T>(
     val data: T? = null

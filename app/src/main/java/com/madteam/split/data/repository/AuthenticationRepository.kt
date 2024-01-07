@@ -1,6 +1,6 @@
 package com.madteam.split.data.repository
 
-import com.madteam.split.data.model.AuthResult
+import com.madteam.split.data.model.utils.AuthResult
 
 interface AuthenticationRepository {
     suspend fun signUp(

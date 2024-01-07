@@ -1,6 +1,10 @@
 package com.madteam.split.ui.screens.signup.email.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.madteam.split.data.model.utils.AuthResult
+import com.madteam.split.data.repository.AuthenticationRepository
+import com.madteam.split.data.repository.AuthenticationRepositoryImpl
 import com.madteam.split.ui.screens.signup.email.state.SignUpUIEvent
 import com.madteam.split.ui.screens.signup.email.state.SignUpUIState
 import com.madteam.split.ui.utils.validateEmail
@@ -9,11 +13,12 @@ import com.madteam.split.ui.utils.validatePassword
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
-
+    private val authRepository: AuthenticationRepository
 ) : ViewModel() {
 
     private val _signUpUIState = MutableStateFlow(SignUpUIState())
@@ -42,9 +47,29 @@ class SignUpViewModel @Inject constructor(
             }
 
             is SignUpUIEvent.OnSignUpClicked -> {
-                signUpClicked()
+                signUpIntent()
+            }
+
+            is SignUpUIEvent.OnErrorDialogStateChanged -> {
+                setErrorDialogState(event.state)
+            }
+
+            is SignUpUIEvent.OnEmailErrorStateChanged -> {
+                setErrorEmailState()
             }
         }
+    }
+
+    private fun setErrorEmailState() {
+        _signUpUIState.value = _signUpUIState.value.copy(
+            isEmailValid = false
+        )
+    }
+
+    private fun setErrorDialogState(state: Boolean) {
+        _signUpUIState.value = _signUpUIState.value.copy(
+            isErrorDialog = state
+        )
     }
 
     private fun nameChanged(name: String) {
@@ -84,7 +109,28 @@ class SignUpViewModel @Inject constructor(
         )
     }
 
-    private fun signUpClicked(){
-        //TODO: Implement sign up logic
+    private fun setLoadingState(state: Boolean){
+        _signUpUIState.value = _signUpUIState.value.copy(
+            isLoading = state
+        )
+    }
+
+    private fun updateAuthResult(authResult: AuthResult<Unit>){
+        _signUpUIState.value = _signUpUIState.value.copy(
+            authResult = authResult
+        )
+    }
+
+    private fun signUpIntent(){
+        viewModelScope.launch {
+            setLoadingState(true)
+            val result = authRepository.signUp(
+                email = _signUpUIState.value.email,
+                password = _signUpUIState.value.password,
+                name = _signUpUIState.value.name
+            )
+            setLoadingState(false)
+            updateAuthResult(result)
+        }
     }
 }

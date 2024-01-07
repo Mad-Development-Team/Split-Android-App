@@ -1,5 +1,6 @@
 package com.madteam.split.ui.screens.signup.email.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,6 +21,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,7 +36,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.madteam.split.R
+import com.madteam.split.data.model.utils.AuthResult
 import com.madteam.split.ui.navigation.Screens
+import com.madteam.split.ui.screens.signin.email.state.SignInEmailUIEvent
 import com.madteam.split.ui.screens.signup.email.state.SignUpUIEvent
 import com.madteam.split.ui.screens.signup.email.state.SignUpUIState
 import com.madteam.split.ui.screens.signup.email.viewmodel.SignUpViewModel
@@ -42,9 +46,11 @@ import com.madteam.split.ui.theme.DSBasicTextField
 import com.madteam.split.ui.theme.DSCheckBoxTextWithLink
 import com.madteam.split.ui.theme.DSEmailTextField
 import com.madteam.split.ui.theme.DSPasswordTextField
+import com.madteam.split.ui.theme.ErrorDialog
+import com.madteam.split.ui.theme.LoadingDialog
 import com.madteam.split.ui.theme.PrimaryLargeButton
 import com.madteam.split.ui.theme.SplitTheme
-import com.madteam.split.utils.navigateWithPopUpTo
+import com.madteam.split.utils.ui.navigateWithPopUpTo
 
 @Composable
 fun SignUpScreen(
@@ -64,10 +70,18 @@ fun SignUpScreen(
             SignUpScreenContent(
                 state = state,
                 navigateBack = navController::popBackStack,
-                popUpTo = { route ->
+                popUpToSignIn = {
                     navController.navigateWithPopUpTo(
-                        route = route,
-                        popUpTo = Screens.WelcomeScreen.route
+                        route = Screens.SignInEmailScreen.route,
+                        popUpTo = Screens.WelcomeScreen.route,
+                        inclusive = false
+                    )
+                },
+                popUpToGroups = {
+                    navController.navigateWithPopUpTo(
+                        route = Screens.MyGroupsScreen.route,
+                        popUpTo = Screens.WelcomeScreen.route,
+                        inclusive = true
                     )
                 },
                 nameChanged = { name ->
@@ -84,6 +98,15 @@ fun SignUpScreen(
                 },
                 isTermsAndConditionsCheckedChanged = {
                     viewModel.onEvent(SignUpUIEvent.OnTermsAndConditionsChecked)
+                },
+                setErrorDialogState = { state ->
+                    viewModel.onEvent(SignUpUIEvent.OnErrorDialogStateChanged(state))
+                },
+                setEmailErrorState = {
+                    viewModel.onEvent(SignUpUIEvent.OnEmailErrorStateChanged)
+                },
+                onSignUpClicked = {
+                    viewModel.onEvent(SignUpUIEvent.OnSignUpClicked)
                 }
             )
         }
@@ -94,7 +117,11 @@ fun SignUpScreen(
 fun SignUpScreenContent(
     state: SignUpUIState,
     navigateBack: () -> Unit,
-    popUpTo: (String) -> Unit,
+    popUpToSignIn: () -> Unit,
+    popUpToGroups: () -> Unit,
+    setErrorDialogState: (Boolean) -> Unit,
+    setEmailErrorState: () -> Unit,
+    onSignUpClicked: () -> Unit,
     nameChanged: (String) -> Unit,
     emailChanged: (String) -> Unit,
     passwordChanged: (String) -> Unit,
@@ -205,7 +232,7 @@ fun SignUpScreenContent(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             PrimaryLargeButton(
-                onClick = { /* TODO: Do sign up */ },
+                onClick = { onSignUpClicked() },
                 text = R.string.continue_text,
                 enabled = state.isNameValid
                         && state.isEmailValid
@@ -216,11 +243,77 @@ fun SignUpScreenContent(
             Spacer(modifier = Modifier.size(16.dp))
             Text(
                 modifier = Modifier
-                    .clickable { popUpTo(Screens.SignInEmailScreen.route) },
+                    .clickable { popUpToSignIn() },
                 text = stringResource(id = R.string.already_have_an_account),
                 style = SplitTheme.typography.textLink.l,
                 color = SplitTheme.colors.neutral.textLinkDefault
             )
+        }
+    }
+
+    if (state.isLoading) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(SplitTheme.colors.neutral.backgroundHeavy.copy(alpha = 0.3f)),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            LoadingDialog()
+        }
+    }
+
+    if (state.isErrorDialog) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(SplitTheme.colors.neutral.backgroundHeavy.copy(alpha = 0.3f)),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            val errorTitle = if (state.authResult is AuthResult.Unauthorized) {
+                stringResource(id = R.string.email_already_exists_title)
+            } else {
+                stringResource(id = R.string.generic_error_title)
+            }
+
+            val errorText = if (state.authResult is AuthResult.Unauthorized) {
+                stringResource(id = R.string.email_already_exists_text)
+            } else {
+                stringResource(id = R.string.generic_error_text)
+            }
+
+            val errorButton = R.string.ok
+
+            ErrorDialog(
+                setShowDialog = {
+                    setErrorDialogState(it)
+                },
+                errorTitle = errorTitle,
+                errorText = errorText,
+                errorButton = errorButton
+            )
+        }
+    }
+
+    LaunchedEffect(state.authResult) {
+        when (state.authResult) {
+            is AuthResult.Authorized -> {
+                popUpToGroups()
+            }
+
+            is AuthResult.Unauthorized -> {
+                setErrorDialogState(true)
+                setEmailErrorState()
+            }
+
+            is AuthResult.UnknownError -> {
+                setErrorDialogState(true)
+            }
+
+            else -> {
+                //Do nothing
+            }
         }
     }
 }

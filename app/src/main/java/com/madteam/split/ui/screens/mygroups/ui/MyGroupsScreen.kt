@@ -30,8 +30,8 @@ import com.madteam.split.ui.screens.mygroups.viewmodel.MyGroupsViewModel
 import com.madteam.split.ui.theme.PrimaryLargeButton
 import com.madteam.split.ui.theme.SecondaryLargeButton
 import com.madteam.split.ui.theme.SplitTheme
-import com.madteam.split.utils.BackPressHandler
-import com.madteam.split.utils.navigateWithPopUpTo
+import com.madteam.split.utils.ui.BackPressHandler
+import com.madteam.split.utils.ui.navigateWithPopUpTo
 
 @Composable
 fun MyGroupsScreen(

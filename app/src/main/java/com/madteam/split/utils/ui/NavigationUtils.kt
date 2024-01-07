@@ -1,4 +1,4 @@
-package com.madteam.split.utils
+package com.madteam.split.utils.ui
 
 import androidx.navigation.NavController
 

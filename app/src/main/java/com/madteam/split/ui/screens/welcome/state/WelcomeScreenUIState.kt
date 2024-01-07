@@ -1,6 +1,6 @@
 package com.madteam.split.ui.screens.welcome.state
 
-import com.madteam.split.data.model.AuthResult
+import com.madteam.split.data.model.utils.AuthResult
 
 data class WelcomeScreenUIState(
     val progressPhase: Int = 0,

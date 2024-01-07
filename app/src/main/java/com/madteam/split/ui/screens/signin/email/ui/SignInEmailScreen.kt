@@ -24,7 +24,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
@@ -36,7 +35,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.madteam.split.R
-import com.madteam.split.data.model.AuthResult
+import com.madteam.split.data.model.utils.AuthResult
 import com.madteam.split.ui.navigation.Screens
 import com.madteam.split.ui.screens.signin.email.state.SignInEmailUIEvent
 import com.madteam.split.ui.screens.signin.email.state.SignInEmailUIState
@@ -47,7 +46,7 @@ import com.madteam.split.ui.theme.ErrorDialog
 import com.madteam.split.ui.theme.LoadingDialog
 import com.madteam.split.ui.theme.PrimaryLargeButton
 import com.madteam.split.ui.theme.SplitTheme
-import com.madteam.split.utils.navigateWithPopUpTo
+import com.madteam.split.utils.ui.navigateWithPopUpTo
 
 @Composable
 fun SignInEmailScreen(

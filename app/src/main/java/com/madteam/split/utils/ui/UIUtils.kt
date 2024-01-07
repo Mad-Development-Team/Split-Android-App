@@ -1,4 +1,4 @@
-package com.madteam.split.utils
+package com.madteam.split.utils.ui
 
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.OnBackPressedDispatcher

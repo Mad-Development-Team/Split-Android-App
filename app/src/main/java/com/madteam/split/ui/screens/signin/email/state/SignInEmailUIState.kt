@@ -1,6 +1,6 @@
 package com.madteam.split.ui.screens.signin.email.state
 
-import com.madteam.split.data.model.AuthResult
+import com.madteam.split.data.model.utils.AuthResult
 
 data class SignInEmailUIState(
     val emailValue: String = "",
