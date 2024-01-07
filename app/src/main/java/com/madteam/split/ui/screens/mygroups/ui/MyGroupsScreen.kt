@@ -30,6 +30,7 @@ import com.madteam.split.ui.screens.mygroups.viewmodel.MyGroupsViewModel
 import com.madteam.split.ui.theme.PrimaryLargeButton
 import com.madteam.split.ui.theme.SecondaryLargeButton
 import com.madteam.split.ui.theme.SplitTheme
+import com.madteam.split.utils.BackPressHandler
 import com.madteam.split.utils.navigateWithPopUpTo
 
 @Composable
@@ -37,6 +38,10 @@ fun MyGroupsScreen(
     navController: NavController,
     viewModel: MyGroupsViewModel = hiltViewModel()
 ) {
+
+    BackPressHandler {
+        //Do nothing on back press
+    }
 
     Scaffold(
         containerColor = SplitTheme.colors.neutral.backgroundExtraWeak

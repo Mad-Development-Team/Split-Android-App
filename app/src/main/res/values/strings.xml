@@ -46,4 +46,10 @@
     <string name="or">or</string>
     <string name="create_a_new_group">Create a new group</string>
     <string name="loading">Loading</string>
+    <string name="ok">Ok</string>
+    <string name="generic_error_title">Oops!</string>
+    <string name="generic_error_text">Something went wrong. We\'ve sent a report and we will be inmediatly working on it. Sorry for the inconvenience...</string>
+    <string name="wrong_credentials_title">Invalid credentials</string>
+    <string name="wrong_credentials_text">No user found with this email and password, try again or reset your password.</string>
+    <string name="try_again">Try again</string>
 </resources>

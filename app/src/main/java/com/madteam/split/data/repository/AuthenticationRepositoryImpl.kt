@@ -5,6 +5,7 @@ import com.madteam.split.api.AuthenticationApi
 import com.madteam.split.data.model.AuthResult
 import com.madteam.split.data.model.request.SignInRequestDTO
 import com.madteam.split.data.model.request.SignUpRequestDTO
+import com.madteam.split.utils.network.HttpStatusCodes
 import retrofit2.HttpException
 import javax.inject.Inject
 
@@ -50,12 +51,13 @@ class AuthenticationRepositoryImpl @Inject constructor(
                 .apply()
             AuthResult.Authorized()
         } catch (e: HttpException) {
-            if (e.code() == 401) {
-                //TODO: Implement code numbers on a different file with constants
-                //TODO: Handle more server errors (Server down, existing email, etc etc)
-                AuthResult.Unauthorized()
-            } else {
-                AuthResult.UnknownError()
+            when (e.code()){
+                HttpStatusCodes.BAD_REQUEST -> {
+                    AuthResult.UnknownError()
+                }
+                else -> {
+                    AuthResult.Unauthorized()
+                }
             }
         } catch (e: Exception) {
             AuthResult.UnknownError()

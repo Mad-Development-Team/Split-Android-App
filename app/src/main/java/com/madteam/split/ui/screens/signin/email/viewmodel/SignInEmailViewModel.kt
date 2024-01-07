@@ -25,12 +25,20 @@ class SignInEmailViewModel @Inject constructor(
         when (event) {
             is SignInEmailUIEvent.OnEmailChanged -> {
                 updateEmailValue(event.email)
+                setErrorFieldsState(false)
             }
             is SignInEmailUIEvent.OnPasswordChanged -> {
                 updatePasswordValue(event.password)
+                setErrorFieldsState(false)
             }
             is SignInEmailUIEvent.OnSignInClicked -> {
                 signInIntent()
+            }
+            is SignInEmailUIEvent.OnErrorDialogStateChanged -> {
+                setErrorDialogState(event.state)
+            }
+            is SignInEmailUIEvent.OnErrorFieldsStateChanged -> {
+                setErrorFieldsState(event.state)
             }
         }
     }
@@ -54,6 +62,12 @@ class SignInEmailViewModel @Inject constructor(
         )
     }
 
+    private fun setErrorDialogState(state: Boolean){
+        _signInEmailUIState.value = _signInEmailUIState.value.copy(
+            isErrorDialog = state
+        )
+    }
+
     private fun signInIntent(){
         viewModelScope.launch {
             setLoadingState(true)
@@ -69,6 +83,12 @@ class SignInEmailViewModel @Inject constructor(
     private fun setLoadingState(state: Boolean){
         _signInEmailUIState.value = _signInEmailUIState.value.copy(
             isLoading = state
+        )
+    }
+
+    private fun setErrorFieldsState(state: Boolean){
+        _signInEmailUIState.value = _signInEmailUIState.value.copy(
+            isFieldsOnErrorState = state
         )
     }
 
