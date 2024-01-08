@@ -67,10 +67,7 @@ class AuthenticationRepositoryImpl @Inject constructor(
 
     override suspend fun authenticate(): AuthResult<Unit> {
         return try {
-            val token = prefs.getString("jwt", null) ?: return AuthResult.Unauthorized()
-            api.authenticate(
-                token = "Bearer $token"
-            )
+            api.authenticate()
             AuthResult.Authorized()
         } catch (e: HttpException) {
             when (e.code()){

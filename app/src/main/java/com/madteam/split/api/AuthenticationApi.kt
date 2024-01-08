@@ -24,7 +24,5 @@ interface AuthenticationApi {
     ): TokenResponseDTO
 
     @GET(AUTHENTICATE)
-    suspend fun authenticate(
-        @Header("Authorization") token: String
-    )
+    suspend fun authenticate()
 }
