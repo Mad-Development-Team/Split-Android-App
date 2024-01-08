@@ -79,6 +79,7 @@ dependencies {
     implementation(libs.converter.gson)
 
     testImplementation(libs.junit)
+    testImplementation(libs.mockk)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
 }
