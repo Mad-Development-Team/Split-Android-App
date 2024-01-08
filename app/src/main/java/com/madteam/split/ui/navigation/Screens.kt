@@ -8,4 +8,5 @@ sealed class Screens(
     data object ForgotPasswordScreen: Screens("forgot_password_screen")
     data object SignUpScreen: Screens("sign_up_screen")
     data object MyGroupsScreen: Screens("my_groups_screen")
+    data object MyUserScreen: Screens("my_user_screen")
 }
