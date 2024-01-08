@@ -22,6 +22,7 @@ markdownCompose = "0.3.7"
 converterGson = "2.9.0"
 retrofit = "2.9.0"
 mockk = "1.13.8"
+glide = "1.0.0-beta01"
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -51,6 +52,7 @@ markdown-compose = { module = "com.github.jeziellago:compose-markdown", version.
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+glide = { module = "com.github.bumptech.glide:compose", version.ref = "glide" }
 
 [plugins]
 com-android-application = { id = "com.android.application", version.ref = "agp" }

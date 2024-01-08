@@ -1,6 +1,7 @@
 package com.madteam.split.ui.screens.myuser.ui
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -10,9 +11,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.madteam.split.ui.screens.forgotpassword.state.ForgotPasswordUIEvent
-import com.madteam.split.ui.screens.forgotpassword.ui.ForgotPasswordContent
+import com.madteam.split.R
 import com.madteam.split.ui.screens.myuser.viewmodel.MyUserViewModel
+import com.madteam.split.ui.theme.NavigationAndActionTopAppBar
 import com.madteam.split.ui.theme.SplitTheme
 
 @Composable
@@ -23,7 +24,15 @@ fun MyUserScreen(
     Scaffold(
         containerColor = SplitTheme.colors.neutral.backgroundExtraWeak,
         topBar = {
-
+            NavigationAndActionTopAppBar(
+                onNavigationClick = {
+                    navController.popBackStack()
+                },
+                onActionClick = {
+                    //TODO: Not implemented yet
+                },
+                title = R.string.your_profile
+            )
         }
     ) {
         Box(
@@ -38,8 +47,13 @@ fun MyUserScreen(
 }
 
 @Composable
-fun MyUserContent(){
+fun MyUserContent() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
 
+    }
 }
 
 @Preview
