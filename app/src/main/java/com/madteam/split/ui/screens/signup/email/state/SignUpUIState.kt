@@ -1,5 +1,7 @@
 package com.madteam.split.ui.screens.signup.email.state
 
+import com.madteam.split.data.model.utils.AuthResult
+
 data class SignUpUIState(
     val name: String = "",
     val isNameValid: Boolean = false,
@@ -12,4 +14,7 @@ data class SignUpUIState(
     val isTermsAndConditionsChecked: Boolean = false,
     val isTermsAndConditionsError: Boolean = false,
     val isFormValid: Boolean = false,
+    val isLoading: Boolean = false,
+    val authResult: AuthResult<Unit>? = null,
+    val isErrorDialog: Boolean = false,
 )

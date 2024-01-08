@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.madteam.split.ui.screens.forgotpassword.ui.ForgotPasswordScreen
+import com.madteam.split.ui.screens.mygroups.ui.MyGroupsScreen
 import com.madteam.split.ui.screens.signin.email.ui.SignInEmailScreen
 import com.madteam.split.ui.screens.signup.email.ui.SignUpScreen
 import com.madteam.split.ui.screens.welcome.ui.WelcomeScreen
@@ -145,6 +146,21 @@ fun Navigation() {
             }
         ) {
             SignUpScreen(navController = navController)
+        }
+
+        composable(
+            route = Screens.MyGroupsScreen.route,
+            enterTransition = {
+                EnterTransition.None
+            },
+            exitTransition = {
+                ExitTransition.None
+            },
+            popExitTransition = {
+                ExitTransition.None
+            }
+        ) {
+            MyGroupsScreen(navController = navController)
         }
     }
 }

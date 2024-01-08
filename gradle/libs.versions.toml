@@ -19,6 +19,9 @@ lifecycleCompose = "2.6.2"
 lottieCompose = "6.1.0"
 navigationCompose = "2.7.6"
 markdownCompose = "0.3.7"
+converterGson = "2.9.0"
+retrofit = "2.9.0"
+mockk = "1.13.8"
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -45,6 +48,9 @@ androidx-lifecycle-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx"
 androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycleCompose" }
 compose-lottie = { module = "com.airbnb.android:lottie-compose", version.ref = "lottieCompose" }
 markdown-compose = { module = "com.github.jeziellago:compose-markdown", version.ref = "markdownCompose"}
+converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 
 [plugins]
 com-android-application = { id = "com.android.application", version.ref = "agp" }

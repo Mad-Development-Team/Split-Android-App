@@ -7,4 +7,5 @@ sealed class Screens(
     data object SignInEmailScreen: Screens("sign_in_email_screen")
     data object ForgotPasswordScreen: Screens("forgot_password_screen")
     data object SignUpScreen: Screens("sign_up_screen")
+    data object MyGroupsScreen: Screens("my_groups_screen")
 }
