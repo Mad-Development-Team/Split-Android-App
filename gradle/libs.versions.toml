@@ -23,6 +23,7 @@ converterGson = "2.9.0"
 retrofit = "2.9.0"
 mockk = "1.13.8"
 glide = "1.0.0-beta01"
+constraintLayoutCompose = "1.0.1"
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -53,6 +54,7 @@ converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 glide = { module = "com.github.bumptech.glide:compose", version.ref = "glide" }
+constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintLayoutCompose" }
 
 [plugins]
 com-android-application = { id = "com.android.application", version.ref = "agp" }

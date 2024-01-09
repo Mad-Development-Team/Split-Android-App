@@ -33,45 +33,18 @@ fun SecondaryLargeButton(
     @StringRes iconDescription: Int? = null,
     iconTint: Color? = null
 ) {
-    ElevatedButton(
-        modifier = modifier
-            .fillMaxWidth(),
+    BaseLargeButton(
+        onClick = { onClick() },
+        text = text,
+        containerColor = SplitTheme.colors.neutral.backgroundHeavy,
+        disabledContainerColor = SplitTheme.colors.neutral.backgroundMedium,
+        textColor = SplitTheme.colors.neutral.textExtraWeak,
         enabled = enabled,
-        shape = RoundedCornerShape(40.dp),
-        colors = ButtonDefaults.elevatedButtonColors(
-            containerColor = SplitTheme.colors.neutral.backgroundHeavy
-        ),
-        elevation = ButtonDefaults.elevatedButtonElevation(
-            defaultElevation = 4.dp,
-            pressedElevation = 2.dp,
-            disabledElevation = 0.dp
-        ),
-        onClick = { onClick() }
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
-        ) {
-            if (icon != null && iconDescription != null && iconTint != null) {
-                Icon(
-                    painter = painterResource(id = icon),
-                    contentDescription = stringResource(id = iconDescription),
-                    tint = iconTint,
-                    modifier = Modifier.size(24.dp)
-                )
-                Spacer(modifier = Modifier.size(8.dp))
-            }
-            Text(
-                text = stringResource(id = text),
-                color = SplitTheme.colors.neutral.textExtraWeak,
-                style = SplitTheme.typography.body.xxl,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-        }
-    }
+        iconTint = iconTint,
+        modifier = modifier,
+        icon = icon,
+        iconDescription = iconDescription
+    )
 }
 
 @Composable
@@ -84,14 +57,65 @@ fun PrimaryLargeButton(
     @StringRes iconDescription: Int? = null,
     iconTint: Color? = null
 ) {
+    BaseLargeButton(
+        onClick = { onClick() },
+        text = text,
+        containerColor = SplitTheme.colors.primary.backgroundStrong,
+        disabledContainerColor = SplitTheme.colors.neutral.backgroundMedium,
+        textColor = SplitTheme.colors.neutral.textExtraWeak,
+        enabled = enabled,
+        iconTint = iconTint,
+        modifier = modifier,
+        icon = icon,
+        iconDescription = iconDescription
+    )
+}
+
+@Composable
+fun DangerLargeButton(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+    enabled: Boolean = true,
+    @StringRes text: Int,
+    @DrawableRes icon: Int? = null,
+    @StringRes iconDescription: Int? = null,
+    iconTint: Color? = null
+) {
+    BaseLargeButton(
+        onClick = { onClick() },
+        text = text,
+        containerColor = SplitTheme.colors.error.backgroundDefault,
+        disabledContainerColor = SplitTheme.colors.neutral.backgroundMedium,
+        textColor = SplitTheme.colors.error.textDefault,
+        enabled = enabled,
+        iconTint = iconTint,
+        modifier = modifier,
+        icon = icon,
+        iconDescription = iconDescription
+    )
+}
+
+@Composable
+internal fun BaseLargeButton(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+    enabled: Boolean = true,
+    @StringRes text: Int,
+    @DrawableRes icon: Int? = null,
+    @StringRes iconDescription: Int? = null,
+    iconTint: Color? = null,
+    containerColor: Color,
+    disabledContainerColor: Color,
+    textColor: Color
+) {
     ElevatedButton(
         modifier = modifier
             .fillMaxWidth(),
-        shape = RoundedCornerShape(40.dp),
         enabled = enabled,
+        shape = RoundedCornerShape(40.dp),
         colors = ButtonDefaults.elevatedButtonColors(
-            containerColor = SplitTheme.colors.primary.backgroundStrong,
-            disabledContainerColor = SplitTheme.colors.neutral.backgroundMedium,
+            containerColor = containerColor,
+            disabledContainerColor = disabledContainerColor,
         ),
         elevation = ButtonDefaults.elevatedButtonElevation(
             defaultElevation = 4.dp,
@@ -117,7 +141,7 @@ fun PrimaryLargeButton(
             }
             Text(
                 text = stringResource(id = text),
-                color = SplitTheme.colors.neutral.textExtraWeak,
+                color = textColor,
                 style = SplitTheme.typography.body.xxl,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
@@ -125,6 +149,9 @@ fun PrimaryLargeButton(
         }
     }
 }
+
+
+
 
 @Preview(showBackground = true)
 @Composable
@@ -149,5 +176,15 @@ fun PrimaryLargeButtonPreview() {
         iconTint = SplitTheme.colors.neutral.iconExtraWeak,
         iconDescription = R.string.google_icon_description,
         enabled = false
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DangerLargeButtonPreview() {
+    DangerLargeButton(
+        onClick = {},
+        text = R.string.continue_with_google,
+        enabled = true
     )
 }

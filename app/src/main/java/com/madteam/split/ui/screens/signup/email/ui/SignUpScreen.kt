@@ -38,7 +38,6 @@ import androidx.navigation.compose.rememberNavController
 import com.madteam.split.R
 import com.madteam.split.data.model.utils.AuthResult
 import com.madteam.split.ui.navigation.Screens
-import com.madteam.split.ui.screens.signin.email.state.SignInEmailUIEvent
 import com.madteam.split.ui.screens.signup.email.state.SignUpUIEvent
 import com.madteam.split.ui.screens.signup.email.state.SignUpUIState
 import com.madteam.split.ui.screens.signup.email.viewmodel.SignUpViewModel

@@ -57,6 +57,7 @@ dependencies {
     implementation(libs.compose.foundations)
     implementation(libs.androidx.ui.tooling.preview.android)
     implementation(libs.constraintlayout)
+    implementation(libs.constraintlayout.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.lifecycle.ktx)
     implementation(libs.androidx.lifecycle.runtime.compose)

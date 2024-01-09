@@ -1,5 +1,6 @@
 package com.madteam.split.ui.screens.mygroups.ui
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -59,7 +60,8 @@ fun MyGroupsScreen(
                         popUpTo = Screens.MyGroupsScreen.route,
                         inclusive = true
                     )
-                }
+                },
+                navigateTo = navController::navigate
             )
         }
     }
@@ -67,14 +69,17 @@ fun MyGroupsScreen(
 
 @Composable
 fun MyGroupsContent(
-    onCreateNewGroupClick: () -> Unit = {}
+    onCreateNewGroupClick: () -> Unit = {},
+    navigateTo: (String) -> Unit
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(24.dp)
     ) {
-        MyGroupsTopBar()
+        MyGroupsTopBar(
+            navigateTo = navigateTo
+        )
         Spacer(modifier = Modifier.size(24.dp))
         PrimaryLargeButton(
             onClick = { /*TODO*/ },
@@ -99,7 +104,9 @@ fun MyGroupsContent(
 }
 
 @Composable
-fun MyGroupsTopBar() {
+fun MyGroupsTopBar(
+    navigateTo: (String) -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth(),
@@ -118,7 +125,11 @@ fun MyGroupsTopBar() {
             )
             Icon(
                 modifier = Modifier
-                    .size(48.dp),
+                    .size(48.dp)
+                    .clickable {
+                        //TODO: Make a IconButton or similar for this
+                        navigateTo(Screens.MyUserScreen.route)
+                    },
                 imageVector = Icons.Default.AccountCircle,
                 tint = SplitTheme.colors.neutral.iconHeavy,
                 contentDescription = null
