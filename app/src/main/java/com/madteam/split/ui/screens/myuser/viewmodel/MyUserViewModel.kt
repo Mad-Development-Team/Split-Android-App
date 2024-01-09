@@ -25,6 +25,9 @@ class MyUserViewModel @Inject constructor(
             is MyUserUIEvent.OnShowSignOutDialogStateChanged -> {
                 showSignOutDialog(event.state)
             }
+            is MyUserUIEvent.OnShowSharedInfoMessageStateChanged -> {
+                showSharedInfoMessage(event.state)
+            }
             is MyUserUIEvent.OnSignOutConfirmedClick -> {
                 onSignOutClick()
             }
@@ -33,6 +36,10 @@ class MyUserViewModel @Inject constructor(
 
     private fun showSignOutDialog(state: Boolean) {
         _state.value = _state.value.copy(showLogOutDialog = state)
+    }
+
+    private fun showSharedInfoMessage(state: Boolean) {
+        _state.value = _state.value.copy(showSharedInfoMessage = state)
     }
 
     private fun onSignOutClick() {

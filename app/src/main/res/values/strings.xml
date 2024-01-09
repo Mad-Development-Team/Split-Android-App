@@ -61,4 +61,6 @@
     <string name="log_out_confirm_text">If you log out you will need to sign in again to enjoy all the benefits. Are you sure you want to continue?</string>
     <string name="continue_log_out">Yes, log out</string>
     <string name="cancel">Cancel</string>
+    <string name="close_icon_description">Close icon</string>
+    <string name="shared_user_changes_info">The profile image and the name you use in your global profile will apply for all new groups you join or create but not for the ones where you have already joined.</string>
 </resources>

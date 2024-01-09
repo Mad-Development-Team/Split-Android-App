@@ -1,5 +1,6 @@
 package com.madteam.split.ui.screens.myuser.ui
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -30,6 +31,7 @@ import com.madteam.split.ui.theme.DSBasicTextField
 import com.madteam.split.ui.theme.DSEmailTextField
 import com.madteam.split.ui.theme.DangerDialog
 import com.madteam.split.ui.theme.DangerLargeButton
+import com.madteam.split.ui.theme.InfoMessage
 import com.madteam.split.ui.theme.NavigationAndActionTopAppBar
 import com.madteam.split.ui.theme.ProfileImage
 import com.madteam.split.ui.theme.SplitTheme
@@ -69,6 +71,9 @@ fun MyUserScreen(
                 onSignOutDialogStateChanged = { state ->
                     viewModel.onEvent(MyUserUIEvent.OnShowSignOutDialogStateChanged(state))
                 },
+                onShowInfoMessageStateChanged = { state ->
+                    viewModel.onEvent(MyUserUIEvent.OnShowSharedInfoMessageStateChanged(state))
+                },
                 onSignOutConfirmed = {
                     viewModel.onEvent(MyUserUIEvent.OnSignOutConfirmedClick)
                     navController.navigateWithPopUpTo(
@@ -88,6 +93,7 @@ fun MyUserContent(
     state: MyUserUIState,
     onSignOutClick: () -> Unit,
     onSignOutDialogStateChanged: (Boolean) -> Unit,
+    onShowInfoMessageStateChanged: (Boolean) -> Unit,
     onSignOutConfirmed: () -> Unit
 ) {
     Column(
@@ -96,6 +102,18 @@ fun MyUserContent(
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        AnimatedVisibility(
+            visible = state.showSharedInfoMessage,
+            modifier = Modifier.padding(bottom = 24.dp)
+        ) {
+            InfoMessage(
+                messageText = R.string.shared_user_changes_info,
+                cancelable = true,
+                onCloseClick = {
+                    onShowInfoMessageStateChanged(false)
+                }
+            )
+        }
         ProfileImage(
             userInfo = User(
                 id = "1",

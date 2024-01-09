@@ -4,5 +4,6 @@ import com.madteam.split.domain.model.User
 
 data class MyUserUIState(
     val userInfo: User = User("", "", "", ""),
-    val showLogOutDialog: Boolean = false
+    val showLogOutDialog: Boolean = false,
+    val showSharedInfoMessage: Boolean = true,
 )
