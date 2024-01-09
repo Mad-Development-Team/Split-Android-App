@@ -54,12 +54,7 @@ fun MyGroupsScreen(
         ) {
             MyGroupsContent(
                 onCreateNewGroupClick = {
-                    viewModel.onEvent(MyGroupsUIEvent.OnCreateNewGroupClick)
-                    navController.navigateWithPopUpTo(
-                        route = Screens.WelcomeScreen.route,
-                        popUpTo = Screens.MyGroupsScreen.route,
-                        inclusive = true
-                    )
+                    //TODO: Not implemented yet
                 },
                 navigateTo = navController::navigate
             )

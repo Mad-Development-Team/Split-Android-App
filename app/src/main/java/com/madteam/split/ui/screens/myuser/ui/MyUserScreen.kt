@@ -1,11 +1,12 @@
 package com.madteam.split.ui.screens.myuser.ui
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Scaffold
@@ -21,14 +22,18 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.madteam.split.R
 import com.madteam.split.domain.model.User
+import com.madteam.split.ui.navigation.Screens
+import com.madteam.split.ui.screens.myuser.state.MyUserUIEvent
 import com.madteam.split.ui.screens.myuser.state.MyUserUIState
 import com.madteam.split.ui.screens.myuser.viewmodel.MyUserViewModel
 import com.madteam.split.ui.theme.DSBasicTextField
 import com.madteam.split.ui.theme.DSEmailTextField
+import com.madteam.split.ui.theme.DangerDialog
 import com.madteam.split.ui.theme.DangerLargeButton
 import com.madteam.split.ui.theme.NavigationAndActionTopAppBar
 import com.madteam.split.ui.theme.ProfileImage
 import com.madteam.split.ui.theme.SplitTheme
+import com.madteam.split.utils.ui.navigateWithPopUpTo
 
 @Composable
 fun MyUserScreen(
@@ -57,7 +62,21 @@ fun MyUserScreen(
                 .padding(it)
         ) {
             MyUserContent(
-                state = state
+                state = state,
+                onSignOutClick = {
+                    viewModel.onEvent(MyUserUIEvent.OnShowSignOutDialogStateChanged(true))
+                },
+                onSignOutDialogStateChanged = { state ->
+                    viewModel.onEvent(MyUserUIEvent.OnShowSignOutDialogStateChanged(state))
+                },
+                onSignOutConfirmed = {
+                    viewModel.onEvent(MyUserUIEvent.OnSignOutConfirmedClick)
+                    navController.navigateWithPopUpTo(
+                        route = Screens.WelcomeScreen.route,
+                        popUpTo = Screens.MyUserScreen.route,
+                        inclusive = true
+                    )
+                }
             )
         }
     }
@@ -66,7 +85,10 @@ fun MyUserScreen(
 
 @Composable
 fun MyUserContent(
-    state: MyUserUIState
+    state: MyUserUIState,
+    onSignOutClick: () -> Unit,
+    onSignOutDialogStateChanged: (Boolean) -> Unit,
+    onSignOutConfirmed: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -107,9 +129,32 @@ fun MyUserContent(
         verticalAlignment = Alignment.Bottom
     ) {
         DangerLargeButton(
-            onClick = { /*TODO*/ },
+            onClick = { onSignOutClick() },
             text = R.string.log_out
         )
+    }
+
+    if (state.showLogOutDialog) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(SplitTheme.colors.neutral.backgroundHeavy.copy(alpha = 0.3f)),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            DangerDialog(
+                setShowDialog = {
+                    onSignOutDialogStateChanged(it)
+                },
+                title = R.string.is_it_a_goodbye,
+                text = R.string.log_out_confirm_text,
+                cancelButtonText = R.string.cancel,
+                continueButtonText = R.string.continue_log_out,
+                onContinueClick = {
+                    onSignOutConfirmed()
+                },
+            )
+        }
     }
 }
 

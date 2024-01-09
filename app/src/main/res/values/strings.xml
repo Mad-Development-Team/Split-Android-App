@@ -57,4 +57,8 @@
     <string name="your_profile">Your profile</string>
     <string name="user_profile_image_description">User profile image</string>
     <string name="log_out">Log out</string>
+    <string name="is_it_a_goodbye">Is it a goodbye?</string>
+    <string name="log_out_confirm_text">If you log out you will need to sign in again to enjoy all the benefits. Are you sure you want to continue?</string>
+    <string name="continue_log_out">Yes, log out</string>
+    <string name="cancel">Cancel</string>
 </resources>

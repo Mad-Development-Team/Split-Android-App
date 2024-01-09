@@ -13,7 +13,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MyGroupsViewModel @Inject constructor(
-    private val authenticationRepository: AuthenticationRepository
 ): ViewModel() {
 
     private val _myGroupsUIState = MutableStateFlow(MyGroupsUIState())
@@ -22,14 +21,9 @@ class MyGroupsViewModel @Inject constructor(
     fun onEvent(event: MyGroupsUIEvent) {
         when (event) {
             is MyGroupsUIEvent.OnCreateNewGroupClick -> {
-                signOut()
+                //Not implemented yet
             }
         }
     }
 
-    private fun signOut() {
-        viewModelScope.launch {
-            authenticationRepository.signOut()
-        }
-    }
 }

@@ -107,6 +107,81 @@ fun ErrorDialog(
     }
 }
 
+@Composable
+fun DangerDialog(
+    setShowDialog: (Boolean) -> Unit,
+    title: Int,
+    text: Int,
+    cancelButtonText: Int,
+    continueButtonText: Int,
+    onContinueClick: () -> Unit
+) {
+    Dialog(
+        onDismissRequest = {
+            setShowDialog(false)
+        }
+    ) {
+        ElevatedCard(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.elevatedCardColors(
+                containerColor = SplitTheme.colors.neutral.backgroundExtraWeak
+            )
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(24.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = stringResource(id = title),
+                    style = SplitTheme.typography.heading.l,
+                    color = SplitTheme.colors.neutral.textTitle,
+                    textAlign = TextAlign.Center
+                )
+                Spacer(modifier = Modifier.size(16.dp))
+                Text(
+                    text = stringResource(id = text),
+                    style = SplitTheme.typography.body.l,
+                    color = SplitTheme.colors.neutral.textStrong,
+                    textAlign = TextAlign.Center
+                )
+                Spacer(modifier = Modifier.size(16.dp))
+                DangerLargeButton(
+                    onClick = { onContinueClick() },
+                    text = continueButtonText
+                )
+                Spacer(modifier = Modifier.size(16.dp))
+                SecondaryLargeButton(
+                    onClick = {
+                        setShowDialog(false)
+                    },
+                    text = cancelButtonText
+                )
+
+            }
+
+        }
+
+    }
+}
+
+@Preview
+@Composable
+fun DangerDialogPreview() {
+    DangerDialog(
+        setShowDialog = {},
+        title = R.string.is_it_a_goodbye,
+        text = R.string.log_out_confirm_text,
+        cancelButtonText = R.string.cancel,
+        continueButtonText = R.string.continue_log_out,
+        onContinueClick = {}
+    )
+}
+
 @Preview
 @Composable
 fun LoadingDialogPreview() {
