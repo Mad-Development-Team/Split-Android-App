@@ -13,6 +13,7 @@ import com.madteam.split.ui.screens.mygroups.ui.MyGroupsScreen
 import com.madteam.split.ui.screens.myuser.ui.MyUserScreen
 import com.madteam.split.ui.screens.signin.email.ui.SignInEmailScreen
 import com.madteam.split.ui.screens.signup.email.ui.SignUpScreen
+import com.madteam.split.ui.screens.splash.ui.SplashScreen
 import com.madteam.split.ui.screens.welcome.ui.WelcomeScreen
 
 private const val DEFAULT_ANIMATION_DURATION_IN_MILLIS = 500
@@ -22,7 +23,7 @@ fun Navigation() {
     val navController = rememberNavController()
     NavHost(
         navController = navController,
-        startDestination = Screens.WelcomeScreen.route
+        startDestination = Screens.SplashScreen.route
     ) {
 
         composable(
@@ -177,6 +178,21 @@ fun Navigation() {
             }
         ) {
             MyUserScreen(navController = navController)
+        }
+
+        composable(
+            route = Screens.SplashScreen.route,
+            enterTransition = {
+                EnterTransition.None
+            },
+            exitTransition = {
+                ExitTransition.None
+            },
+            popExitTransition = {
+                ExitTransition.None
+            }
+        ) {
+            SplashScreen(navController = navController)
         }
     }
 }

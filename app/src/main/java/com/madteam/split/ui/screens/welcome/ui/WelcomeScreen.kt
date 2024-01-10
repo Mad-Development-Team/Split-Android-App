@@ -69,13 +69,7 @@ fun WelcomeScreen(
         ) {
             WelcomeContent(
                 state = welcomeScreenUIState,
-                navigateTo = navController::navigate,
-                popUpTo = { route ->
-                    navController.navigateWithPopUpTo(
-                        route = route,
-                        popUpTo = Screens.WelcomeScreen.route
-                    )
-                }
+                navigateTo = navController::navigate
             )
         }
     }
@@ -84,39 +78,8 @@ fun WelcomeScreen(
 @Composable
 fun WelcomeContent(
     state: WelcomeScreenUIState,
-    navigateTo: (String) -> Unit,
-    popUpTo: (String) -> Unit
+    navigateTo: (String) -> Unit
 ) {
-    val context = LocalContext.current
-
-    LaunchedEffect(state.isAuthenticated) {
-        when (state.isAuthenticated) {
-            is AuthResult.Authorized -> {
-                popUpTo(Screens.MyGroupsScreen.route)
-            }
-
-            is AuthResult.Unauthorized -> {
-                Toast.makeText(
-                    context,
-                    "Unauthorized",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-
-            is AuthResult.UnknownError -> {
-                Toast.makeText(
-                    context,
-                    "Unknown error",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-
-            else -> {
-                //Do nothing
-            }
-        }
-    }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
