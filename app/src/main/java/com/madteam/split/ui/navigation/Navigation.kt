@@ -156,7 +156,18 @@ fun Navigation() {
                 EnterTransition.None
             },
             exitTransition = {
-                ExitTransition.None
+                when (targetState.destination.route) {
+                    Screens.MyUserScreen.route -> {
+                        slideOutOfContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Left,
+                            animationSpec = tween(DEFAULT_ANIMATION_DURATION_IN_MILLIS)
+                        )
+                    }
+
+                    else -> {
+                        ExitTransition.None
+                    }
+                }
             },
             popExitTransition = {
                 ExitTransition.None
@@ -168,13 +179,22 @@ fun Navigation() {
         composable(
             route = Screens.MyUserScreen.route,
             enterTransition = {
-                EnterTransition.None
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left,
+                    animationSpec = tween(DEFAULT_ANIMATION_DURATION_IN_MILLIS)
+                )
             },
             exitTransition = {
-                ExitTransition.None
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Right,
+                    animationSpec = tween(DEFAULT_ANIMATION_DURATION_IN_MILLIS)
+                )
             },
             popExitTransition = {
-                ExitTransition.None
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Right,
+                    animationSpec = tween(DEFAULT_ANIMATION_DURATION_IN_MILLIS)
+                )
             }
         ) {
             MyUserScreen(navController = navController)
