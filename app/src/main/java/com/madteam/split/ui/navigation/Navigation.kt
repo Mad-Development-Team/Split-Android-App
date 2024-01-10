@@ -153,7 +153,21 @@ fun Navigation() {
         composable(
             route = Screens.MyGroupsScreen.route,
             enterTransition = {
-                EnterTransition.None
+                when (initialState.destination.route) {
+                    Screens.MyUserScreen.route -> {
+                        slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Right,
+                            animationSpec = tween(DEFAULT_ANIMATION_DURATION_IN_MILLIS)
+                        )
+                    }
+
+                    else -> {
+                        slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Left,
+                            animationSpec = tween(DEFAULT_ANIMATION_DURATION_IN_MILLIS)
+                        )
+                    }
+                }
             },
             exitTransition = {
                 when (targetState.destination.route) {
