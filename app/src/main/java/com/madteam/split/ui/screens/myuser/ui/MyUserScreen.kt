@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Scaffold
@@ -17,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -114,15 +116,28 @@ fun MyUserContent(
                 }
             )
         }
-        ProfileImage(
-            userInfo = User(
-                id = "1",
-                name = "John Doe",
-                email = "",
-                profileImage = ""
-            ),
-            size = 120
-        )
+        ConstraintLayout(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            val (profileImage, editImageButton) = createRefs()
+            ProfileImage(
+                modifier = Modifier
+                    .constrainAs(profileImage) {
+                        top.linkTo(parent.top)
+                        bottom.linkTo(parent.bottom)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    },
+                userInfo = User(
+                    id = "1",
+                    name = "John Doe",
+                    email = "",
+                    profileImage = ""
+                ),
+                size = 120
+            )
+        }
+
         Spacer(modifier = Modifier.size(36.dp))
         DSEmailTextField(
             value = state.userInfo.email,

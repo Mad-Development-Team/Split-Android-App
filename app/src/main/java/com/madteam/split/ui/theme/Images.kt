@@ -22,6 +22,7 @@ import com.madteam.split.domain.model.User
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun ProfileImage(
+    modifier: Modifier = Modifier,
     userInfo: User,
     size: Int
 ) {
@@ -30,7 +31,9 @@ fun ProfileImage(
     } else {
         SplitTheme.typography.display.m
     }
-    Column {
+    Column(
+        modifier = modifier
+    ) {
         ConstraintLayout {
             val (profileImage, text) = createRefs()
             GlideImage(
