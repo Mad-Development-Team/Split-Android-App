@@ -186,10 +186,10 @@ fun Navigation() {
                 EnterTransition.None
             },
             exitTransition = {
-                ExitTransition.None
-            },
-            popExitTransition = {
-                ExitTransition.None
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left,
+                    animationSpec = tween(DEFAULT_ANIMATION_DURATION_IN_MILLIS)
+                )
             }
         ) {
             SplashScreen(navController = navController)
