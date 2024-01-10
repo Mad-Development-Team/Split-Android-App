@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -33,6 +35,7 @@ import com.madteam.split.ui.theme.DSBasicTextField
 import com.madteam.split.ui.theme.DSEmailTextField
 import com.madteam.split.ui.theme.DangerDialog
 import com.madteam.split.ui.theme.DangerLargeButton
+import com.madteam.split.ui.theme.ElevatedIconButton
 import com.madteam.split.ui.theme.InfoMessage
 import com.madteam.split.ui.theme.NavigationAndActionTopAppBar
 import com.madteam.split.ui.theme.ProfileImage
@@ -135,6 +138,16 @@ fun MyUserContent(
                     profileImage = ""
                 ),
                 size = 120
+            )
+            ElevatedIconButton(
+                modifier = Modifier
+                    .constrainAs(editImageButton) {
+                        start.linkTo(profileImage.end, ((-36).dp))
+                        top.linkTo(profileImage.bottom, ((-48).dp))
+                    },
+                onClick = { /*TODO*/ },
+                icon = Icons.Filled.Edit,
+                iconDescription = R.string.edit_icon_description
             )
         }
 

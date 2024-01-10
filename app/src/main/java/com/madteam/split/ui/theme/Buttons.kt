@@ -7,16 +7,22 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -152,18 +158,43 @@ internal fun BaseLargeButton(
 }
 
 @Composable
-fun ElevatedIconButton(){
+fun ElevatedIconButton(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+    icon: ImageVector,
+    iconDescription: Int
+) {
     IconButton(
-        modifier = Modifier,
-        colors = Iconb,
-        onClick = { /*TODO*/ }
+        modifier = modifier
+            .shadow(
+                elevation = 6.dp,
+                shape = CircleShape
+            ),
+        colors = IconButtonDefaults.iconButtonColors(
+            containerColor = SplitTheme.colors.neutral.backgroundMedium
+        ),
+        onClick = {
+            onClick()
+        }
     ) {
-        
+        Icon(
+            imageVector = icon,
+            contentDescription = stringResource(id = iconDescription),
+            tint = SplitTheme.colors.neutral.iconHeavy
+        )
     }
 }
 
-
-
+@Preview
+@Composable
+fun ElevatedIconButtonPreview() {
+    ElevatedIconButton(
+        modifier = Modifier,
+        onClick = {},
+        icon = Icons.Filled.Edit,
+        iconDescription = R.string.icon_back_description
+    )
+}
 
 @Preview(showBackground = true)
 @Composable

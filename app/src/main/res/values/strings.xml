@@ -63,4 +63,5 @@
     <string name="cancel">Cancel</string>
     <string name="close_icon_description">Close icon</string>
     <string name="shared_user_changes_info">The profile image and the name you use in your global profile will apply for all new groups you join or create but not for the ones where you have already joined.</string>
+    <string name="edit_icon_description">Edit icon</string>
 </resources>
