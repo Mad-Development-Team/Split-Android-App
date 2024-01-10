@@ -2,6 +2,7 @@ package com.madteam.split.ui.theme
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -20,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -167,9 +169,14 @@ fun ElevatedIconButton(
     IconButton(
         modifier = modifier
             .shadow(
-                elevation = 6.dp,
+                elevation = 8.dp,
+                shape = CircleShape,
+            )
+            .background(
+                color = SplitTheme.colors.neutral.backgroundMedium,
                 shape = CircleShape
-            ),
+            )
+        ,
         colors = IconButtonDefaults.iconButtonColors(
             containerColor = SplitTheme.colors.neutral.backgroundMedium
         ),

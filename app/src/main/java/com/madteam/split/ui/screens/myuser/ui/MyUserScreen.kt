@@ -13,6 +13,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.EmojiEmotions
+import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -33,10 +36,12 @@ import com.madteam.split.ui.screens.myuser.state.MyUserUIState
 import com.madteam.split.ui.screens.myuser.viewmodel.MyUserViewModel
 import com.madteam.split.ui.theme.DSBasicTextField
 import com.madteam.split.ui.theme.DSEmailTextField
+import com.madteam.split.ui.theme.DSModalBottomSheet
 import com.madteam.split.ui.theme.DangerDialog
 import com.madteam.split.ui.theme.DangerLargeButton
 import com.madteam.split.ui.theme.ElevatedIconButton
 import com.madteam.split.ui.theme.InfoMessage
+import com.madteam.split.ui.theme.ModalOption
 import com.madteam.split.ui.theme.NavigationAndActionTopAppBar
 import com.madteam.split.ui.theme.ProfileImage
 import com.madteam.split.ui.theme.SplitTheme
@@ -49,6 +54,33 @@ fun MyUserScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
+    if (state.showProfileImageModal) {
+        DSModalBottomSheet(
+            optionsList = mutableListOf(
+                ModalOption(
+                    iconDescription = R.string.edit_icon_description,
+                    icon = Icons.Outlined.Image,
+                    title = R.string.update_profile_image_from_device,
+                    action = {}
+                ),
+                ModalOption(
+                    iconDescription = R.string.edit_icon_description,
+                    icon = Icons.Outlined.Delete,
+                    title = R.string.delete_profile_image,
+                    action = {}
+                ),
+                ModalOption(
+                    iconDescription = R.string.edit_icon_description,
+                    icon = Icons.Outlined.EmojiEmotions,
+                    title = R.string.choose_an_avatar,
+                    action = {}
+                )
+            ),
+            onClose = {
+                viewModel.onEvent(MyUserUIEvent.OnShowProfileImageModalStateChanged(false))
+            }
+        )
+    }
     Scaffold(
         containerColor = SplitTheme.colors.neutral.backgroundExtraWeak,
         topBar = {
@@ -79,6 +111,9 @@ fun MyUserScreen(
                 onShowInfoMessageStateChanged = { state ->
                     viewModel.onEvent(MyUserUIEvent.OnShowSharedInfoMessageStateChanged(state))
                 },
+                onShowProfileImageModalStateChanged = { state ->
+                    viewModel.onEvent(MyUserUIEvent.OnShowProfileImageModalStateChanged(state))
+                },
                 onSignOutConfirmed = {
                     viewModel.onEvent(MyUserUIEvent.OnSignOutConfirmedClick)
                     navController.navigateWithPopUpTo(
@@ -99,6 +134,7 @@ fun MyUserContent(
     onSignOutClick: () -> Unit,
     onSignOutDialogStateChanged: (Boolean) -> Unit,
     onShowInfoMessageStateChanged: (Boolean) -> Unit,
+    onShowProfileImageModalStateChanged: (Boolean) -> Unit,
     onSignOutConfirmed: () -> Unit
 ) {
     Column(
@@ -145,7 +181,9 @@ fun MyUserContent(
                         start.linkTo(profileImage.end, ((-36).dp))
                         top.linkTo(profileImage.bottom, ((-48).dp))
                     },
-                onClick = { /*TODO*/ },
+                onClick = {
+                    onShowProfileImageModalStateChanged(true)
+                },
                 icon = Icons.Filled.Edit,
                 iconDescription = R.string.edit_icon_description
             )
