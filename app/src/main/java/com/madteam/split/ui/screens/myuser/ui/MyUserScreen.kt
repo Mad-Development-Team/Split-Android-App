@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Logout
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.EmojiEmotions
@@ -44,6 +45,7 @@ import com.madteam.split.ui.theme.InfoMessage
 import com.madteam.split.ui.theme.ModalOption
 import com.madteam.split.ui.theme.NavigationAndActionTopAppBar
 import com.madteam.split.ui.theme.ProfileImage
+import com.madteam.split.ui.theme.SecondaryLargeButton
 import com.madteam.split.ui.theme.SplitTheme
 import com.madteam.split.utils.ui.navigateWithPopUpTo
 
@@ -58,19 +60,19 @@ fun MyUserScreen(
         DSModalBottomSheet(
             optionsList = mutableListOf(
                 ModalOption(
-                    iconDescription = R.string.edit_icon_description,
+                    iconDescription = R.string.update_profile_image_from_device,
                     icon = Icons.Outlined.Image,
                     title = R.string.update_profile_image_from_device,
                     action = {}
                 ),
                 ModalOption(
-                    iconDescription = R.string.edit_icon_description,
+                    iconDescription = R.string.delete_profile_image,
                     icon = Icons.Outlined.Delete,
                     title = R.string.delete_profile_image,
                     action = {}
                 ),
                 ModalOption(
-                    iconDescription = R.string.edit_icon_description,
+                    iconDescription = R.string.choose_an_avatar,
                     icon = Icons.Outlined.EmojiEmotions,
                     title = R.string.choose_an_avatar,
                     action = {}
@@ -78,6 +80,24 @@ fun MyUserScreen(
             ),
             onClose = {
                 viewModel.onEvent(MyUserUIEvent.OnShowProfileImageModalStateChanged(false))
+            }
+        )
+    } else if (state.showSettingsModal) {
+        DSModalBottomSheet(
+            optionsList = mutableListOf(
+                ModalOption(
+                    iconDescription = R.string.log_out,
+                    icon = Icons.AutoMirrored.Outlined.Logout,
+                    title = R.string.log_out,
+                    isDangerOption = true,
+                    action = {
+                        viewModel.onEvent(MyUserUIEvent.OnShowSettingsModalStateChanged(false))
+                        viewModel.onEvent(MyUserUIEvent.OnShowSignOutDialogStateChanged(true))
+                    }
+                )
+            ),
+            onClose = {
+                viewModel.onEvent(MyUserUIEvent.OnShowSettingsModalStateChanged(false))
             }
         )
     }
@@ -89,7 +109,7 @@ fun MyUserScreen(
                     navController.popBackStack()
                 },
                 onActionClick = {
-                    //TODO: Not implemented yet
+                    viewModel.onEvent(MyUserUIEvent.OnShowSettingsModalStateChanged(true))
                 },
                 title = R.string.your_profile
             )
@@ -102,9 +122,6 @@ fun MyUserScreen(
         ) {
             MyUserContent(
                 state = state,
-                onSignOutClick = {
-                    viewModel.onEvent(MyUserUIEvent.OnShowSignOutDialogStateChanged(true))
-                },
                 onSignOutDialogStateChanged = { state ->
                     viewModel.onEvent(MyUserUIEvent.OnShowSignOutDialogStateChanged(state))
                 },
@@ -131,7 +148,6 @@ fun MyUserScreen(
 @Composable
 fun MyUserContent(
     state: MyUserUIState,
-    onSignOutClick: () -> Unit,
     onSignOutDialogStateChanged: (Boolean) -> Unit,
     onShowInfoMessageStateChanged: (Boolean) -> Unit,
     onShowProfileImageModalStateChanged: (Boolean) -> Unit,
@@ -212,9 +228,10 @@ fun MyUserContent(
             .padding(24.dp),
         verticalAlignment = Alignment.Bottom
     ) {
-        DangerLargeButton(
-            onClick = { onSignOutClick() },
-            text = R.string.log_out
+        SecondaryLargeButton(
+            onClick = { /*TODO*/ },
+            text = R.string.save_changes,
+            enabled = false
         )
     }
 

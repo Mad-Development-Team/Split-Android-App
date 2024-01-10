@@ -8,4 +8,5 @@ data class MyUserUIState(
     val showLogOutDialog: Boolean = false,
     val showSharedInfoMessage: Boolean = true,
     val showProfileImageModal: Boolean = false,
+    val showSettingsModal: Boolean = false
 )

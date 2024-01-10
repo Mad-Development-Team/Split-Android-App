@@ -34,11 +34,18 @@ class MyUserViewModel @Inject constructor(
             is MyUserUIEvent.OnShowProfileImageModalStateChanged -> {
                 showProfileImageModal(event.state)
             }
+            is MyUserUIEvent.OnShowSettingsModalStateChanged -> {
+                showSettingsModal(event.state)
+            }
         }
     }
 
     private fun showSignOutDialog(state: Boolean) {
         _state.value = _state.value.copy(showLogOutDialog = state)
+    }
+
+    private fun showSettingsModal(state: Boolean) {
+        _state.value = _state.value.copy(showSettingsModal = state)
     }
 
     private fun showSharedInfoMessage(state: Boolean) {

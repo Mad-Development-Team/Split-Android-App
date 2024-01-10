@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.EmojiEmotions
@@ -24,8 +23,6 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -36,7 +33,8 @@ data class ModalOption(
     val icon: ImageVector,
     val iconDescription: Int,
     val title: Int,
-    val action: () -> Unit
+    val action: () -> Unit,
+    val isDangerOption: Boolean = false
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -58,9 +56,9 @@ fun DSModalBottomSheet(
     ) {
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(16.dp),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp)
         ) {
             itemsIndexed(optionsList) { _, option ->
                 Row(
@@ -74,13 +72,17 @@ fun DSModalBottomSheet(
                     Icon(
                         imageVector = option.icon,
                         contentDescription = stringResource(id = option.iconDescription),
-                        tint = SplitTheme.colors.neutral.iconHeavy
+                        tint = if (option.isDangerOption) {
+                            SplitTheme.colors.error.iconDefault
+                        } else SplitTheme.colors.neutral.iconHeavy,
                     )
                     Spacer(modifier = Modifier.size(24.dp))
                     Text(
                         text = stringResource(id = option.title),
                         style = SplitTheme.typography.body.l,
-                        color = SplitTheme.colors.neutral.textTitle
+                        color = if (option.isDangerOption) {
+                            SplitTheme.colors.error.textDefault
+                        } else SplitTheme.colors.neutral.textTitle,
                     )
                 }
             }

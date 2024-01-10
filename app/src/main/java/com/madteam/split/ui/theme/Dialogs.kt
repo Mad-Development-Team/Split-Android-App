@@ -1,5 +1,6 @@
 package com.madteam.split.ui.theme
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -32,6 +33,9 @@ fun LoadingDialog() {
             containerColor = SplitTheme.colors.neutral.backgroundExtraWeak
         )
     ) {
+        BackHandler {
+            //Do nothing on back press
+        }
         Column(
             modifier = Modifier
                 .fillMaxSize(),
