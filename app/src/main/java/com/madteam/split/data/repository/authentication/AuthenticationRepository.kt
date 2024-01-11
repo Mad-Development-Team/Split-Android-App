@@ -1,4 +1,4 @@
-package com.madteam.split.data.repository
+package com.madteam.split.data.repository.authentication
 
 import com.madteam.split.data.model.utils.AuthResult
 

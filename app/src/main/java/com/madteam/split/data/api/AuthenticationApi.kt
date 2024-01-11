@@ -1,4 +1,4 @@
-package com.madteam.split.api
+package com.madteam.split.data.api
 
 import com.madteam.split.data.config.EndpointsConstants.AUTHENTICATE
 import com.madteam.split.data.config.EndpointsConstants.SIGN_IN
@@ -8,7 +8,6 @@ import com.madteam.split.data.model.request.SignUpRequestDTO
 import com.madteam.split.data.model.response.TokenResponseDTO
 import retrofit2.http.Body
 import retrofit2.http.GET
-import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface AuthenticationApi {

@@ -75,10 +75,11 @@ fun ProfileImage(
 fun ProfileImagePreview() {
     ProfileImage(
         userInfo = User(
-            id = "1",
+            id = 1,
             name = "test",
             email = "test@gmail.com",
-            profileImage = ""
+            profileImage = "",
+            createdDate = ""
         ),
         size = 60
     )

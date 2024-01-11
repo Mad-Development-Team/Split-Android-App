@@ -1,11 +1,11 @@
 package com.madteam.split.di.authentication
 
 import android.content.SharedPreferences
-import com.madteam.split.api.AuthenticationApi
+import com.madteam.split.data.api.AuthenticationApi
 import com.madteam.split.data.config.LinksConstants.BASE_API_URL
 import com.madteam.split.data.interceptor.AuthInterceptor
-import com.madteam.split.data.repository.AuthenticationRepository
-import com.madteam.split.data.repository.AuthenticationRepositoryImpl
+import com.madteam.split.data.repository.authentication.AuthenticationRepository
+import com.madteam.split.data.repository.authentication.AuthenticationRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

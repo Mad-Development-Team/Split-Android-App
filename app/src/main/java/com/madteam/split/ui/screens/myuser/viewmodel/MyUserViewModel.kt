@@ -2,8 +2,7 @@ package com.madteam.split.ui.screens.myuser.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.madteam.split.data.repository.AuthenticationRepository
-import com.madteam.split.ui.screens.mygroups.state.MyGroupsUIEvent
+import com.madteam.split.data.repository.authentication.AuthenticationRepository
 import com.madteam.split.ui.screens.myuser.state.MyUserUIEvent
 import com.madteam.split.ui.screens.myuser.state.MyUserUIState
 import dagger.hilt.android.lifecycle.HiltViewModel

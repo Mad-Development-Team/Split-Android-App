@@ -30,7 +30,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.madteam.split.R
-import com.madteam.split.domain.model.User
 import com.madteam.split.ui.navigation.Screens
 import com.madteam.split.ui.screens.myuser.state.MyUserUIEvent
 import com.madteam.split.ui.screens.myuser.state.MyUserUIState
@@ -39,7 +38,6 @@ import com.madteam.split.ui.theme.DSBasicTextField
 import com.madteam.split.ui.theme.DSEmailTextField
 import com.madteam.split.ui.theme.DSModalBottomSheet
 import com.madteam.split.ui.theme.DangerDialog
-import com.madteam.split.ui.theme.DangerLargeButton
 import com.madteam.split.ui.theme.ElevatedIconButton
 import com.madteam.split.ui.theme.InfoMessage
 import com.madteam.split.ui.theme.ModalOption
@@ -183,12 +181,7 @@ fun MyUserContent(
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                     },
-                userInfo = User(
-                    id = "1",
-                    name = "John Doe",
-                    email = "",
-                    profileImage = ""
-                ),
+                userInfo = state.userInfo,
                 size = 120
             )
             ElevatedIconButton(
