@@ -61,6 +61,7 @@ fun LoadingDialog() {
 @Composable
 fun ErrorDialog(
     setShowDialog: (Boolean) -> Unit,
+    onContinueClick: () -> Unit = {},
     errorTitle: String? = stringResource(id = R.string.generic_error_title),
     errorText: String? = stringResource(id = R.string.generic_error_text),
     errorButton: Int? = R.string.ok
@@ -100,14 +101,14 @@ fun ErrorDialog(
                 )
                 Spacer(modifier = Modifier.size(16.dp))
                 PrimaryLargeButton(
-                    onClick = { setShowDialog(false) },
+                    onClick = {
+                        setShowDialog(false)
+                        onContinueClick()
+                    },
                     text = errorButton!!
                 )
-
             }
-
         }
-
     }
 }
 

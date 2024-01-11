@@ -13,13 +13,17 @@ class UserRepositoryImpl @Inject constructor(
     private val userLocalDataSource: UserDataSourceContract.Local
 ) : UserRepository {
 
-    override suspend fun getUserInfo(): Resource<User> {
-        try {
-            return Resource.Success(
-                data = userLocalDataSource.getUserInfoEntity().toUser()
-            )
-        } catch (e: Exception) {
-            Log.d("UserRepositoryImpl::getUserInfo", "Error: ${e.message}")
+    override suspend fun getUserInfo(
+        update: Boolean
+    ): Resource<User> {
+        if (!update) {
+            try {
+                return Resource.Success(
+                    data = userLocalDataSource.getUserInfoEntity().toUser()
+                )
+            } catch (e: Exception) {
+                Log.d("UserRepositoryImpl::getUserInfo", "Error: ${e.message}")
+            }
         }
         try {
             val user = userRemoteDataSource.getUserInfo().toUser()

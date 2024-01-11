@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -39,7 +40,9 @@ import com.madteam.split.ui.theme.DSEmailTextField
 import com.madteam.split.ui.theme.DSModalBottomSheet
 import com.madteam.split.ui.theme.DangerDialog
 import com.madteam.split.ui.theme.ElevatedIconButton
+import com.madteam.split.ui.theme.ErrorDialog
 import com.madteam.split.ui.theme.InfoMessage
+import com.madteam.split.ui.theme.LoadingDialog
 import com.madteam.split.ui.theme.ModalOption
 import com.madteam.split.ui.theme.NavigationAndActionTopAppBar
 import com.madteam.split.ui.theme.ProfileImage
@@ -136,6 +139,10 @@ fun MyUserScreen(
                         popUpTo = Screens.MyUserScreen.route,
                         inclusive = true
                     )
+                },
+                navigateBackWithError = {
+                    viewModel.onEvent(MyUserUIEvent.OnShowErrorMessageStateChanged(false))
+                    navController.popBackStack()
                 }
             )
         }
@@ -149,7 +156,8 @@ fun MyUserContent(
     onSignOutDialogStateChanged: (Boolean) -> Unit,
     onShowInfoMessageStateChanged: (Boolean) -> Unit,
     onShowProfileImageModalStateChanged: (Boolean) -> Unit,
-    onSignOutConfirmed: () -> Unit
+    onSignOutConfirmed: () -> Unit,
+    navigateBackWithError: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -226,6 +234,41 @@ fun MyUserContent(
             text = R.string.save_changes,
             enabled = false
         )
+    }
+
+    if (state.showErrorMessage) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(SplitTheme.colors.neutral.backgroundHeavy.copy(alpha = 0.3f)),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            val errorTitle = stringResource(id = R.string.generic_error_title)
+            val errorText = stringResource(id = state.errorMessage ?: R.string.generic_error_text)
+            val errorButton = R.string.ok
+
+            ErrorDialog(
+                setShowDialog = {
+                    navigateBackWithError()
+                },
+                errorTitle = errorTitle,
+                errorText = errorText,
+                errorButton = errorButton
+            )
+        }
+    }
+
+    if (state.showLoading) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(SplitTheme.colors.neutral.backgroundHeavy.copy(alpha = 0.3f)),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            LoadingDialog()
+        }
     }
 
     if (state.showLogOutDialog) {
