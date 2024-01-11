@@ -15,6 +15,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -47,8 +50,14 @@ fun SplashScreen(
 
     val state by viewModel.state.collectAsStateWithLifecycle()
 
+    var nameAnimState by remember {
+        mutableStateOf(false)
+    }
+
     LaunchedEffect(state.isAuthenticated, state.isReadyToGo) {
         if (state.isReadyToGo) {
+            delay(500)
+            nameAnimState = true
             delay(700)
             when (state.isAuthenticated) {
                 is AuthResult.Authorized -> {
@@ -111,6 +120,19 @@ fun SplashScreen(
                     color = SplitTheme.colors.neutral.textTitle
                 )
             }
+        }
+        Spacer(modifier = Modifier.size(24.dp))
+        AnimatedVisibility(
+            visible = nameAnimState &&
+                    state.userInfo != null &&
+                    state.userInfo!!.name.isNotBlank(),
+        ) {
+            Text(
+                modifier = Modifier,
+                text = "${stringResource(id = R.string.welcome_back)} ${state.userInfo!!.name}",
+                style = SplitTheme.typography.body.xl,
+                color = SplitTheme.colors.neutral.textTitle
+            )
         }
         Spacer(modifier = Modifier.size(96.dp))
         CircularProgressIndicator(

@@ -3,6 +3,8 @@ package com.madteam.split.di.user
 import android.content.SharedPreferences
 import com.madteam.split.data.api.UserApi
 import com.madteam.split.data.config.LinksConstants.BASE_API_URL
+import com.madteam.split.data.database.user.UserDatabase
+import com.madteam.split.data.database.user.dao.UserDAO
 import com.madteam.split.data.datasource.user.UserDataSource
 import com.madteam.split.data.datasource.user.UserDataSourceContract
 import com.madteam.split.data.interceptor.AuthInterceptor
@@ -16,6 +18,7 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.create
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -57,6 +60,14 @@ object UserModule {
         userRepository: UserRepositoryImpl
     ): UserRepository {
         return userRepository
+    }
+
+    @Provides
+    @Singleton
+    fun providesUserDao(
+        @Named("UserDatabase") database: UserDatabase
+    ): UserDAO {
+        return database.getUserDao()
     }
 
 }

@@ -3,6 +3,7 @@ package com.madteam.split.ui.screens.myuser.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.madteam.split.data.repository.authentication.AuthenticationRepository
+import com.madteam.split.data.repository.user.UserRepository
 import com.madteam.split.ui.screens.myuser.state.MyUserUIEvent
 import com.madteam.split.ui.screens.myuser.state.MyUserUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,7 +14,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MyUserViewModel @Inject constructor(
-    private val authenticationRepository: AuthenticationRepository
+    private val authenticationRepository: AuthenticationRepository,
+    private val userRepository: UserRepository
 ) : ViewModel() {
 
     private val _state: MutableStateFlow<MyUserUIState> = MutableStateFlow(MyUserUIState())
@@ -58,6 +60,7 @@ class MyUserViewModel @Inject constructor(
     private fun onSignOutClick() {
         viewModelScope.launch {
             authenticationRepository.signOut()
+            userRepository.deleteAllUserLocalInfo()
         }
     }
 

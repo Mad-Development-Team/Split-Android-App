@@ -82,6 +82,10 @@ dependencies {
     //Glide
     implementation(libs.glide)
 
+    //Room
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
+
     testImplementation(libs.junit)
     testImplementation(libs.mockk)
     androidTestImplementation(libs.androidx.test.ext.junit)
