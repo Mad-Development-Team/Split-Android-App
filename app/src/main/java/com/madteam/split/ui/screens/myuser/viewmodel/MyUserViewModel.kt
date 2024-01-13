@@ -7,6 +7,7 @@ import com.madteam.split.data.repository.authentication.AuthenticationRepository
 import com.madteam.split.data.repository.user.UserRepository
 import com.madteam.split.ui.screens.myuser.state.MyUserUIEvent
 import com.madteam.split.ui.screens.myuser.state.MyUserUIState
+import com.madteam.split.ui.utils.validateName
 import com.madteam.split.utils.network.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -157,8 +158,10 @@ class MyUserViewModel @Inject constructor(
         _state.value = _state.value.copy(
           userInfo = _state.value.userInfo.copy(
             name = updatedName
-          )
+          ),
+          nameIsValid = validateName(updatedName)
         )
+
         if (_state.value.userInfo != _state.value.originalUserInfo) {
             _state.value = _state.value.copy(hasInfoBeenModified = true)
         }

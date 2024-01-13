@@ -227,7 +227,14 @@ fun MyUserContent(
       onValueChange = {
         onNameChanged(it)
       },
-      placeholder = R.string.enter_your_name
+      placeholder = R.string.enter_your_name,
+      isError = state.hasInfoBeenModified && !state.nameIsValid && state.userInfo.name.isNotEmpty(),
+      isSuccess = state.hasInfoBeenModified && state.nameIsValid && state.userInfo.name.isNotEmpty(),
+      supportingText = if (state.hasInfoBeenModified && !state.nameIsValid && state.userInfo.name.isNotEmpty()) {
+        R.string.sign_up_name_supporting_text_rules
+      } else {
+        null
+      }
     )
   }
   Row(
@@ -241,7 +248,7 @@ fun MyUserContent(
         onSaveInfoClick()
       },
       text = R.string.save_changes,
-      enabled = state.hasInfoBeenModified
+      enabled = state.hasInfoBeenModified && state.nameIsValid
     )
   }
 
