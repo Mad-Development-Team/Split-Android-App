@@ -1,10 +1,10 @@
-package com.madteam.split.data.repository
+package com.madteam.split.data.repository.authentication
 
 import android.content.SharedPreferences
-import com.madteam.split.api.AuthenticationApi
-import com.madteam.split.data.model.utils.AuthResult
+import com.madteam.split.data.api.AuthenticationApi
 import com.madteam.split.data.model.request.SignInRequestDTO
 import com.madteam.split.data.model.request.SignUpRequestDTO
+import com.madteam.split.data.model.utils.AuthResult
 import com.madteam.split.utils.network.HttpStatusCodes
 import retrofit2.HttpException
 import javax.inject.Inject

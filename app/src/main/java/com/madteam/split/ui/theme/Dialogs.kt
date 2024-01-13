@@ -1,6 +1,6 @@
 package com.madteam.split.ui.theme
 
-import androidx.compose.foundation.Image
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -16,8 +16,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -35,6 +33,9 @@ fun LoadingDialog() {
             containerColor = SplitTheme.colors.neutral.backgroundExtraWeak
         )
     ) {
+        BackHandler {
+            //Do nothing on back press
+        }
         Column(
             modifier = Modifier
                 .fillMaxSize(),
@@ -60,6 +61,7 @@ fun LoadingDialog() {
 @Composable
 fun ErrorDialog(
     setShowDialog: (Boolean) -> Unit,
+    onContinueClick: () -> Unit = {},
     errorTitle: String? = stringResource(id = R.string.generic_error_title),
     errorText: String? = stringResource(id = R.string.generic_error_text),
     errorButton: Int? = R.string.ok
@@ -99,8 +101,70 @@ fun ErrorDialog(
                 )
                 Spacer(modifier = Modifier.size(16.dp))
                 PrimaryLargeButton(
-                    onClick = { setShowDialog(false) },
+                    onClick = {
+                        setShowDialog(false)
+                        onContinueClick()
+                    },
                     text = errorButton!!
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun DangerDialog(
+    setShowDialog: (Boolean) -> Unit,
+    title: Int,
+    text: Int,
+    cancelButtonText: Int,
+    continueButtonText: Int,
+    onContinueClick: () -> Unit
+) {
+    Dialog(
+        onDismissRequest = {
+            setShowDialog(false)
+        }
+    ) {
+        ElevatedCard(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.elevatedCardColors(
+                containerColor = SplitTheme.colors.neutral.backgroundExtraWeak
+            )
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(24.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = stringResource(id = title),
+                    style = SplitTheme.typography.heading.l,
+                    color = SplitTheme.colors.neutral.textTitle,
+                    textAlign = TextAlign.Center
+                )
+                Spacer(modifier = Modifier.size(16.dp))
+                Text(
+                    text = stringResource(id = text),
+                    style = SplitTheme.typography.body.l,
+                    color = SplitTheme.colors.neutral.textStrong,
+                    textAlign = TextAlign.Center
+                )
+                Spacer(modifier = Modifier.size(16.dp))
+                DangerLargeButton(
+                    onClick = { onContinueClick() },
+                    text = continueButtonText
+                )
+                Spacer(modifier = Modifier.size(16.dp))
+                SecondaryLargeButton(
+                    onClick = {
+                        setShowDialog(false)
+                    },
+                    text = cancelButtonText
                 )
 
             }
@@ -108,6 +172,19 @@ fun ErrorDialog(
         }
 
     }
+}
+
+@Preview
+@Composable
+fun DangerDialogPreview() {
+    DangerDialog(
+        setShowDialog = {},
+        title = R.string.is_it_a_goodbye,
+        text = R.string.log_out_confirm_text,
+        cancelButtonText = R.string.cancel,
+        continueButtonText = R.string.continue_log_out,
+        onContinueClick = {}
+    )
 }
 
 @Preview

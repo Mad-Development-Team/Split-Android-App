@@ -10,8 +10,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.madteam.split.ui.screens.forgotpassword.ui.ForgotPasswordScreen
 import com.madteam.split.ui.screens.mygroups.ui.MyGroupsScreen
+import com.madteam.split.ui.screens.myuser.ui.MyUserScreen
 import com.madteam.split.ui.screens.signin.email.ui.SignInEmailScreen
 import com.madteam.split.ui.screens.signup.email.ui.SignUpScreen
+import com.madteam.split.ui.screens.splash.ui.SplashScreen
 import com.madteam.split.ui.screens.welcome.ui.WelcomeScreen
 
 private const val DEFAULT_ANIMATION_DURATION_IN_MILLIS = 500
@@ -21,7 +23,7 @@ fun Navigation() {
     val navController = rememberNavController()
     NavHost(
         navController = navController,
-        startDestination = Screens.WelcomeScreen.route
+        startDestination = Screens.SplashScreen.route
     ) {
 
         composable(
@@ -151,16 +153,80 @@ fun Navigation() {
         composable(
             route = Screens.MyGroupsScreen.route,
             enterTransition = {
-                EnterTransition.None
+                when (initialState.destination.route) {
+                    Screens.MyUserScreen.route -> {
+                        slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Right,
+                            animationSpec = tween(DEFAULT_ANIMATION_DURATION_IN_MILLIS)
+                        )
+                    }
+
+                    else -> {
+                        slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Left,
+                            animationSpec = tween(DEFAULT_ANIMATION_DURATION_IN_MILLIS)
+                        )
+                    }
+                }
             },
             exitTransition = {
-                ExitTransition.None
+                when (targetState.destination.route) {
+                    Screens.MyUserScreen.route -> {
+                        slideOutOfContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Left,
+                            animationSpec = tween(DEFAULT_ANIMATION_DURATION_IN_MILLIS)
+                        )
+                    }
+
+                    else -> {
+                        ExitTransition.None
+                    }
+                }
             },
             popExitTransition = {
                 ExitTransition.None
             }
         ) {
             MyGroupsScreen(navController = navController)
+        }
+
+        composable(
+            route = Screens.MyUserScreen.route,
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left,
+                    animationSpec = tween(DEFAULT_ANIMATION_DURATION_IN_MILLIS)
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Right,
+                    animationSpec = tween(DEFAULT_ANIMATION_DURATION_IN_MILLIS)
+                )
+            },
+            popExitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Right,
+                    animationSpec = tween(DEFAULT_ANIMATION_DURATION_IN_MILLIS)
+                )
+            }
+        ) {
+            MyUserScreen(navController = navController)
+        }
+
+        composable(
+            route = Screens.SplashScreen.route,
+            enterTransition = {
+                EnterTransition.None
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left,
+                    animationSpec = tween(DEFAULT_ANIMATION_DURATION_IN_MILLIS)
+                )
+            }
+        ) {
+            SplashScreen(navController = navController)
         }
     }
 }

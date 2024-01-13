@@ -2,7 +2,7 @@ package com.madteam.split.ui.screens.welcome.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.madteam.split.data.repository.AuthenticationRepository
+import com.madteam.split.data.repository.authentication.AuthenticationRepository
 import com.madteam.split.ui.screens.welcome.state.WelcomeScreenUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope

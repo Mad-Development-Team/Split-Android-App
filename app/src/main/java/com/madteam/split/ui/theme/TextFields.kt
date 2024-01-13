@@ -68,6 +68,7 @@ private fun DSTextField(
             cursorColor = SplitTheme.colors.primary.backgroundMedium,
             errorCursorColor = SplitTheme.colors.error.iconDefault,
             errorIndicatorColor = Color.Transparent,
+            disabledIndicatorColor = Color.Transparent,
             errorSupportingTextColor = SplitTheme.colors.error.textDefault,
             errorTrailingIconColor = SplitTheme.colors.error.iconDefault,
             focusedSupportingTextColor = SplitTheme.colors.neutral.textStrong,

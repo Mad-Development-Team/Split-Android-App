@@ -57,6 +57,7 @@ dependencies {
     implementation(libs.compose.foundations)
     implementation(libs.androidx.ui.tooling.preview.android)
     implementation(libs.constraintlayout)
+    implementation(libs.constraintlayout.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.lifecycle.ktx)
     implementation(libs.androidx.lifecycle.runtime.compose)
@@ -77,6 +78,13 @@ dependencies {
     //Retrofit
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
+
+    //Glide
+    implementation(libs.glide)
+
+    //Room
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
 
     testImplementation(libs.junit)
     testImplementation(libs.mockk)
