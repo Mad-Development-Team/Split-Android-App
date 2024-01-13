@@ -23,4 +23,6 @@ interface UserDAO {
     @Query("DELETE FROM $USER_TABLE_NAME")
     suspend fun deleteAllUserInfo()
 
+    @Query("UPDATE $USER_TABLE_NAME SET profile_image = '' WHERE id = :userId")
+    suspend fun clearProfileImage(userId: Int)
 }

@@ -26,10 +26,30 @@ fun User.toEntity(): UserEntity {
 
 fun UserEntity.toUser(): User {
     return User(
-        id = id,
-        name = name,
-        email = email,
-        profileImage = profileImage,
-        createdDate = createdDate,
+      id = id,
+      name = name,
+      email = email,
+      profileImage = profileImage,
+      createdDate = createdDate,
+    )
+}
+
+fun UserDTO.toEntity(): UserEntity {
+    return UserEntity(
+      id = id,
+      name = name,
+      email = email,
+      profileImage = profileImage,
+      createdDate = createdDate,
+    )
+}
+
+fun User.toDTO(): UserDTO {
+    return UserDTO(
+      id = id,
+      name = name,
+      email = email,
+      profileImage = profileImage,
+      createdDate = createdDate,
     )
 }

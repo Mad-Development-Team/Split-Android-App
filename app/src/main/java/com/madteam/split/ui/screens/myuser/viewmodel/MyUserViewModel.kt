@@ -52,19 +52,60 @@ class MyUserViewModel @Inject constructor(
             is MyUserUIEvent.OnShowErrorMessageStateChanged -> {
                 showErrorMessage(event.state)
             }
+
+            is MyUserUIEvent.OnNameChanged -> {
+                onNameChanged(event.name)
+            }
+
+            is MyUserUIEvent.OnSaveInfoClick -> {
+                saveUserInfo()
+            }
+        }
+    }
+
+    private fun saveUserInfo() {
+        viewModelScope.launch {
+            showLoading(true)
+            val user = userRepository.updateUserInfo(
+              _state.value.userInfo
+            )
+            when (user) {
+                is Resource.Success -> {
+                    user.data.let {
+                        _state.value = _state.value.copy(
+                          originalUserInfo = _state.value.userInfo,
+                          hasInfoBeenModified = false
+                        )
+                    }
+                    showLoading(false)
+                }
+
+                is Resource.Error -> {
+                    showErrorMessage(
+                      true,
+                      R.string.generic_error_text
+                    )
+                    showLoading(false)
+                }
+
+                is Resource.Loading -> {
+                    showLoading(true)
+                }
+            }
         }
     }
 
     private fun getUpdatedUserInfo() {
         viewModelScope.launch {
             val user = userRepository.getUserInfo(
-                update = true
+              update = true
             )
             when (user) {
                 is Resource.Success -> {
                     user.data.let {
                         _state.value = _state.value.copy(
-                            userInfo = it
+                          userInfo = it,
+                          originalUserInfo = it
                         )
                     }
                     showLoading(false)
@@ -103,13 +144,24 @@ class MyUserViewModel @Inject constructor(
 
     private fun showErrorMessage(state: Boolean, message: Int? = null) {
         _state.value = _state.value.copy(
-            showErrorMessage = state,
-            errorMessage = message
+          showErrorMessage = state,
+          errorMessage = message
         )
     }
 
     private fun showLoading(state: Boolean) {
         _state.value = _state.value.copy(showLoading = state)
+    }
+
+    private fun onNameChanged(updatedName: String) {
+        _state.value = _state.value.copy(
+          userInfo = _state.value.userInfo.copy(
+            name = updatedName
+          )
+        )
+        if (_state.value.userInfo != _state.value.originalUserInfo) {
+            _state.value = _state.value.copy(hasInfoBeenModified = true)
+        }
     }
 
     private fun onSignOutClick() {
@@ -118,5 +170,4 @@ class MyUserViewModel @Inject constructor(
             userRepository.deleteAllUserLocalInfo()
         }
     }
-
 }

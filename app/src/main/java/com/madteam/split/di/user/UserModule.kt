@@ -49,15 +49,23 @@ object UserModule {
     @Provides
     @Singleton
     fun providesUserLocalDataSource(
-        userRemoteDataSource: UserDataSource
+        userRemoteDataSource: UserDataSource,
     ): UserDataSourceContract.Local {
         return userRemoteDataSource
     }
 
     @Provides
     @Singleton
+    fun providesUserDataSource(
+        userDataSource: UserDataSource,
+    ): UserDataSourceContract {
+        return userDataSource
+    }
+
+    @Provides
+    @Singleton
     fun providesUserRepository(
-        userRepository: UserRepositoryImpl
+        userRepository: UserRepositoryImpl,
     ): UserRepository {
         return userRepository
     }

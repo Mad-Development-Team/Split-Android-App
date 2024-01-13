@@ -5,10 +5,14 @@ import com.madteam.split.utils.network.Resource
 
 interface UserRepository {
     suspend fun getUserInfo(
-        update: Boolean = false
+        update: Boolean = false,
     ): Resource<User>
 
-    suspend fun updateUserLocalInfo(user: User)
+    suspend fun updateUserInfo(
+        user: User,
+    ): Resource<Boolean>
+
     suspend fun insertUserLocalInfo(user: User)
     suspend fun deleteAllUserLocalInfo()
+    suspend fun removeProfileImage(userId: Int)
 }
