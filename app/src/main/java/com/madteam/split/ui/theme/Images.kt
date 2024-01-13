@@ -24,7 +24,7 @@ import com.madteam.split.domain.model.User
 fun ProfileImage(
     modifier: Modifier = Modifier,
     userInfo: User,
-    size: Int
+    size: Int,
 ) {
     val textStyle = if (size >= 100) {
         SplitTheme.typography.display.l
@@ -54,18 +54,20 @@ fun ProfileImage(
                         end.linkTo(parent.end)
                     }
             )
-            Text(
-                text = userInfo.name.firstOrNull().toString().uppercase(),
-                style = textStyle,
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .constrainAs(text) {
-                        top.linkTo(profileImage.top)
-                        start.linkTo(profileImage.start)
-                        end.linkTo(profileImage.end)
-                        bottom.linkTo(profileImage.bottom)
-                    }
-            )
+            if (userInfo.profileImage.isEmpty() && userInfo.name.isNotEmpty()) {
+                Text(
+                    text = userInfo.name.firstOrNull().toString().uppercase(),
+                    style = textStyle,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .constrainAs(text) {
+                            top.linkTo(profileImage.top)
+                            start.linkTo(profileImage.start)
+                            end.linkTo(profileImage.end)
+                            bottom.linkTo(profileImage.bottom)
+                        }
+                )
+            }
         }
     }
 }
