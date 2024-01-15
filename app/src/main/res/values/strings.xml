@@ -60,14 +60,16 @@
     <string name="is_it_a_goodbye">Is it a goodbye?</string>
   <string name="log_out_confirm_text">If you log out you will need to sign in again to enjoy all the benefits. Are you sure you want to continue?</string>
   <string name="continue_log_out">Yes, log out</string>
-  <string name="cancel">Cancel</string>
-  <string name="close_icon_description">Close icon</string>
-  <string name="shared_user_changes_info">The profile image and the name you use in your global profile will apply for all new groups you join or create but not for the ones where you have already joined.</string>
-  <string name="edit_icon_description">Edit icon</string>
-  <string name="update_profile_image_from_device">Update from device</string>
-  <string name="delete_profile_image">Delete profile image</string>
-  <string name="choose_an_avatar">Choose an avatar</string>
-  <string name="save_changes">Save changes</string>
-  <string name="choose">Choose</string>
-  <string name="swipe_to_see_more">Swipe to see more</string>
+    <string name="cancel">Cancel</string>
+    <string name="close_icon_description">Close icon</string>
+    <string name="shared_user_changes_info">The profile image and the name you use in your global profile will apply for all new groups you join or create but not for the ones where you have already joined.</string>
+    <string name="edit_icon_description">Edit icon</string>
+    <string name="update_profile_image_from_device">Update from device</string>
+    <string name="delete_profile_image">Delete profile image</string>
+    <string name="choose_an_avatar">Choose an avatar</string>
+    <string name="save_changes">Save changes</string>
+    <string name="choose">Choose</string>
+    <string name="swipe_to_see_more">Swipe to see more</string>
+    <string name="discard_changes">Discard changes</string>
+    <string name="exit_without_saving_changes">If you leave now you will lose all the changes made to your account. Are you sure you want to proceed?</string>
 </resources>

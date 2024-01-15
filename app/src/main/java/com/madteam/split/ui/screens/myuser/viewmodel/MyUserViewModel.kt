@@ -81,7 +81,15 @@ class MyUserViewModel @Inject constructor(
             is MyUserUIEvent.OnProfileImageSelectedFromDevice -> {
                 updateUserInfoWithSelectedImageFromDevice(event.uri)
             }
+
+            is MyUserUIEvent.OnShowExitDialogStateChanged -> {
+                showExitDialog(event.state)
+            }
         }
+    }
+
+    private fun showExitDialog(state: Boolean) {
+        _state.value = _state.value.copy(showExitDialog = state)
     }
 
     private fun updateUserInfoWithSelectedImageFromDevice(uri: Uri) {

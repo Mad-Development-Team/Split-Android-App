@@ -52,6 +52,7 @@ import com.madteam.split.ui.theme.NavigationAndActionTopAppBar
 import com.madteam.split.ui.theme.ProfileImage
 import com.madteam.split.ui.theme.SecondaryLargeButton
 import com.madteam.split.ui.theme.SplitTheme
+import com.madteam.split.utils.ui.BackPressHandler
 import com.madteam.split.utils.ui.navigateWithPopUpTo
 
 @Composable
@@ -59,7 +60,16 @@ fun MyUserScreen(
     navController: NavController,
     viewModel: MyUserViewModel = hiltViewModel(),
 ) {
+
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    BackPressHandler {
+        if (state.hasInfoBeenModified) {
+            viewModel.onEvent(MyUserUIEvent.OnShowExitDialogStateChanged(true))
+        } else {
+            navController.popBackStack()
+        }
+    }
 
     val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
@@ -133,7 +143,11 @@ fun MyUserScreen(
         topBar = {
             NavigationAndActionTopAppBar(
                 onNavigationClick = {
-                    navController.popBackStack()
+                    if (state.hasInfoBeenModified) {
+                        viewModel.onEvent(MyUserUIEvent.OnShowExitDialogStateChanged(true))
+                    } else {
+                        navController.popBackStack()
+                    }
                 },
                 onActionClick = {
                     viewModel.onEvent(MyUserUIEvent.OnShowSettingsModalStateChanged(true))
@@ -170,6 +184,9 @@ fun MyUserScreen(
                     viewModel.onEvent(MyUserUIEvent.OnShowErrorMessageStateChanged(false))
                     navController.popBackStack()
                 },
+                navigateBack = {
+                    navController.popBackStack()
+                },
                 onSaveInfoClick = {
                     viewModel.onEvent(MyUserUIEvent.OnSaveInfoClick)
                 },
@@ -181,6 +198,9 @@ fun MyUserScreen(
                 },
                 onAvatarImageSelected = { index ->
                     viewModel.onEvent(MyUserUIEvent.OnAvatarImageSelected(index))
+                },
+                onShowExitDialogStateChanged = { state ->
+                    viewModel.onEvent(MyUserUIEvent.OnShowExitDialogStateChanged(state))
                 }
             )
         }
@@ -194,10 +214,12 @@ fun MyUserContent(
     onShowInfoMessageStateChanged: (Boolean) -> Unit,
     onShowProfileImageModalStateChanged: (Boolean) -> Unit,
     onShowAvatarsImagesDialogChanged: (Boolean) -> Unit,
+    onShowExitDialogStateChanged: (Boolean) -> Unit,
     onAvatarImageSelected: (Int) -> Unit,
     onNameChanged: (String) -> Unit,
     onSignOutConfirmed: () -> Unit,
     navigateBackWithError: () -> Unit,
+    navigateBack: () -> Unit,
     onSaveInfoClick: () -> Unit,
 ) {
     Column(
@@ -359,6 +381,30 @@ fun MyUserContent(
                 continueButtonText = R.string.continue_log_out,
                 onContinueClick = {
                     onSignOutConfirmed()
+                },
+            )
+        }
+    }
+
+    if (state.showExitDialog) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(SplitTheme.colors.neutral.backgroundHeavy.copy(alpha = 0.3f)),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            DangerDialog(
+                setShowDialog = {
+                    onShowExitDialogStateChanged(it)
+                },
+                title = R.string.discard_changes,
+                text = R.string.exit_without_saving_changes,
+                cancelButtonText = R.string.cancel,
+                continueButtonText = R.string.discard_changes,
+                onContinueClick = {
+                    onShowExitDialogStateChanged(false)
+                    navigateBack()
                 },
             )
         }

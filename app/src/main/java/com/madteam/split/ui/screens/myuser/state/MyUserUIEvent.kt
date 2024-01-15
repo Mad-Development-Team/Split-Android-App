@@ -9,6 +9,7 @@ sealed class MyUserUIEvent {
     data class OnShowSettingsModalStateChanged(val state: Boolean) : MyUserUIEvent()
     data class OnShowErrorMessageStateChanged(val state: Boolean) : MyUserUIEvent()
     data class OnShowChooseAvatarDialogStateChanged(val state: Boolean) : MyUserUIEvent()
+    data class OnShowExitDialogStateChanged(val state: Boolean) : MyUserUIEvent()
     data class OnAvatarImageSelected(val index: Int) : MyUserUIEvent()
     data class OnProfileImageSelectedFromDevice(val uri: Uri) : MyUserUIEvent()
     data class OnNameChanged(val name: String) : MyUserUIEvent()
