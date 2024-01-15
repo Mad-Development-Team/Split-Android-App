@@ -68,11 +68,24 @@ class MyUserViewModel @Inject constructor(
                 onShowChooseAvatarDialogClick(event.state)
             }
 
+            is MyUserUIEvent.OnDeleteProfileImageClick -> {
+                deleteProfileImage()
+            }
+
             is MyUserUIEvent.OnAvatarImageSelected -> {
                 onAvatarImageSelected(event.index)
                 onShowChooseAvatarDialogClick(false)
             }
         }
+    }
+
+    private fun deleteProfileImage() {
+        _state.value = _state.value.copy(
+            userInfo = _state.value.userInfo.copy(
+                profileImage = ""
+            )
+        )
+        checkIfInfoHasBeenModified()
     }
 
     private fun saveUserInfo() {
@@ -81,6 +94,10 @@ class MyUserViewModel @Inject constructor(
             val user = userRepository.updateUserInfo(
                 _state.value.userInfo
             )
+            if (_state.value.originalUserInfo.profileImage.isNotBlank()
+                && _state.value.userInfo.profileImage.isBlank()) {
+                userRepository.removeProfileImage(_state.value.userInfo.id)
+            }
             when (user) {
                 is Resource.Success -> {
                     user.data.let {

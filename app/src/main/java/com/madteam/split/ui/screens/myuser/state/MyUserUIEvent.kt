@@ -10,5 +10,6 @@ sealed class MyUserUIEvent {
     data class OnAvatarImageSelected(val index: Int) : MyUserUIEvent()
     data class OnNameChanged(val name: String) : MyUserUIEvent()
     data object OnSignOutConfirmedClick : MyUserUIEvent()
+    data object OnDeleteProfileImageClick : MyUserUIEvent()
     data object OnSaveInfoClick : MyUserUIEvent()
 }

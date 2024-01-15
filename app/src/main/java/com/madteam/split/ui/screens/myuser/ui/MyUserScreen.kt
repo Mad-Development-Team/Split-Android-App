@@ -71,7 +71,10 @@ fun MyUserScreen(
                     iconDescription = R.string.delete_profile_image,
                     icon = Icons.Outlined.Delete,
                     title = R.string.delete_profile_image,
-                    action = {}
+                    action = {
+                        viewModel.onEvent(MyUserUIEvent.OnShowProfileImageModalStateChanged(false))
+                        viewModel.onEvent(MyUserUIEvent.OnDeleteProfileImageClick)
+                    }
                 ),
                 ModalOption(
                     iconDescription = R.string.choose_an_avatar,
