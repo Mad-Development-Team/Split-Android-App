@@ -1,9 +1,11 @@
 package com.madteam.split.ui.screens.myuser.viewmodel
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.madteam.split.R
 import com.madteam.split.data.repository.authentication.AuthenticationRepository
+import com.madteam.split.data.repository.storage.StorageRepository
 import com.madteam.split.data.repository.user.UserRepository
 import com.madteam.split.ui.screens.myuser.state.MyUserUIEvent
 import com.madteam.split.ui.screens.myuser.state.MyUserUIState
@@ -18,7 +20,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MyUserViewModel @Inject constructor(
     private val authenticationRepository: AuthenticationRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val storageRepository: StorageRepository,
 ) : ViewModel() {
 
     private val _state: MutableStateFlow<MyUserUIState> = MutableStateFlow(MyUserUIState())
@@ -61,21 +64,93 @@ class MyUserViewModel @Inject constructor(
             is MyUserUIEvent.OnSaveInfoClick -> {
                 saveUserInfo()
             }
+
+            is MyUserUIEvent.OnShowChooseAvatarDialogStateChanged -> {
+                onShowChooseAvatarDialogClick(event.state)
+            }
+
+            is MyUserUIEvent.OnDeleteProfileImageClick -> {
+                deleteProfileImage()
+            }
+
+            is MyUserUIEvent.OnAvatarImageSelected -> {
+                onAvatarImageSelected(event.index)
+                onShowChooseAvatarDialogClick(false)
+            }
+
+            is MyUserUIEvent.OnProfileImageSelectedFromDevice -> {
+                updateUserInfoWithSelectedImageFromDevice(event.uri)
+            }
+
+            is MyUserUIEvent.OnShowExitDialogStateChanged -> {
+                showExitDialog(event.state)
+            }
         }
+    }
+
+    private fun showExitDialog(state: Boolean) {
+        _state.value = _state.value.copy(showExitDialog = state)
+    }
+
+    private fun updateUserInfoWithSelectedImageFromDevice(uri: Uri) {
+        _state.value = _state.value.copy(
+            userInfo = _state.value.userInfo.copy(
+                profileImage = uri.toString()
+            ),
+            newProfileImageSelectedFromDevice = true
+        )
+        checkIfInfoHasBeenModified()
+    }
+
+    private fun deleteProfileImage() {
+        _state.value = _state.value.copy(
+            userInfo = _state.value.userInfo.copy(
+                profileImage = ""
+            ),
+            newProfileImageSelectedFromDevice = false
+        )
+        checkIfInfoHasBeenModified()
     }
 
     private fun saveUserInfo() {
         viewModelScope.launch {
             showLoading(true)
+            if (_state.value.newProfileImageSelectedFromDevice) {
+                val newUserImageResult = storageRepository.uploadProfileImage(
+                    _state.value.userInfo.profileImage,
+                    _state.value.userInfo.id
+                )
+                val newUserImageUrl: String
+                if (newUserImageResult is Resource.Success) {
+                    newUserImageUrl = newUserImageResult.data
+                    _state.value = _state.value.copy(
+                        userInfo = _state.value.userInfo.copy(
+                            profileImage = newUserImageUrl
+                        )
+                    )
+                } else {
+                    _state.value = _state.value.copy(
+                        userInfo = _state.value.userInfo.copy(
+                            profileImage = ""
+                        ),
+                        showErrorMessage = true
+                    )
+                }
+            }
             val user = userRepository.updateUserInfo(
-              _state.value.userInfo
+                _state.value.userInfo
             )
+            if (_state.value.originalUserInfo.profileImage.isNotBlank()
+                && _state.value.userInfo.profileImage.isBlank()) {
+                storageRepository.deleteAllProfileUserImages(_state.value.userInfo.id)
+                userRepository.removeProfileImage(_state.value.userInfo.id)
+            }
             when (user) {
                 is Resource.Success -> {
                     user.data.let {
                         _state.value = _state.value.copy(
-                          originalUserInfo = _state.value.userInfo,
-                          hasInfoBeenModified = false
+                            originalUserInfo = _state.value.userInfo,
+                            hasInfoBeenModified = false
                         )
                     }
                     showLoading(false)
@@ -83,8 +158,8 @@ class MyUserViewModel @Inject constructor(
 
                 is Resource.Error -> {
                     showErrorMessage(
-                      true,
-                      R.string.generic_error_text
+                        true,
+                        R.string.generic_error_text
                     )
                     showLoading(false)
                 }
@@ -96,17 +171,27 @@ class MyUserViewModel @Inject constructor(
         }
     }
 
+    private fun onAvatarImageSelected(index: Int) {
+        _state.value = _state.value.copy(
+            userInfo = _state.value.userInfo.copy(
+                profileImage = _state.value.avatarImagesUrlsList[index]
+            ),
+            newProfileImageSelectedFromDevice = false
+        )
+        checkIfInfoHasBeenModified()
+    }
+
     private fun getUpdatedUserInfo() {
         viewModelScope.launch {
             val user = userRepository.getUserInfo(
-              update = true
+                update = true
             )
             when (user) {
                 is Resource.Success -> {
                     user.data.let {
                         _state.value = _state.value.copy(
-                          userInfo = it,
-                          originalUserInfo = it
+                            userInfo = it,
+                            originalUserInfo = it
                         )
                     }
                     showLoading(false)
@@ -145,8 +230,8 @@ class MyUserViewModel @Inject constructor(
 
     private fun showErrorMessage(state: Boolean, message: Int? = null) {
         _state.value = _state.value.copy(
-          showErrorMessage = state,
-          errorMessage = message
+            showErrorMessage = state,
+            errorMessage = message
         )
     }
 
@@ -156,15 +241,35 @@ class MyUserViewModel @Inject constructor(
 
     private fun onNameChanged(updatedName: String) {
         _state.value = _state.value.copy(
-          userInfo = _state.value.userInfo.copy(
-            name = updatedName
-          ),
-          nameIsValid = validateName(updatedName)
+            userInfo = _state.value.userInfo.copy(
+                name = updatedName
+            ),
+            nameIsValid = validateName(updatedName)
         )
+        checkIfInfoHasBeenModified()
+    }
 
+    private fun checkIfInfoHasBeenModified() {
         if (_state.value.userInfo != _state.value.originalUserInfo) {
             _state.value = _state.value.copy(hasInfoBeenModified = true)
+        } else {
+            _state.value = _state.value.copy(hasInfoBeenModified = false)
         }
+    }
+
+    private fun onShowChooseAvatarDialogClick(state: Boolean) {
+        if (_state.value.avatarImagesUrlsList.isEmpty()) {
+            showLoading(true)
+            viewModelScope.launch {
+                val avatarImagesUrlsList = storageRepository.getAvatarImagesUrls()
+                if (avatarImagesUrlsList is Resource.Success) {
+                    _state.value =
+                        _state.value.copy(avatarImagesUrlsList = avatarImagesUrlsList.data)
+                }
+            }
+            showLoading(false)
+        }
+        _state.value = _state.value.copy(showChooseAvatarDialog = state)
     }
 
     private fun onSignOutClick() {

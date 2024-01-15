@@ -4,6 +4,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -24,7 +27,7 @@ import com.madteam.split.domain.model.User
 fun ProfileImage(
     modifier: Modifier = Modifier,
     userInfo: User,
-    size: Int
+    size: Int,
 ) {
     val textStyle = if (size >= 100) {
         SplitTheme.typography.display.l
@@ -54,18 +57,33 @@ fun ProfileImage(
                         end.linkTo(parent.end)
                     }
             )
-            Text(
-                text = userInfo.name.firstOrNull().toString().uppercase(),
-                style = textStyle,
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .constrainAs(text) {
-                        top.linkTo(profileImage.top)
-                        start.linkTo(profileImage.start)
-                        end.linkTo(profileImage.end)
-                        bottom.linkTo(profileImage.bottom)
-                    }
-            )
+            if (userInfo.profileImage.isEmpty() && userInfo.name.isNotEmpty()) {
+                Text(
+                    text = userInfo.name.firstOrNull().toString().uppercase(),
+                    style = textStyle,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .constrainAs(text) {
+                            top.linkTo(profileImage.top)
+                            start.linkTo(profileImage.start)
+                            end.linkTo(profileImage.end)
+                            bottom.linkTo(profileImage.bottom)
+                        }
+                )
+            } else if (userInfo.profileImage.isEmpty() && userInfo.name.isEmpty()) {
+                Icon(
+                    imageVector = Icons.Outlined.Person,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(48.dp)
+                        .constrainAs(text) {
+                            top.linkTo(profileImage.top)
+                            start.linkTo(profileImage.start)
+                            end.linkTo(profileImage.end)
+                            bottom.linkTo(profileImage.bottom)
+                        }
+                )
+            }
         }
     }
 }
@@ -76,7 +94,7 @@ fun ProfileImagePreview() {
     ProfileImage(
         userInfo = User(
             id = 1,
-            name = "test",
+            name = "",
             email = "test@gmail.com",
             profileImage = "",
             createdDate = ""

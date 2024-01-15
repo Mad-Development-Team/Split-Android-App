@@ -10,39 +10,41 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.madteam.split.R
+import com.madteam.split.domain.model.User
 import com.madteam.split.ui.navigation.Screens
-import com.madteam.split.ui.screens.mygroups.state.MyGroupsUIEvent
+import com.madteam.split.ui.screens.mygroups.state.MyGroupsUIState
 import com.madteam.split.ui.screens.mygroups.viewmodel.MyGroupsViewModel
 import com.madteam.split.ui.theme.PrimaryLargeButton
+import com.madteam.split.ui.theme.ProfileImage
 import com.madteam.split.ui.theme.SecondaryLargeButton
 import com.madteam.split.ui.theme.SplitTheme
 import com.madteam.split.utils.ui.BackPressHandler
-import com.madteam.split.utils.ui.navigateWithPopUpTo
 
 @Composable
 fun MyGroupsScreen(
     navController: NavController,
-    viewModel: MyGroupsViewModel = hiltViewModel()
+    viewModel: MyGroupsViewModel = hiltViewModel(),
 ) {
 
     BackPressHandler {
         //Do nothing on back press
     }
+
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     Scaffold(
         containerColor = SplitTheme.colors.neutral.backgroundExtraWeak
@@ -53,6 +55,7 @@ fun MyGroupsScreen(
                 .padding(it)
         ) {
             MyGroupsContent(
+                state = state,
                 onCreateNewGroupClick = {
                     //TODO: Not implemented yet
                 },
@@ -64,8 +67,9 @@ fun MyGroupsScreen(
 
 @Composable
 fun MyGroupsContent(
+    state: MyGroupsUIState,
     onCreateNewGroupClick: () -> Unit = {},
-    navigateTo: (String) -> Unit
+    navigateTo: (String) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -73,6 +77,7 @@ fun MyGroupsContent(
             .padding(24.dp)
     ) {
         MyGroupsTopBar(
+            userInfo = state.userInfo,
             navigateTo = navigateTo
         )
         Spacer(modifier = Modifier.size(24.dp))
@@ -100,7 +105,8 @@ fun MyGroupsContent(
 
 @Composable
 fun MyGroupsTopBar(
-    navigateTo: (String) -> Unit
+    userInfo: User,
+    navigateTo: (String) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -118,16 +124,13 @@ fun MyGroupsTopBar(
                 style = SplitTheme.typography.heading.m,
                 color = SplitTheme.colors.neutral.textTitle,
             )
-            Icon(
+            ProfileImage(
                 modifier = Modifier
-                    .size(48.dp)
                     .clickable {
-                        //TODO: Make a IconButton or similar for this
                         navigateTo(Screens.MyUserScreen.route)
                     },
-                imageVector = Icons.Default.AccountCircle,
-                tint = SplitTheme.colors.neutral.iconHeavy,
-                contentDescription = null
+                userInfo = userInfo,
+                size = 48
             )
         }
 
