@@ -56,9 +56,6 @@ fun MyGroupsScreen(
         ) {
             MyGroupsContent(
                 state = state,
-                onCreateNewGroupClick = {
-                    //TODO: Not implemented yet
-                },
                 navigateTo = navController::navigate
             )
         }
@@ -68,7 +65,6 @@ fun MyGroupsScreen(
 @Composable
 fun MyGroupsContent(
     state: MyGroupsUIState,
-    onCreateNewGroupClick: () -> Unit = {},
     navigateTo: (String) -> Unit,
 ) {
     Column(
@@ -96,7 +92,7 @@ fun MyGroupsContent(
         Spacer(modifier = Modifier.size(16.dp))
         SecondaryLargeButton(
             onClick = {
-                onCreateNewGroupClick()
+                navigateTo(Screens.CreateGroupInfoScreen.route)
             },
             text = R.string.create_a_new_group
         )

@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.madteam.split.ui.screens.creategroup.info.ui.CreateGroupInfoScreen
 import com.madteam.split.ui.screens.forgotpassword.ui.ForgotPasswordScreen
 import com.madteam.split.ui.screens.mygroups.ui.MyGroupsScreen
 import com.madteam.split.ui.screens.myuser.ui.MyUserScreen
@@ -154,7 +155,9 @@ fun Navigation() {
             route = Screens.MyGroupsScreen.route,
             enterTransition = {
                 when (initialState.destination.route) {
-                    Screens.MyUserScreen.route -> {
+                    Screens.CreateGroupInfoScreen.route,
+                    Screens.MyUserScreen.route,
+                    -> {
                         slideIntoContainer(
                             AnimatedContentTransitionScope.SlideDirection.Right,
                             animationSpec = tween(DEFAULT_ANIMATION_DURATION_IN_MILLIS)
@@ -171,7 +174,9 @@ fun Navigation() {
             },
             exitTransition = {
                 when (targetState.destination.route) {
-                    Screens.MyUserScreen.route -> {
+                    Screens.CreateGroupInfoScreen.route,
+                    Screens.MyUserScreen.route,
+                    -> {
                         slideOutOfContainer(
                             AnimatedContentTransitionScope.SlideDirection.Left,
                             animationSpec = tween(DEFAULT_ANIMATION_DURATION_IN_MILLIS)
@@ -227,6 +232,24 @@ fun Navigation() {
             }
         ) {
             SplashScreen(navController = navController)
+        }
+
+        composable(
+            route = Screens.CreateGroupInfoScreen.route,
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left,
+                    animationSpec = tween(DEFAULT_ANIMATION_DURATION_IN_MILLIS)
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Right,
+                    animationSpec = tween(DEFAULT_ANIMATION_DURATION_IN_MILLIS)
+                )
+            }
+        ) {
+            CreateGroupInfoScreen(navController = navController)
         }
     }
 }
