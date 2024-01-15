@@ -1,5 +1,8 @@
 package com.madteam.split.ui.screens.myuser.ui
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -58,6 +61,15 @@ fun MyUserScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
+    val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia(),
+        onResult = { uri ->
+            if (uri != null) {
+                // TODO: Uri received, do something with it
+            }
+        }
+    )
+
     if (state.showProfileImageModal) {
         DSModalBottomSheet(
             optionsList = mutableListOf(
@@ -65,7 +77,14 @@ fun MyUserScreen(
                     iconDescription = R.string.update_profile_image_from_device,
                     icon = Icons.Outlined.Image,
                     title = R.string.update_profile_image_from_device,
-                    action = {}
+                    action = {
+                        viewModel.onEvent(MyUserUIEvent.OnShowProfileImageModalStateChanged(false))
+                        singlePhotoPickerLauncher.launch(
+                            PickVisualMediaRequest(
+                                ActivityResultContracts.PickVisualMedia.ImageOnly
+                            )
+                        )
+                    }
                 ),
                 ModalOption(
                     iconDescription = R.string.delete_profile_image,
