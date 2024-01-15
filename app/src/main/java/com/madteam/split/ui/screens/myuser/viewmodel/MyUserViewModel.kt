@@ -1,5 +1,6 @@
 package com.madteam.split.ui.screens.myuser.viewmodel
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.madteam.split.R
@@ -76,14 +77,29 @@ class MyUserViewModel @Inject constructor(
                 onAvatarImageSelected(event.index)
                 onShowChooseAvatarDialogClick(false)
             }
+
+            is MyUserUIEvent.OnProfileImageSelectedFromDevice -> {
+                updateUserInfoWithSelectedImageFromDevice(event.uri)
+            }
         }
+    }
+
+    private fun updateUserInfoWithSelectedImageFromDevice(uri: Uri) {
+        _state.value = _state.value.copy(
+            userInfo = _state.value.userInfo.copy(
+                profileImage = uri.toString()
+            ),
+            newProfileImageSelectedFromDevice = true
+        )
+        checkIfInfoHasBeenModified()
     }
 
     private fun deleteProfileImage() {
         _state.value = _state.value.copy(
             userInfo = _state.value.userInfo.copy(
                 profileImage = ""
-            )
+            ),
+            newProfileImageSelectedFromDevice = false
         )
         checkIfInfoHasBeenModified()
     }
@@ -91,11 +107,34 @@ class MyUserViewModel @Inject constructor(
     private fun saveUserInfo() {
         viewModelScope.launch {
             showLoading(true)
+            if (_state.value.newProfileImageSelectedFromDevice) {
+                val newUserImageResult = storageRepository.uploadProfileImage(
+                    _state.value.userInfo.profileImage,
+                    _state.value.userInfo.id
+                )
+                val newUserImageUrl: String
+                if (newUserImageResult is Resource.Success) {
+                    newUserImageUrl = newUserImageResult.data
+                    _state.value = _state.value.copy(
+                        userInfo = _state.value.userInfo.copy(
+                            profileImage = newUserImageUrl
+                        )
+                    )
+                } else {
+                    _state.value = _state.value.copy(
+                        userInfo = _state.value.userInfo.copy(
+                            profileImage = ""
+                        ),
+                        showErrorMessage = true
+                    )
+                }
+            }
             val user = userRepository.updateUserInfo(
                 _state.value.userInfo
             )
             if (_state.value.originalUserInfo.profileImage.isNotBlank()
                 && _state.value.userInfo.profileImage.isBlank()) {
+                storageRepository.deleteAllProfileUserImages(_state.value.userInfo.id)
                 userRepository.removeProfileImage(_state.value.userInfo.id)
             }
             when (user) {
@@ -128,7 +167,8 @@ class MyUserViewModel @Inject constructor(
         _state.value = _state.value.copy(
             userInfo = _state.value.userInfo.copy(
                 profileImage = _state.value.avatarImagesUrlsList[index]
-            )
+            ),
+            newProfileImageSelectedFromDevice = false
         )
         checkIfInfoHasBeenModified()
     }

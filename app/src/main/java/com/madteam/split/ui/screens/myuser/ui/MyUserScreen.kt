@@ -65,7 +65,7 @@ fun MyUserScreen(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = { uri ->
             if (uri != null) {
-                // TODO: Uri received, do something with it
+                viewModel.onEvent(MyUserUIEvent.OnProfileImageSelectedFromDevice(uri))
             }
         }
     )

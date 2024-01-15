@@ -27,5 +27,6 @@ data class MyUserUIState(
     val hasInfoBeenModified: Boolean = false,
     val nameIsValid: Boolean = true,
     val showChooseAvatarDialog: Boolean = false,
+    val newProfileImageSelectedFromDevice: Boolean = false,
     val avatarImagesUrlsList: List<String> = listOf(),
 )
