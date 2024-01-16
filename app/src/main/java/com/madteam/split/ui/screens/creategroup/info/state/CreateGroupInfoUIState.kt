@@ -4,5 +4,5 @@ data class CreateGroupInfoUIState(
     val groupName: String = "",
     val groupDescription: String = "",
     val isGroupNameValid: Boolean = false,
-    val isGroupDescriptionValid: Boolean = false,
+    val isGroupDescriptionValid: Boolean = true,
 )

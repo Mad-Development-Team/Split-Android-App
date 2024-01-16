@@ -29,6 +29,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.madteam.split.R
+import com.madteam.split.ui.navigation.Screens
 import com.madteam.split.ui.screens.creategroup.info.state.CreateGroupInfoUIEvent
 import com.madteam.split.ui.screens.creategroup.info.state.CreateGroupInfoUIState
 import com.madteam.split.ui.screens.creategroup.info.viewmodel.CreateGroupInfoViewModel
@@ -145,7 +146,7 @@ fun CreateGroupInfoScreenContent(
             Spacer(modifier = Modifier.size(24.dp))
             PrimaryLargeButton(
                 onClick = {
-                    //TODO: Implement onContinueClicked
+                    navigateTo(Screens.CreateGroupMembersScreen.route)
                 },
                 text = R.string.continue_text,
                 enabled = state.isGroupNameValid && state.isGroupDescriptionValid

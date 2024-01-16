@@ -238,16 +238,38 @@ fun Navigation() {
         composable(
             route = Screens.CreateGroupInfoScreen.route,
             enterTransition = {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Left,
-                    animationSpec = tween(DEFAULT_ANIMATION_DURATION_IN_MILLIS)
-                )
+                when (initialState.destination.route) {
+                    Screens.CreateGroupMembersScreen.route -> {
+                        slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Right,
+                            animationSpec = tween(DEFAULT_ANIMATION_DURATION_IN_MILLIS)
+                        )
+                    }
+
+                    else -> {
+                        slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Left,
+                            animationSpec = tween(DEFAULT_ANIMATION_DURATION_IN_MILLIS)
+                        )
+                    }
+                }
             },
             exitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Right,
-                    animationSpec = tween(DEFAULT_ANIMATION_DURATION_IN_MILLIS)
-                )
+                when (targetState.destination.route) {
+                    Screens.CreateGroupMembersScreen.route -> {
+                        slideOutOfContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Left,
+                            animationSpec = tween(DEFAULT_ANIMATION_DURATION_IN_MILLIS)
+                        )
+                    }
+
+                    else -> {
+                        slideOutOfContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Right,
+                            animationSpec = tween(DEFAULT_ANIMATION_DURATION_IN_MILLIS)
+                        )
+                    }
+                }
             }
         ) {
             CreateGroupInfoScreen(navController = navController)
