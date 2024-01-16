@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.madteam.split.ui.screens.creategroup.info.ui.CreateGroupInfoScreen
+import com.madteam.split.ui.screens.creategroup.members.ui.CreateGroupMembersScreen
 import com.madteam.split.ui.screens.forgotpassword.ui.ForgotPasswordScreen
 import com.madteam.split.ui.screens.mygroups.ui.MyGroupsScreen
 import com.madteam.split.ui.screens.myuser.ui.MyUserScreen
@@ -250,6 +251,24 @@ fun Navigation() {
             }
         ) {
             CreateGroupInfoScreen(navController = navController)
+        }
+
+        composable(
+            route = Screens.CreateGroupMembersScreen.route,
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left,
+                    animationSpec = tween(DEFAULT_ANIMATION_DURATION_IN_MILLIS)
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Right,
+                    animationSpec = tween(DEFAULT_ANIMATION_DURATION_IN_MILLIS)
+                )
+            }
+        ) {
+            CreateGroupMembersScreen(navController = navController)
         }
     }
 }
