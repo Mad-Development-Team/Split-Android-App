@@ -59,6 +59,7 @@ fun CreateGroupInfoScreen(
                 onGroupDescriptionChanged = { description ->
                     viewModel.onEvent(CreateGroupInfoUIEvent.OnGroupDescriptionChange(description))
                 },
+                navigateTo = navController::navigate,
                 navigateBack = {
                     navController.popBackStack()
                 }
@@ -72,6 +73,7 @@ fun CreateGroupInfoScreenContent(
     state: CreateGroupInfoUIState,
     onGroupNameChanged: (String) -> Unit,
     onGroupDescriptionChanged: (String) -> Unit,
+    navigateTo: (String) -> Unit,
     navigateBack: () -> Unit,
 ) {
     Column(
@@ -119,7 +121,10 @@ fun CreateGroupInfoScreenContent(
                     onGroupNameChanged(it)
                 },
                 placeholder = R.string.enter_name_group,
-                isError = false,
+                supportingText = if (!state.isGroupNameValid && state.groupName.isNotEmpty()) {
+                    R.string.group_name_rules
+                } else null,
+                isError = !state.isGroupNameValid && state.groupName.isNotEmpty(),
                 enabled = true,
             )
             DSBasicTextField(
@@ -128,7 +133,11 @@ fun CreateGroupInfoScreenContent(
                     onGroupDescriptionChanged(it)
                 },
                 placeholder = R.string.enter_group_description,
-                isError = false,
+                isError = !state.isGroupDescriptionValid && state.groupDescription.isNotEmpty(),
+                supportingText = if (!state.isGroupDescriptionValid
+                    && state.groupDescription.isNotEmpty()) {
+                    R.string.group_description_max_characters
+                } else null,
                 enabled = true,
                 maxLines = 5,
                 imeAction = ImeAction.Done
@@ -139,7 +148,7 @@ fun CreateGroupInfoScreenContent(
                     //TODO: Implement onContinueClicked
                 },
                 text = R.string.continue_text,
-                enabled = false
+                enabled = state.isGroupNameValid && state.isGroupDescriptionValid
             )
         }
     }

@@ -2,7 +2,9 @@ package com.madteam.split.ui.utils
 
 private const val VALID_NAME_REGEX = "^[a-zA-Z0-9]+$"
 private const val MIN_CHAR_NAME_LENGTH = 3
+private const val MIN_CHAR_GROUP_NAME_LENGTH = 1
 private const val MAX_CHAR_NAME_LENGTH = 20
+private const val MAX_CHAR_GROUP_NAME_LENGTH = 20
 
 private const val VALID_EMAIL_REGEX = "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}"
 
@@ -25,4 +27,8 @@ fun validatePassword(password: String): Boolean {
     val regex = Regex(VALID_PASSWORD_REGEX)
 
     return regex.matches(password)
+}
+
+fun validateGroupName(name: String): Boolean {
+    return name.length in MIN_CHAR_GROUP_NAME_LENGTH..MAX_CHAR_GROUP_NAME_LENGTH
 }

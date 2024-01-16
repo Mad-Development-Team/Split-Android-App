@@ -76,4 +76,6 @@
   <string name="create_group_description">Enter the following information to create the group</string>
   <string name="enter_name_group">Enter name group</string>
   <string name="enter_group_description">Enter group description</string>
+  <string name="group_description_max_characters">Maximum 250 characters.</string>
+  <string name="group_name_rules">It has to be between 1 and 25 characters.</string>
 </resources>
