@@ -78,4 +78,7 @@
   <string name="enter_group_description">Enter group description</string>
   <string name="group_description_max_characters">Maximum 250 characters.</string>
   <string name="group_name_rules">It has to be between 1 and 25 characters.</string>
+  <string name="add_members">Add members</string>
+  <string name="add_members_description">Who will be in this group? You can still add members later.</string>
+  <string name="group_members">Group members</string>
 </resources>

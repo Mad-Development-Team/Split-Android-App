@@ -16,6 +16,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -27,6 +28,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.madteam.split.R
 import com.madteam.split.ui.screens.creategroup.members.viewmodel.CreateGroupMembersViewModel
+import com.madteam.split.ui.theme.PrimaryLargeButton
 import com.madteam.split.ui.theme.SplitTheme
 
 @Composable
@@ -79,7 +81,7 @@ fun CreateGroupMembersContent(
                 .padding(horizontal = 24.dp)
         ) {
             Text(
-                text = stringResource(id = R.string.create_group),
+                text = stringResource(id = R.string.add_members),
                 style = SplitTheme.typography.display.m,
                 color = SplitTheme.colors.neutral.textTitle,
                 maxLines = 2,
@@ -88,12 +90,30 @@ fun CreateGroupMembersContent(
             )
             Spacer(modifier = Modifier.size(4.dp))
             Text(
-                text = stringResource(id = R.string.create_group_description),
+                text = stringResource(id = R.string.add_members_description),
                 style = SplitTheme.typography.body.l,
                 color = SplitTheme.colors.neutral.textBody,
                 textAlign = TextAlign.Justify
             )
             Spacer(modifier = Modifier.size(24.dp))
+            Text(
+                text = stringResource(id = R.string.group_members),
+                style = SplitTheme.typography.heading.m,
+                color = SplitTheme.colors.neutral.textTitle,
+            )
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(bottom = 24.dp),
+                verticalAlignment = Alignment.Bottom,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                PrimaryLargeButton(
+                    onClick = { /*TODO*/ },
+                    text = R.string.continue_text,
+                    enabled = false
+                )
+            }
         }
     }
 }
