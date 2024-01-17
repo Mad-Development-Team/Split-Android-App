@@ -28,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -121,6 +122,75 @@ fun ErrorDialog(
                         onContinueClick()
                     },
                     text = errorButton!!
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun AddMemberDialog(
+    modifier: Modifier = Modifier,
+    setShowDialog: (Boolean) -> Unit,
+    onContinueClick: () -> Unit = {},
+    newMemberName: String,
+    onNewMemberNameChange: (String) -> Unit,
+    isNameValid: Boolean,
+    errorText: Int? = null,
+) {
+    Dialog(
+        onDismissRequest = {
+            setShowDialog(false)
+        }
+    ) {
+        ElevatedCard(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.elevatedCardColors(
+                containerColor = SplitTheme.colors.neutral.backgroundExtraWeak
+            )
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(24.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = stringResource(id = R.string.add_member),
+                    style = SplitTheme.typography.heading.l,
+                    color = SplitTheme.colors.neutral.textTitle,
+                    textAlign = TextAlign.Center
+                )
+                Spacer(modifier = Modifier.size(16.dp))
+                DSBasicTextField(
+                    value = newMemberName,
+                    onValueChange = {
+                        onNewMemberNameChange(it)
+                    },
+                    placeholder = R.string.add_member,
+                    isError = !isNameValid && newMemberName.isNotEmpty(),
+                    isSuccess = isNameValid,
+                    supportingText = if (!isNameValid && newMemberName.isNotEmpty()) errorText else null,
+                    imeAction = ImeAction.Done
+                )
+                Spacer(modifier = Modifier.size(8.dp))
+                DangerLargeButton(
+                    onClick = {
+                        setShowDialog(false)
+                    },
+                    text = R.string.cancel
+                )
+                Spacer(modifier = Modifier.size(8.dp))
+                PrimaryLargeButton(
+                    onClick = {
+                        setShowDialog(false)
+                        onContinueClick()
+                    },
+                    text = R.string.add_member,
+                    enabled = isNameValid
                 )
             }
         }
@@ -331,4 +401,17 @@ fun LoadingDialogPreview() {
 @Composable
 fun ErrorDialogPreview() {
     ErrorDialog(setShowDialog = {})
+}
+
+@Preview
+@Composable
+fun AddMemberDialogPreview() {
+    AddMemberDialog(
+        setShowDialog = {},
+        onContinueClick = {},
+        newMemberName = "",
+        onNewMemberNameChange = {},
+        isNameValid = false,
+        errorText = R.string.generic_error_text
+    )
 }

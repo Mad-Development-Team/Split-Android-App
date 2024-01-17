@@ -1,5 +1,6 @@
 package com.madteam.split.ui.screens.creategroup.members.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,6 +17,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -24,11 +26,17 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.madteam.split.R
+import com.madteam.split.ui.screens.creategroup.members.state.CreateGroupMembersUIEvent
+import com.madteam.split.ui.screens.creategroup.members.state.CreateGroupMembersUIState
 import com.madteam.split.ui.screens.creategroup.members.viewmodel.CreateGroupMembersViewModel
+import com.madteam.split.ui.theme.AddMemberDialog
+import com.madteam.split.ui.theme.AddMembersHorizontalList
 import com.madteam.split.ui.theme.PrimaryLargeButton
+import com.madteam.split.ui.theme.SecondaryLargeButton
 import com.madteam.split.ui.theme.SplitTheme
 
 @Composable
@@ -36,6 +44,7 @@ fun CreateGroupMembersScreen(
     navController: NavController,
     viewModel: CreateGroupMembersViewModel = hiltViewModel(),
 ) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
     Scaffold(
         containerColor = SplitTheme.colors.neutral.backgroundExtraWeak
     ) {
@@ -45,8 +54,18 @@ fun CreateGroupMembersScreen(
                 .padding(it)
         ) {
             CreateGroupMembersContent(
+                state = state,
                 navigateBack = {
                     navController.popBackStack()
+                },
+                onShowAddMemberDialogChanged = { state ->
+                    viewModel.onEvent(CreateGroupMembersUIEvent.OnShowAddMemberDialogChanged(state))
+                },
+                onNewMemberNameChanged = { name ->
+                    viewModel.onEvent(CreateGroupMembersUIEvent.OnNewMemberNameChanged(name))
+                },
+                onAddNewMemberClicked = {
+                    viewModel.onEvent(CreateGroupMembersUIEvent.OnAddMemberClicked)
                 }
             )
         }
@@ -55,7 +74,11 @@ fun CreateGroupMembersScreen(
 
 @Composable
 fun CreateGroupMembersContent(
+    state: CreateGroupMembersUIState,
     navigateBack: () -> Unit,
+    onShowAddMemberDialogChanged: (Boolean) -> Unit,
+    onNewMemberNameChanged: (String) -> Unit,
+    onAddNewMemberClicked: () -> Unit = {},
 ) {
     Column(
         modifier = Modifier
@@ -101,6 +124,24 @@ fun CreateGroupMembersContent(
                 style = SplitTheme.typography.heading.m,
                 color = SplitTheme.colors.neutral.textTitle,
             )
+        }
+        Column {
+            Spacer(modifier = Modifier.size(16.dp))
+            AddMembersHorizontalList(
+                memberList = state.membersList
+            )
+        }
+        Column(
+            modifier = Modifier
+                .padding(horizontal = 24.dp)
+        ) {
+            Spacer(modifier = Modifier.size(16.dp))
+            SecondaryLargeButton(
+                onClick = {
+                    onShowAddMemberDialogChanged(true)
+                },
+                text = R.string.add_member
+            )
             Row(
                 modifier = Modifier
                     .fillMaxSize()
@@ -114,6 +155,29 @@ fun CreateGroupMembersContent(
                     enabled = false
                 )
             }
+        }
+    }
+
+    if (state.showAddMemberDialog) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(SplitTheme.colors.neutral.backgroundHeavy.copy(alpha = 0.3f)),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            AddMemberDialog(
+                setShowDialog = { onShowAddMemberDialogChanged(it) },
+                newMemberName = state.newMemberName,
+                onNewMemberNameChange = {
+                    onNewMemberNameChanged(it)
+                },
+                isNameValid = state.isNewMemberNameValid,
+                onContinueClick = {
+                    onAddNewMemberClicked()
+                },
+                errorText = state.nameErrorText
+            )
         }
     }
 }

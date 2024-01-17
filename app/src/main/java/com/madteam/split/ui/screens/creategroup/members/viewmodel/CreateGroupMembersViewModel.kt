@@ -1,8 +1,11 @@
 package com.madteam.split.ui.screens.creategroup.members.viewmodel
 
 import androidx.lifecycle.ViewModel
+import com.madteam.split.R
+import com.madteam.split.domain.model.Member
 import com.madteam.split.ui.screens.creategroup.members.state.CreateGroupMembersUIEvent
 import com.madteam.split.ui.screens.creategroup.members.state.CreateGroupMembersUIState
+import com.madteam.split.ui.utils.validateName
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,9 +22,55 @@ class CreateGroupMembersViewModel @Inject constructor(
 
     fun onEvent(event: CreateGroupMembersUIEvent) {
         when (event) {
-            else -> {
-                // do nothing
+            is CreateGroupMembersUIEvent.OnShowAddMemberDialogChanged -> {
+                showAddMemberDialog(event.show)
+            }
+
+            is CreateGroupMembersUIEvent.OnNewMemberNameChanged -> {
+                newMemberNameChanged(event.name)
+            }
+
+            is CreateGroupMembersUIEvent.OnAddMemberClicked -> {
+                addNewMemberToList()
             }
         }
+    }
+
+    private fun showAddMemberDialog(state: Boolean) {
+        _state.value = _state.value.copy(
+            showAddMemberDialog = state
+        )
+    }
+
+    private fun newMemberNameChanged(name: String) {
+        _state.value = _state.value.copy(
+            newMemberName = name,
+            isNewMemberNameValid = validateName(name) && nameDoesNotAlreadyExist(name),
+            nameErrorText = if (!nameDoesNotAlreadyExist(
+                    name
+                )) R.string.name_already_exists else null
+        )
+    }
+
+    private fun addNewMemberToList() {
+        val newMember = Member(
+            id = 0,
+            name = _state.value.newMemberName,
+            profileImage = null,
+            user = null,
+            color = null,
+            joinedDate = "",
+            groupId = 0,
+        )
+        _state.value = _state.value.copy(
+            membersList = _state.value.membersList + newMember,
+            newMemberName = "",
+            isNewMemberNameValid = false,
+            showAddMemberDialog = false
+        )
+    }
+
+    private fun nameDoesNotAlreadyExist(name: String): Boolean {
+        return _state.value.membersList.none { it.name == name }
     }
 }

@@ -5,7 +5,7 @@ data class Member(
     val name: String,
     val profileImage: String?,
     val user: Int?,
-    val color: String,
+    val color: String?,
     val joinedDate: String,
     val groupId: Int,
 )
