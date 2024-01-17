@@ -30,6 +30,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.madteam.split.R
+import com.madteam.split.domain.model.Member
 import com.madteam.split.ui.screens.creategroup.members.state.CreateGroupMembersUIEvent
 import com.madteam.split.ui.screens.creategroup.members.state.CreateGroupMembersUIState
 import com.madteam.split.ui.screens.creategroup.members.viewmodel.CreateGroupMembersViewModel
@@ -66,6 +67,12 @@ fun CreateGroupMembersScreen(
                 },
                 onAddNewMemberClicked = {
                     viewModel.onEvent(CreateGroupMembersUIEvent.OnAddMemberClicked)
+                },
+                onDeleteSelectedMember = {
+                    viewModel.onEvent(CreateGroupMembersUIEvent.OnDeleteSelectedMember)
+                },
+                onMemberSelected = { member ->
+                    viewModel.onEvent(CreateGroupMembersUIEvent.OnMemberSelected(member))
                 }
             )
         }
@@ -79,6 +86,8 @@ fun CreateGroupMembersContent(
     onShowAddMemberDialogChanged: (Boolean) -> Unit,
     onNewMemberNameChanged: (String) -> Unit,
     onAddNewMemberClicked: () -> Unit = {},
+    onDeleteSelectedMember: () -> Unit = {},
+    onMemberSelected: (Member) -> Unit = {},
 ) {
     Column(
         modifier = Modifier
@@ -128,7 +137,14 @@ fun CreateGroupMembersContent(
         Column {
             Spacer(modifier = Modifier.size(16.dp))
             AddMembersHorizontalList(
-                memberList = state.membersList
+                memberList = state.membersList,
+                memberSelected = state.memberSelected,
+                onDeleteSelectedMember = {
+                    onDeleteSelectedMember()
+                },
+                onMemberSelected = {
+                    onMemberSelected(it)
+                }
             )
         }
         Column(

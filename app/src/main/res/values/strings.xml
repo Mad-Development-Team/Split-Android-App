@@ -84,4 +84,5 @@
   <string name="add_member">Add member</string>
   <string name="enter_member_name">Enter member name</string>
   <string name="name_already_exists">Member name already exists on the group</string>
+  <string name="delete_member">Delete member</string>
 </resources>

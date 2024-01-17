@@ -33,6 +33,14 @@ class CreateGroupMembersViewModel @Inject constructor(
             is CreateGroupMembersUIEvent.OnAddMemberClicked -> {
                 addNewMemberToList()
             }
+
+            is CreateGroupMembersUIEvent.OnDeleteSelectedMember -> {
+                deleteSelectedMember()
+            }
+
+            is CreateGroupMembersUIEvent.OnMemberSelected -> {
+                onMemberSelected(event.member)
+            }
         }
     }
 
@@ -40,6 +48,18 @@ class CreateGroupMembersViewModel @Inject constructor(
         _state.value = _state.value.copy(
             showAddMemberDialog = state
         )
+    }
+
+    private fun onMemberSelected(member: Member) {
+        if (_state.value.memberSelected?.id == member.id) {
+            _state.value = _state.value.copy(
+                memberSelected = null
+            )
+        } else {
+            _state.value = _state.value.copy(
+                memberSelected = member
+            )
+        }
     }
 
     private fun newMemberNameChanged(name: String) {
@@ -50,6 +70,16 @@ class CreateGroupMembersViewModel @Inject constructor(
                     name
                 )) R.string.name_already_exists else null
         )
+    }
+
+    private fun deleteSelectedMember() {
+        val selectedMember = _state.value.memberSelected
+        if (selectedMember != null) {
+            _state.value = _state.value.copy(
+                membersList = _state.value.membersList.filter { it.id != selectedMember.id },
+                memberSelected = null
+            )
+        }
     }
 
     private fun addNewMemberToList() {

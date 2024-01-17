@@ -8,4 +8,5 @@ data class CreateGroupMembersUIState(
     val newMemberName: String = "",
     val isNewMemberNameValid: Boolean = false,
     val nameErrorText: Int? = null,
+    val memberSelected: Member? = null,
 )
