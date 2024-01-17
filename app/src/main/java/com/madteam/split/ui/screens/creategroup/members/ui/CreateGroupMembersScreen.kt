@@ -1,5 +1,6 @@
 package com.madteam.split.ui.screens.creategroup.members.ui
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -36,9 +37,12 @@ import com.madteam.split.ui.screens.creategroup.members.state.CreateGroupMembers
 import com.madteam.split.ui.screens.creategroup.members.viewmodel.CreateGroupMembersViewModel
 import com.madteam.split.ui.theme.AddMemberDialog
 import com.madteam.split.ui.theme.AddMembersHorizontalList
+import com.madteam.split.ui.theme.ErrorMessage
 import com.madteam.split.ui.theme.PrimaryLargeButton
 import com.madteam.split.ui.theme.SecondaryLargeButton
 import com.madteam.split.ui.theme.SplitTheme
+
+private const val MAXIMUM_MEMBERS_PER_GROUP = 10
 
 @Composable
 fun CreateGroupMembersScreen(
@@ -156,8 +160,18 @@ fun CreateGroupMembersContent(
                 onClick = {
                     onShowAddMemberDialogChanged(true)
                 },
-                text = R.string.add_member
+                text = R.string.add_member,
+                enabled = state.membersList.size < MAXIMUM_MEMBERS_PER_GROUP
             )
+            AnimatedVisibility(visible = state.membersList.size >= MAXIMUM_MEMBERS_PER_GROUP) {
+                Column {
+                    Spacer(modifier = Modifier.size(8.dp))
+                    ErrorMessage(
+                        titleText = R.string.maximum_members_reached_error_title,
+                        messageText = R.string.maximum_members_reached_error
+                    )
+                }
+            }
             Row(
                 modifier = Modifier
                     .fillMaxSize()

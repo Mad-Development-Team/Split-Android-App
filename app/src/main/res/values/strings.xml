@@ -85,4 +85,6 @@
   <string name="enter_member_name">Enter member name</string>
   <string name="name_already_exists">Member name already exists on the group</string>
   <string name="delete_member">Delete member</string>
+  <string name="maximum_members_reached_error">You have reached the maximum members allowed per group. We are improving our service in order to raise the limit, sorry for the inconvenience.</string>
+  <string name="maximum_members_reached_error_title">Members limit reached!</string>
 </resources>

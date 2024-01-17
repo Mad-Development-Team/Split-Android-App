@@ -80,7 +80,7 @@ private fun DSBaseMessage(
                 if (titleText != null) {
                     Text(
                         text = stringResource(id = titleText),
-                        style = SplitTheme.typography.body.m,
+                        style = SplitTheme.typography.heading.xs,
                         color = textColor,
                         textAlign = TextAlign.Start,
                         maxLines = 1,
@@ -200,5 +200,15 @@ fun InfoMessagePreview() {
     InfoMessage(
         messageText = R.string.shared_user_changes_info,
         cancelable = true
+    )
+}
+
+@Preview
+@Composable
+fun ErrorMessagePreview() {
+    ErrorMessage(
+        messageText = R.string.shared_user_changes_info,
+        cancelable = false,
+        titleText = R.string.maximum_members_reached_error_title
     )
 }

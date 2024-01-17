@@ -76,7 +76,7 @@ class CreateGroupMembersViewModel @Inject constructor(
         val selectedMember = _state.value.memberSelected
         if (selectedMember != null) {
             _state.value = _state.value.copy(
-                membersList = _state.value.membersList.filter { it.id != selectedMember.id },
+                membersList = _state.value.membersList.filter { it.name != selectedMember.name },
                 memberSelected = null
             )
         }
