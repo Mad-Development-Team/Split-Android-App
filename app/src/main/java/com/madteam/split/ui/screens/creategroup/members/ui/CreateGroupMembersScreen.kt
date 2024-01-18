@@ -37,7 +37,9 @@ import com.madteam.split.ui.screens.creategroup.members.state.CreateGroupMembers
 import com.madteam.split.ui.screens.creategroup.members.viewmodel.CreateGroupMembersViewModel
 import com.madteam.split.ui.theme.AddMemberDialog
 import com.madteam.split.ui.theme.AddMembersHorizontalList
+import com.madteam.split.ui.theme.ErrorDialog
 import com.madteam.split.ui.theme.ErrorMessage
+import com.madteam.split.ui.theme.LoadingDialog
 import com.madteam.split.ui.theme.PrimaryLargeButton
 import com.madteam.split.ui.theme.SecondaryLargeButton
 import com.madteam.split.ui.theme.SplitTheme
@@ -77,6 +79,9 @@ fun CreateGroupMembersScreen(
                 },
                 onMemberSelected = { member ->
                     viewModel.onEvent(CreateGroupMembersUIEvent.OnMemberSelected(member))
+                },
+                onShowErrorDialogChanged = { state ->
+                    viewModel.onEvent(CreateGroupMembersUIEvent.OnShowErrorDialogChanged(state))
                 }
             )
         }
@@ -92,6 +97,7 @@ fun CreateGroupMembersContent(
     onAddNewMemberClicked: () -> Unit = {},
     onDeleteSelectedMember: () -> Unit = {},
     onMemberSelected: (Member) -> Unit = {},
+    onShowErrorDialogChanged: (Boolean) -> Unit = {},
 ) {
     Column(
         modifier = Modifier
@@ -208,6 +214,42 @@ fun CreateGroupMembersContent(
                 },
                 errorText = state.nameErrorText
             )
+        }
+    }
+
+    if (state.showDialogError) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(SplitTheme.colors.neutral.backgroundHeavy.copy(alpha = 0.3f)),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            ErrorDialog(
+                setShowDialog = {
+                    onShowErrorDialogChanged(it)
+                },
+                errorText = if (state.errorMessage != null) {
+                    stringResource(id = state.errorMessage)
+                } else {
+                    null
+                },
+                onContinueClick = {
+                    navigateBack()
+                }
+            )
+        }
+    }
+
+    if (state.showLoading) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(SplitTheme.colors.neutral.backgroundHeavy.copy(alpha = 0.3f)),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            LoadingDialog()
         }
     }
 }

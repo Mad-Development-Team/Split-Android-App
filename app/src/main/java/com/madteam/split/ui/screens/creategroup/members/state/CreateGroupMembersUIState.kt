@@ -9,4 +9,7 @@ data class CreateGroupMembersUIState(
     val isNewMemberNameValid: Boolean = false,
     val nameErrorText: Int? = null,
     val memberSelected: Member? = null,
+    val showDialogError: Boolean = false,
+    val errorMessage: Int? = null,
+    val showLoading: Boolean = false,
 )
