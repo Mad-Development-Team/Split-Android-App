@@ -12,4 +12,5 @@ sealed class Screens(
     data object SplashScreen : Screens("splash_screen")
     data object CreateGroupInfoScreen : Screens("create_group_info_screen")
     data object CreateGroupMembersScreen : Screens("create_group_members_screen")
+    data object CreateGroupInviteScreen : Screens("create_group_invite_screen")
 }
