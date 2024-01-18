@@ -67,6 +67,9 @@ fun CreateGroupMembersScreen(
                     navController.popBackStack()
                 },
                 navigateTo = navController::navigate,
+                onNextClick = {
+                    viewModel.onEvent(CreateGroupMembersUIEvent.OnNextClick)
+                },
                 onShowAddMemberDialogChanged = { state ->
                     viewModel.onEvent(CreateGroupMembersUIEvent.OnShowAddMemberDialogChanged(state))
                 },
@@ -95,6 +98,7 @@ fun CreateGroupMembersContent(
     state: CreateGroupMembersUIState,
     navigateBack: () -> Unit,
     navigateTo: (String) -> Unit,
+    onNextClick: () -> Unit,
     onShowAddMemberDialogChanged: (Boolean) -> Unit,
     onNewMemberNameChanged: (String) -> Unit,
     onAddNewMemberClicked: () -> Unit,
@@ -190,6 +194,7 @@ fun CreateGroupMembersContent(
             ) {
                 PrimaryLargeButton(
                     onClick = {
+                        onNextClick()
                         navigateTo(Screens.CreateGroupInviteScreen.route)
                     },
                     text = R.string.continue_text,

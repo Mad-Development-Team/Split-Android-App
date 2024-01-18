@@ -30,6 +30,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.madteam.split.R
+import com.madteam.split.ui.screens.creategroup.invite.state.CreateGroupInviteUIEvent
 import com.madteam.split.ui.screens.creategroup.invite.viewmodel.CreateGroupInviteViewModel
 import com.madteam.split.ui.theme.PrimaryLargeButton
 import com.madteam.split.ui.theme.SecondaryLargeButton
@@ -53,6 +54,9 @@ fun CreateGroupInviteScreen(
             CreateGroupInviteContent(
                 navigateBack = {
                     navController.popBackStack()
+                },
+                onFinishClick = {
+                    viewModel.onEvent(CreateGroupInviteUIEvent.getgroup)
                 }
             )
         }
@@ -62,6 +66,7 @@ fun CreateGroupInviteScreen(
 @Composable
 fun CreateGroupInviteContent(
     navigateBack: () -> Unit,
+    onFinishClick: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -152,7 +157,7 @@ fun CreateGroupInviteContent(
         ) {
             PrimaryLargeButton(
                 onClick = {
-                    //TODO: Implement creating the group in the back
+                    onFinishClick()
                 },
                 text = R.string.finish,
                 enabled = true

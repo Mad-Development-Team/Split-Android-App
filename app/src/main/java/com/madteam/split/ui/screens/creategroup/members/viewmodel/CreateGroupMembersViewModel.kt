@@ -3,6 +3,7 @@ package com.madteam.split.ui.screens.creategroup.members.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.madteam.split.R
+import com.madteam.split.data.repository.creategroup.CreateGroupRepository
 import com.madteam.split.data.repository.user.UserRepository
 import com.madteam.split.domain.model.Member
 import com.madteam.split.ui.screens.creategroup.members.state.CreateGroupMembersUIEvent
@@ -18,10 +19,57 @@ import javax.inject.Inject
 @HiltViewModel
 class CreateGroupMembersViewModel @Inject constructor(
     private val userRepository: UserRepository,
+    private val createGroupRepository: CreateGroupRepository,
 ) : ViewModel() {
 
     init {
         addMyUserToMembersList()
+    }
+
+    private val _state: MutableStateFlow<CreateGroupMembersUIState> =
+        MutableStateFlow(CreateGroupMembersUIState())
+    val state: StateFlow<CreateGroupMembersUIState> = _state
+
+    fun onEvent(event: CreateGroupMembersUIEvent) {
+        when (event) {
+            is CreateGroupMembersUIEvent.OnShowAddMemberDialogChanged -> {
+                showAddMemberDialog(event.show)
+            }
+
+            is CreateGroupMembersUIEvent.OnNewMemberNameChanged -> {
+                newMemberNameChanged(event.name)
+            }
+
+            is CreateGroupMembersUIEvent.OnAddMemberClicked -> {
+                addNewMemberToList()
+            }
+
+            is CreateGroupMembersUIEvent.OnDeleteSelectedMember -> {
+                deleteSelectedMember()
+            }
+
+            is CreateGroupMembersUIEvent.OnMemberSelected -> {
+                onMemberSelected(event.member)
+            }
+
+            is CreateGroupMembersUIEvent.OnShowErrorDialogChanged -> {
+                showErrorDialog(event.show)
+            }
+
+            is CreateGroupMembersUIEvent.OnShowLoadingDialogChanged -> {
+                showLoadingDialog(event.show)
+            }
+
+            is CreateGroupMembersUIEvent.OnNextClick -> {
+                saveMembers()
+            }
+        }
+    }
+
+    private fun saveMembers() {
+        createGroupRepository.setMembers(
+            state.value.membersList
+        )
     }
 
     private fun addMyUserToMembersList() {
@@ -58,41 +106,6 @@ class CreateGroupMembersViewModel @Inject constructor(
         )
     }
 
-    private val _state: MutableStateFlow<CreateGroupMembersUIState> =
-        MutableStateFlow(CreateGroupMembersUIState())
-    val state: StateFlow<CreateGroupMembersUIState> = _state
-
-    fun onEvent(event: CreateGroupMembersUIEvent) {
-        when (event) {
-            is CreateGroupMembersUIEvent.OnShowAddMemberDialogChanged -> {
-                showAddMemberDialog(event.show)
-            }
-
-            is CreateGroupMembersUIEvent.OnNewMemberNameChanged -> {
-                newMemberNameChanged(event.name)
-            }
-
-            is CreateGroupMembersUIEvent.OnAddMemberClicked -> {
-                addNewMemberToList()
-            }
-
-            is CreateGroupMembersUIEvent.OnDeleteSelectedMember -> {
-                deleteSelectedMember()
-            }
-
-            is CreateGroupMembersUIEvent.OnMemberSelected -> {
-                onMemberSelected(event.member)
-            }
-
-            is CreateGroupMembersUIEvent.OnShowErrorDialogChanged -> {
-                showErrorDialog(event.show)
-            }
-
-            is CreateGroupMembersUIEvent.OnShowLoadingDialogChanged -> {
-                showLoadingDialog(event.show)
-            }
-        }
-    }
 
     private fun showAddMemberDialog(state: Boolean) {
         _state.value = _state.value.copy(
