@@ -1,6 +1,5 @@
 package com.madteam.split.ui.screens.mygroups.ui
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -121,12 +120,13 @@ fun MyGroupsTopBar(
                 color = SplitTheme.colors.neutral.textTitle,
             )
             ProfileImage(
-                modifier = Modifier
-                    .clickable {
-                        navigateTo(Screens.MyUserScreen.route)
-                    },
+                modifier = Modifier,
                 userInfo = userInfo,
-                size = 48
+                size = 48,
+                isClickable = true,
+                onClick = {
+                    navigateTo(Screens.MyUserScreen.route)
+                }
             )
         }
 

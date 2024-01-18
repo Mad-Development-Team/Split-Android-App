@@ -1,6 +1,7 @@
 package com.madteam.split.ui.theme
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -28,6 +29,8 @@ fun ProfileImage(
     modifier: Modifier = Modifier,
     userInfo: User,
     size: Int,
+    onClick: () -> Unit? = {},
+    isClickable: Boolean = false,
 ) {
     val textStyle = if (size >= 100) {
         SplitTheme.typography.display.l
@@ -50,6 +53,10 @@ fun ProfileImage(
                         CircleShape
                     )
                     .clip(CircleShape)
+                    .clickable(
+                        enabled = isClickable,
+                        onClick = { onClick() }
+                    )
                     .constrainAs(profileImage) {
                         top.linkTo(parent.top)
                         bottom.linkTo(parent.bottom)
