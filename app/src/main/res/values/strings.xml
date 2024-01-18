@@ -88,4 +88,9 @@
   <string name="maximum_members_reached_error">You have reached the maximum members allowed per group. We are improving our service in order to raise the limit, sorry for the inconvenience.</string>
   <string name="maximum_members_reached_error_title">Members limit reached!</string>
   <string name="error_adding_yourself_member">It has been an error trying to add you to the group, try again later.</string>
+  <string name="invite">Invite</string>
+  <string name="invite_description">Invite the members you have created with the code or link.</string>
+  <string name="or_send_by_link">Or send by link</string>
+  <string name="icon_copy_description">Copy</string>
+  <string name="finish">Finish</string>
 </resources>

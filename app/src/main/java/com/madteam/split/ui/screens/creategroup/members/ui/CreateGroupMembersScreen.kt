@@ -32,6 +32,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.madteam.split.R
 import com.madteam.split.domain.model.Member
+import com.madteam.split.ui.navigation.Screens
 import com.madteam.split.ui.screens.creategroup.members.state.CreateGroupMembersUIEvent
 import com.madteam.split.ui.screens.creategroup.members.state.CreateGroupMembersUIState
 import com.madteam.split.ui.screens.creategroup.members.viewmodel.CreateGroupMembersViewModel
@@ -65,6 +66,7 @@ fun CreateGroupMembersScreen(
                 navigateBack = {
                     navController.popBackStack()
                 },
+                navigateTo = navController::navigate,
                 onShowAddMemberDialogChanged = { state ->
                     viewModel.onEvent(CreateGroupMembersUIEvent.OnShowAddMemberDialogChanged(state))
                 },
@@ -92,12 +94,13 @@ fun CreateGroupMembersScreen(
 fun CreateGroupMembersContent(
     state: CreateGroupMembersUIState,
     navigateBack: () -> Unit,
+    navigateTo: (String) -> Unit,
     onShowAddMemberDialogChanged: (Boolean) -> Unit,
     onNewMemberNameChanged: (String) -> Unit,
-    onAddNewMemberClicked: () -> Unit = {},
-    onDeleteSelectedMember: () -> Unit = {},
-    onMemberSelected: (Member) -> Unit = {},
-    onShowErrorDialogChanged: (Boolean) -> Unit = {},
+    onAddNewMemberClicked: () -> Unit,
+    onDeleteSelectedMember: () -> Unit,
+    onMemberSelected: (Member) -> Unit,
+    onShowErrorDialogChanged: (Boolean) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -186,9 +189,11 @@ fun CreateGroupMembersContent(
                 horizontalArrangement = Arrangement.Center
             ) {
                 PrimaryLargeButton(
-                    onClick = { /*TODO*/ },
+                    onClick = {
+                        navigateTo(Screens.CreateGroupInviteScreen.route)
+                    },
                     text = R.string.continue_text,
-                    enabled = false
+                    enabled = state.membersList.size in 2..MAXIMUM_MEMBERS_PER_GROUP
                 )
             }
         }
