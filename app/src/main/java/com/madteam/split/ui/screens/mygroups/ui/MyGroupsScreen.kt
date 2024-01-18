@@ -1,6 +1,5 @@
 package com.madteam.split.ui.screens.mygroups.ui
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -56,9 +55,6 @@ fun MyGroupsScreen(
         ) {
             MyGroupsContent(
                 state = state,
-                onCreateNewGroupClick = {
-                    //TODO: Not implemented yet
-                },
                 navigateTo = navController::navigate
             )
         }
@@ -68,7 +64,6 @@ fun MyGroupsScreen(
 @Composable
 fun MyGroupsContent(
     state: MyGroupsUIState,
-    onCreateNewGroupClick: () -> Unit = {},
     navigateTo: (String) -> Unit,
 ) {
     Column(
@@ -96,7 +91,7 @@ fun MyGroupsContent(
         Spacer(modifier = Modifier.size(16.dp))
         SecondaryLargeButton(
             onClick = {
-                onCreateNewGroupClick()
+                navigateTo(Screens.CreateGroupInfoScreen.route)
             },
             text = R.string.create_a_new_group
         )
@@ -125,12 +120,13 @@ fun MyGroupsTopBar(
                 color = SplitTheme.colors.neutral.textTitle,
             )
             ProfileImage(
-                modifier = Modifier
-                    .clickable {
-                        navigateTo(Screens.MyUserScreen.route)
-                    },
+                modifier = Modifier,
                 userInfo = userInfo,
-                size = 48
+                size = 48,
+                isClickable = true,
+                onClick = {
+                    navigateTo(Screens.MyUserScreen.route)
+                }
             )
         }
 
