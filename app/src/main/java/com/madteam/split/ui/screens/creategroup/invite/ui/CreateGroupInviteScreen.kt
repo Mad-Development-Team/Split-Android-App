@@ -127,6 +127,7 @@ fun CreateGroupInviteContent(
                     }) {
                         Icon(
                             imageVector = Icons.Outlined.ContentCopy,
+                            tint = SplitTheme.colors.neutral.iconHeavy,
                             contentDescription = stringResource(
                                 id = R.string.icon_copy_description
                             ),
