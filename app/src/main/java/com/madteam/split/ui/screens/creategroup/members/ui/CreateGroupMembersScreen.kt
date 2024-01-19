@@ -44,6 +44,7 @@ import com.madteam.split.ui.theme.LoadingDialog
 import com.madteam.split.ui.theme.PrimaryLargeButton
 import com.madteam.split.ui.theme.SecondaryLargeButton
 import com.madteam.split.ui.theme.SplitTheme
+import com.madteam.split.utils.ui.navigateWithPopUpTo
 
 private const val MAXIMUM_MEMBERS_PER_GROUP = 10
 
@@ -66,7 +67,13 @@ fun CreateGroupMembersScreen(
                 navigateBack = {
                     navController.popBackStack()
                 },
-                navigateTo = navController::navigate,
+                popUpTo = { route ->
+                    navController.navigateWithPopUpTo(
+                        inclusive = true,
+                        route = route,
+                        popUpTo = Screens.MyGroupsScreen.route
+                    )
+                },
                 onNextClick = {
                     viewModel.onEvent(CreateGroupMembersUIEvent.OnNextClick)
                 },
@@ -97,7 +104,7 @@ fun CreateGroupMembersScreen(
 fun CreateGroupMembersContent(
     state: CreateGroupMembersUIState,
     navigateBack: () -> Unit,
-    navigateTo: (String) -> Unit,
+    popUpTo: (String) -> Unit,
     onNextClick: () -> Unit,
     onShowAddMemberDialogChanged: (Boolean) -> Unit,
     onNewMemberNameChanged: (String) -> Unit,
@@ -195,9 +202,9 @@ fun CreateGroupMembersContent(
                 PrimaryLargeButton(
                     onClick = {
                         onNextClick()
-                        navigateTo(Screens.CreateGroupInviteScreen.route)
+                        popUpTo(Screens.CreateGroupInviteScreen.route)
                     },
-                    text = R.string.continue_text,
+                    text = R.string.create_group,
                     enabled = state.membersList.size in 2..MAXIMUM_MEMBERS_PER_GROUP
                 )
             }
