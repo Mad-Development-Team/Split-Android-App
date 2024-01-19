@@ -7,7 +7,7 @@ data class Group(
     val inviteCode: String,
     val image: String,
     val bannerImage: String,
-    val createDate: String,
+    val createdDate: String,
     val members: List<Member>,
 )
 

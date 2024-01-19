@@ -1,5 +1,6 @@
 package com.madteam.split.di.creategroup
 
+import com.madteam.split.data.datasource.group.GroupDataSource
 import com.madteam.split.data.repository.creategroup.CreateGroupRepository
 import com.madteam.split.data.repository.creategroup.CreateGroupRepositoryImpl
 import dagger.Module
@@ -14,7 +15,9 @@ object CreateGroupModule {
 
     @Provides
     @Singleton
-    fun provideCreateGroupRepository(): CreateGroupRepository {
-        return CreateGroupRepositoryImpl()
+    fun provideCreateGroupRepository(groupDataSource: GroupDataSource): CreateGroupRepository {
+        return CreateGroupRepositoryImpl(
+            createGroupRemoteDataSource = groupDataSource
+        )
     }
 }

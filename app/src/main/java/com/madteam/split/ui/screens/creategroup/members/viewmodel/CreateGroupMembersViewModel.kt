@@ -62,6 +62,25 @@ class CreateGroupMembersViewModel @Inject constructor(
 
             is CreateGroupMembersUIEvent.OnNextClick -> {
                 saveMembers()
+                createGroupIntent()
+            }
+        }
+    }
+
+    private fun createGroupIntent() {
+        viewModelScope.launch {
+            showLoadingDialog(true)
+            val result = createGroupRepository.createGroup()
+            if (result is Resource.Success) {
+                showLoadingDialog(false)
+                _state.value = _state.value.copy(
+                    createGroupSuccess = true
+                )
+            } else {
+                showLoadingDialog(false)
+                showErrorMessage(
+                    message = R.string.error_creating_group
+                )
             }
         }
     }
@@ -105,7 +124,6 @@ class CreateGroupMembersViewModel @Inject constructor(
             errorMessage = message
         )
     }
-
 
     private fun showAddMemberDialog(state: Boolean) {
         _state.value = _state.value.copy(

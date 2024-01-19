@@ -31,6 +31,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.madteam.split.R
 import com.madteam.split.ui.navigation.Screens
+import com.madteam.split.ui.screens.creategroup.invite.state.CreateGroupInviteUIState
 import com.madteam.split.ui.screens.creategroup.invite.viewmodel.CreateGroupInviteViewModel
 import com.madteam.split.ui.theme.PrimaryLargeButton
 import com.madteam.split.ui.theme.SecondaryLargeButton
@@ -58,6 +59,7 @@ fun CreateGroupInviteScreen(
                 .padding(it)
         ) {
             CreateGroupInviteContent(
+                state = state,
                 onFinishClick = {
                     navController.navigateWithPopUpTo(
                         route = Screens.MyGroupsScreen.route,
@@ -72,6 +74,7 @@ fun CreateGroupInviteScreen(
 
 @Composable
 fun CreateGroupInviteContent(
+    state: CreateGroupInviteUIState,
     onFinishClick: () -> Unit,
 ) {
     Column(
@@ -127,7 +130,7 @@ fun CreateGroupInviteContent(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "000000",
+                        text = state.group!!.inviteCode,
                         style = SplitTheme.typography.display.l,
                         color = SplitTheme.colors.neutral.textTitle,
                         maxLines = 1,

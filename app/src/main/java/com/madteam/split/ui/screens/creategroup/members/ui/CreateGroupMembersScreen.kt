@@ -18,6 +18,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -202,12 +203,17 @@ fun CreateGroupMembersContent(
                 PrimaryLargeButton(
                     onClick = {
                         onNextClick()
-                        popUpTo(Screens.CreateGroupInviteScreen.route)
                     },
                     text = R.string.create_group,
                     enabled = state.membersList.size in 2..MAXIMUM_MEMBERS_PER_GROUP
                 )
             }
+        }
+    }
+
+    LaunchedEffect(state.createGroupSuccess) {
+        if (state.createGroupSuccess) {
+            popUpTo(Screens.CreateGroupInviteScreen.route)
         }
     }
 
