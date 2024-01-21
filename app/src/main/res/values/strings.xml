@@ -97,4 +97,5 @@
   <string name="done_exclamation">Done!</string>
   <string name="go_to_my_groups">Go to my groups</string>
   <string name="error_creating_group">There has been an error trying to create the group. Try it later or contact support.</string>
+  <string name="group_banner_image">Group banner image</string>
 </resources>
