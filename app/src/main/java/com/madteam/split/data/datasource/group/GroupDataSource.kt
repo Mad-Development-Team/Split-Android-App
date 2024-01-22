@@ -39,4 +39,20 @@ class GroupDataSource @Inject constructor(
             errorMessage = "Error trying to create new group"
         )
     }
+
+    override suspend fun getUserGroups(): Resource<List<Group>> {
+        try {
+            val response = api.getUserGroups()
+            return Resource.Success(response.map { it.toDomainModel() })
+        } catch (e: HttpException) {
+            Resource.Error(
+                exception = Exception("Error"),
+                errorMessage = "Error trying to get user groups: ${e.message}"
+            )
+        }
+        return Resource.Error(
+            exception = Exception("Error"),
+            errorMessage = "Error trying to get user groups"
+        )
+    }
 }

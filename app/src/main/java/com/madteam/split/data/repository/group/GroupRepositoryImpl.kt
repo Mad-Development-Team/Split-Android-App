@@ -1,4 +1,4 @@
-package com.madteam.split.data.repository.creategroup
+package com.madteam.split.data.repository.group
 
 import com.madteam.split.data.datasource.group.GroupDataSourceContract
 import com.madteam.split.domain.model.Group
@@ -6,11 +6,12 @@ import com.madteam.split.domain.model.Member
 import com.madteam.split.utils.network.Resource
 import javax.inject.Inject
 
-class CreateGroupRepositoryImpl @Inject constructor(
+class GroupRepositoryImpl @Inject constructor(
     private val createGroupRemoteDataSource: GroupDataSourceContract.Remote,
-) : CreateGroupRepository {
+) : GroupRepository {
 
     private var newGroup: Group
+    private var userGroups: List<Group> = listOf()
 
     init {
         newGroup = Group(
@@ -61,5 +62,27 @@ class CreateGroupRepositoryImpl @Inject constructor(
             exception = Exception("Error"),
             errorMessage = "Error trying to create new group"
         )
+    }
+
+    override suspend fun getUserGroups(update: Boolean): Resource<List<Group>> {
+        if (update || userGroups.isEmpty()) {
+            try {
+                val response = createGroupRemoteDataSource.getUserGroups()
+                if (response is Resource.Success) {
+                    userGroups = response.data
+                    return Resource.Success(userGroups)
+                }
+            } catch (e: Exception) {
+                Resource.Error(
+                    exception = Exception("Error"),
+                    errorMessage = "Error trying to get user groups: ${e.message}"
+                )
+            }
+            return Resource.Error(
+                exception = Exception("Error"),
+                errorMessage = "Error trying to get user groups"
+            )
+        }
+        return Resource.Success(userGroups)
     }
 }

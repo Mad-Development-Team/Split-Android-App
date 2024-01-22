@@ -3,7 +3,7 @@ package com.madteam.split.ui.screens.creategroup.members.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.madteam.split.R
-import com.madteam.split.data.repository.creategroup.CreateGroupRepository
+import com.madteam.split.data.repository.group.GroupRepository
 import com.madteam.split.data.repository.user.UserRepository
 import com.madteam.split.domain.model.Member
 import com.madteam.split.ui.screens.creategroup.members.state.CreateGroupMembersUIEvent
@@ -19,7 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CreateGroupMembersViewModel @Inject constructor(
     private val userRepository: UserRepository,
-    private val createGroupRepository: CreateGroupRepository,
+    private val createGroupRepository: GroupRepository,
 ) : ViewModel() {
 
     init {

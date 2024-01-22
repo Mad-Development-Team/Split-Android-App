@@ -1,5 +1,6 @@
 package com.madteam.split.data.mapper.group
 
+import com.madteam.split.data.mapper.member.toDomainModel
 import com.madteam.split.data.model.response.GroupDTO
 import com.madteam.split.domain.model.Group
 
@@ -25,6 +26,6 @@ fun GroupDTO.toDomainModel(): Group {
         image = this.image ?: "",
         bannerImage = this.bannerImage ?: "",
         createdDate = this.createdDate,
-        members = emptyList()
+        members = this.members.toDomainModel()
     )
 }

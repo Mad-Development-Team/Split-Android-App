@@ -17,4 +17,6 @@ data class GroupDTO(
     val image: String?,
     @SerializedName("bannerImage")
     val bannerImage: String?,
+    @SerializedName("members")
+    val members: List<MemberDTO>,
 )

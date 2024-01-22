@@ -98,7 +98,7 @@ fun MyGroupsContent(
             userInfo = state.userInfo,
             navigateTo = navigateTo
         )
-        Spacer(modifier = Modifier.size(24.dp))
+        Spacer(modifier = Modifier.size(8.dp))
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
@@ -109,6 +109,7 @@ fun MyGroupsContent(
                 )
             }
         }
+        Spacer(modifier = Modifier.size(8.dp))
         PrimaryLargeButton(
             onClick = { /*TODO*/ },
             text = R.string.received_an_invitation
@@ -175,6 +176,7 @@ private fun GroupListItem(
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
+            .padding(vertical = 16.dp)
             .size(124.dp),
         shape = RoundedCornerShape(20.dp),
         elevation = CardDefaults.elevatedCardElevation(

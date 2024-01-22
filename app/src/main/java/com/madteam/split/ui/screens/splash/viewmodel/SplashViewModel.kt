@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.madteam.split.data.model.utils.AuthResult
 import com.madteam.split.data.repository.authentication.AuthenticationRepository
+import com.madteam.split.data.repository.group.GroupRepository
 import com.madteam.split.data.repository.user.UserRepository
 import com.madteam.split.ui.screens.splash.state.SplashUIState
 import com.madteam.split.utils.network.Resource
@@ -16,7 +17,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SplashViewModel @Inject constructor(
     private val authenticationRepository: AuthenticationRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val groupRepository: GroupRepository,
 ) : ViewModel() {
 
     private val _state: MutableStateFlow<SplashUIState> = MutableStateFlow(SplashUIState())
@@ -35,6 +37,7 @@ class SplashViewModel @Inject constructor(
             when (result) {
                 is AuthResult.Authorized -> {
                     getUserInfo()
+                    getUserGroups()
                 }
 
                 else -> {
@@ -42,6 +45,14 @@ class SplashViewModel @Inject constructor(
                 }
             }
             onReadyToGo()
+        }
+    }
+
+    private fun getUserGroups() {
+        viewModelScope.launch {
+            groupRepository.getUserGroups(
+                update = true
+            )
         }
     }
 

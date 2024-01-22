@@ -9,4 +9,5 @@ object EndpointsConstants {
     const val UPDATE_USER_INFO = "updateUserInfo"
     const val REMOVE_PROFILE_IMAGE = "removeProfileImage"
     const val CREATE_GROUP = "createNewGroup"
+    const val GET_USER_GROUPS = "getUserGroups"
 }

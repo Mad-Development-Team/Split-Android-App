@@ -12,5 +12,7 @@ interface GroupDataSourceContract {
             description: String,
             members: List<Member>,
         ): Resource<Group>
+
+        suspend fun getUserGroups(): Resource<List<Group>>
     }
 }

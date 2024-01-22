@@ -28,3 +28,17 @@ fun List<Member>.toDtoList(): List<MemberDTO> {
         )
     }
 }
+
+fun List<MemberDTO>.toDomainModel(): List<Member> {
+    return this.map { member ->
+        Member(
+            id = member.id ?: 0,
+            name = member.name,
+            profileImage = member.profileImage,
+            user = member.user,
+            color = member.color,
+            joinedDate = member.joinedDate,
+            groupId = member.groupId,
+        )
+    }
+}

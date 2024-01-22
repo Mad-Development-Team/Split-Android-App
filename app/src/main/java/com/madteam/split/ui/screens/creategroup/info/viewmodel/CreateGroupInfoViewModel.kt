@@ -1,7 +1,7 @@
 package com.madteam.split.ui.screens.creategroup.info.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.madteam.split.data.repository.creategroup.CreateGroupRepository
+import com.madteam.split.data.repository.group.GroupRepository
 import com.madteam.split.ui.screens.creategroup.info.state.CreateGroupInfoUIEvent
 import com.madteam.split.ui.screens.creategroup.info.state.CreateGroupInfoUIState
 import com.madteam.split.ui.utils.validateGroupName
@@ -14,7 +14,7 @@ private const val MAX_CHAR_GROUP_DESCRIPTION_LENGTH = 250
 
 @HiltViewModel
 class CreateGroupInfoViewModel @Inject constructor(
-    private val createGroupRepository: CreateGroupRepository,
+    private val createGroupRepository: GroupRepository,
 ) : ViewModel() {
 
     private val _state: MutableStateFlow<CreateGroupInfoUIState> =
