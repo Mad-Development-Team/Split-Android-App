@@ -34,6 +34,10 @@ class MyGroupsViewModel @Inject constructor(
             is MyGroupsUIEvent.OnCreateNewGroupClick -> {
                 //Not implemented yet
             }
+
+            is MyGroupsUIEvent.OnRefreshGroupsList -> {
+                reloadUserGroups()
+            }
         }
     }
 
@@ -83,6 +87,20 @@ class MyGroupsViewModel @Inject constructor(
                     //Not necessary
                 }
             }
+        }
+    }
+
+    private fun reloadUserGroups() {
+        viewModelScope.launch {
+            _state.value = _state.value.copy(
+                isGroupsListLoading = true
+            )
+            getUserGroups(
+                update = true
+            )
+            _state.value = _state.value.copy(
+                isGroupsListLoading = false
+            )
         }
     }
 }

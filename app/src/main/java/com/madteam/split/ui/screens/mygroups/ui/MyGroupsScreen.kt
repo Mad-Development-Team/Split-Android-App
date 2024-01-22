@@ -43,11 +43,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.madteam.split.R
 import com.madteam.split.domain.model.Group
 import com.madteam.split.domain.model.Member
 import com.madteam.split.domain.model.User
 import com.madteam.split.ui.navigation.Screens
+import com.madteam.split.ui.screens.mygroups.state.MyGroupsUIEvent
 import com.madteam.split.ui.screens.mygroups.state.MyGroupsUIState
 import com.madteam.split.ui.screens.mygroups.viewmodel.MyGroupsViewModel
 import com.madteam.split.ui.theme.PrimaryLargeButton
@@ -78,6 +81,9 @@ fun MyGroupsScreen(
         ) {
             MyGroupsContent(
                 state = state,
+                onRefreshGroups = {
+                    viewModel.onEvent(MyGroupsUIEvent.OnRefreshGroupsList)
+                },
                 navigateTo = navController::navigate
             )
         }
@@ -87,6 +93,7 @@ fun MyGroupsScreen(
 @Composable
 fun MyGroupsContent(
     state: MyGroupsUIState,
+    onRefreshGroups: () -> Unit,
     navigateTo: (String) -> Unit,
 ) {
     Column(
@@ -94,19 +101,28 @@ fun MyGroupsContent(
             .fillMaxSize()
             .padding(24.dp)
     ) {
+        val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = state.isGroupsListLoading)
         MyGroupsTopBar(
             userInfo = state.userInfo,
             navigateTo = navigateTo
         )
         Spacer(modifier = Modifier.size(8.dp))
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+        SwipeRefresh(
+            state = swipeRefreshState,
+            onRefresh = {
+                onRefreshGroups()
+            }
         ) {
-            itemsIndexed(state.userGroups) { _, group ->
-                GroupListItem(
-                    group = group,
-                    isDefault = false
-                )
+            LazyColumn(
+                modifier = Modifier,
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                itemsIndexed(state.userGroups) { _, group ->
+                    GroupListItem(
+                        group = group,
+                        isDefault = false
+                    )
+                }
             }
         }
         Spacer(modifier = Modifier.size(8.dp))

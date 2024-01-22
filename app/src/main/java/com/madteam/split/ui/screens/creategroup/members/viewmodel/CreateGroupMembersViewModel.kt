@@ -72,6 +72,9 @@ class CreateGroupMembersViewModel @Inject constructor(
             showLoadingDialog(true)
             val result = createGroupRepository.createGroup()
             if (result is Resource.Success) {
+                createGroupRepository.getUserGroups(
+                    update = true
+                )
                 showLoadingDialog(false)
                 _state.value = _state.value.copy(
                     createGroupSuccess = true
