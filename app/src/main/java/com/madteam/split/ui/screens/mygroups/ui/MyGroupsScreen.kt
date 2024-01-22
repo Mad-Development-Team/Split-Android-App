@@ -11,21 +11,30 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -90,6 +99,16 @@ fun MyGroupsContent(
             navigateTo = navigateTo
         )
         Spacer(modifier = Modifier.size(24.dp))
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            itemsIndexed(state.userGroups) { _, group ->
+                GroupListItem(
+                    group = group,
+                    isDefault = false
+                )
+            }
+        }
         PrimaryLargeButton(
             onClick = { /*TODO*/ },
             text = R.string.received_an_invitation
@@ -151,6 +170,7 @@ fun MyGroupsTopBar(
 @Composable
 private fun GroupListItem(
     group: Group,
+    isDefault: Boolean = false,
 ) {
     ElevatedCard(
         modifier = Modifier
@@ -168,7 +188,7 @@ private fun GroupListItem(
             modifier = Modifier
                 .fillMaxSize()
         ) {
-            val (backgroundImage, degraded, groupName, members) = createRefs()
+            val (backgroundImage, groupName, members, default) = createRefs()
             if (group.bannerImage.isNotEmpty()) {
                 GlideImage(
                     modifier = Modifier
@@ -212,6 +232,36 @@ private fun GroupListItem(
                         )
                     )
             )
+            MembersListItemList(
+                members = group.members,
+                modifier = Modifier
+                    .constrainAs(members) {
+                        bottom.linkTo(parent.bottom, margin = 16.dp)
+                        start.linkTo(parent.start, margin = 16.dp)
+                    }
+            )
+            Text(
+                modifier = Modifier
+                    .constrainAs(groupName) {
+                        bottom.linkTo(members.top)
+                        start.linkTo(members.start)
+                    },
+                text = group.name,
+                style = SplitTheme.typography.heading.s,
+                color = SplitTheme.colors.neutral.textExtraWeak,
+            )
+            if (isDefault) {
+                Icon(
+                    modifier = Modifier
+                        .constrainAs(default) {
+                            bottom.linkTo(parent.bottom, margin = 16.dp)
+                            end.linkTo(parent.end, margin = 16.dp)
+                        },
+                    tint = SplitTheme.colors.neutral.iconExtraWeak,
+                    imageVector = Icons.Filled.Home,
+                    contentDescription = null
+                )
+            }
         }
 
     }
@@ -267,6 +317,67 @@ fun GroupListItemPreview() {
                     groupId = 10
                 ),
             )
-        )
+        ),
+        isDefault = true
     )
+}
+
+@OptIn(ExperimentalGlideComposeApi::class)
+@Composable
+fun MembersListItemList(
+    modifier: Modifier = Modifier,
+    members: List<Member>,
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy((-8).dp)
+    ) {
+        members.forEachIndexed { index, member ->
+            Box(
+                modifier = Modifier
+                    .shadow(
+                        elevation = 4.dp,
+                        shape = CircleShape
+                    )
+                    .background(
+                        color = SplitTheme.colors.secondary.backgroundMedium,
+                        shape = CircleShape
+                    )
+                    .size(24.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Row(
+                    modifier = Modifier,
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    if (!member.profileImage.isNullOrBlank()) {
+                        GlideImage(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .clip(CircleShape),
+                            model = member.profileImage,
+                            contentDescription = stringResource(
+                                id = R.string.user_profile_image_description
+                            ),
+                            contentScale = ContentScale.Crop,
+                        )
+                    } else {
+                        Text(
+                            text = member.name.firstOrNull().toString().uppercase(),
+                            style = SplitTheme.typography.heading.xxs,
+                            color = SplitTheme.colors.neutral.textTitle,
+                            modifier = Modifier
+                                .clip(CircleShape)
+                                .background(
+                                    color = SplitTheme.colors.secondary.backgroundMedium,
+                                    shape = CircleShape
+                                ),
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
+            }
+        }
+    }
 }
