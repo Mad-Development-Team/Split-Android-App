@@ -18,6 +18,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,6 +45,7 @@ import com.madteam.split.ui.theme.LoadingDialog
 import com.madteam.split.ui.theme.PrimaryLargeButton
 import com.madteam.split.ui.theme.SecondaryLargeButton
 import com.madteam.split.ui.theme.SplitTheme
+import com.madteam.split.utils.ui.navigateWithPopUpTo
 
 private const val MAXIMUM_MEMBERS_PER_GROUP = 10
 
@@ -66,7 +68,16 @@ fun CreateGroupMembersScreen(
                 navigateBack = {
                     navController.popBackStack()
                 },
-                navigateTo = navController::navigate,
+                popUpTo = { route ->
+                    navController.navigateWithPopUpTo(
+                        inclusive = true,
+                        route = route,
+                        popUpTo = Screens.MyGroupsScreen.route
+                    )
+                },
+                onNextClick = {
+                    viewModel.onEvent(CreateGroupMembersUIEvent.OnNextClick)
+                },
                 onShowAddMemberDialogChanged = { state ->
                     viewModel.onEvent(CreateGroupMembersUIEvent.OnShowAddMemberDialogChanged(state))
                 },
@@ -94,7 +105,8 @@ fun CreateGroupMembersScreen(
 fun CreateGroupMembersContent(
     state: CreateGroupMembersUIState,
     navigateBack: () -> Unit,
-    navigateTo: (String) -> Unit,
+    popUpTo: (String) -> Unit,
+    onNextClick: () -> Unit,
     onShowAddMemberDialogChanged: (Boolean) -> Unit,
     onNewMemberNameChanged: (String) -> Unit,
     onAddNewMemberClicked: () -> Unit,
@@ -190,12 +202,18 @@ fun CreateGroupMembersContent(
             ) {
                 PrimaryLargeButton(
                     onClick = {
-                        navigateTo(Screens.CreateGroupInviteScreen.route)
+                        onNextClick()
                     },
-                    text = R.string.continue_text,
+                    text = R.string.create_group,
                     enabled = state.membersList.size in 2..MAXIMUM_MEMBERS_PER_GROUP
                 )
             }
+        }
+    }
+
+    LaunchedEffect(state.createGroupSuccess) {
+        if (state.createGroupSuccess) {
+            popUpTo(Screens.CreateGroupInviteScreen.route)
         }
     }
 

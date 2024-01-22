@@ -1,5 +1,7 @@
 package com.madteam.split.ui.screens.mygroups.ui
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,22 +11,46 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.madteam.split.R
+import com.madteam.split.domain.model.Group
+import com.madteam.split.domain.model.Member
 import com.madteam.split.domain.model.User
 import com.madteam.split.ui.navigation.Screens
+import com.madteam.split.ui.screens.mygroups.state.MyGroupsUIEvent
 import com.madteam.split.ui.screens.mygroups.state.MyGroupsUIState
 import com.madteam.split.ui.screens.mygroups.viewmodel.MyGroupsViewModel
 import com.madteam.split.ui.theme.PrimaryLargeButton
@@ -55,6 +81,9 @@ fun MyGroupsScreen(
         ) {
             MyGroupsContent(
                 state = state,
+                onRefreshGroups = {
+                    viewModel.onEvent(MyGroupsUIEvent.OnRefreshGroupsList)
+                },
                 navigateTo = navController::navigate
             )
         }
@@ -64,6 +93,7 @@ fun MyGroupsScreen(
 @Composable
 fun MyGroupsContent(
     state: MyGroupsUIState,
+    onRefreshGroups: () -> Unit,
     navigateTo: (String) -> Unit,
 ) {
     Column(
@@ -71,11 +101,31 @@ fun MyGroupsContent(
             .fillMaxSize()
             .padding(24.dp)
     ) {
+        val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = state.isGroupsListLoading)
         MyGroupsTopBar(
             userInfo = state.userInfo,
             navigateTo = navigateTo
         )
-        Spacer(modifier = Modifier.size(24.dp))
+        Spacer(modifier = Modifier.size(8.dp))
+        SwipeRefresh(
+            state = swipeRefreshState,
+            onRefresh = {
+                onRefreshGroups()
+            }
+        ) {
+            LazyColumn(
+                modifier = Modifier,
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                itemsIndexed(state.userGroups) { _, group ->
+                    GroupListItem(
+                        group = group,
+                        isDefault = false
+                    )
+                }
+            }
+        }
+        Spacer(modifier = Modifier.size(8.dp))
         PrimaryLargeButton(
             onClick = { /*TODO*/ },
             text = R.string.received_an_invitation
@@ -133,10 +183,219 @@ fun MyGroupsTopBar(
     }
 }
 
+@OptIn(ExperimentalGlideComposeApi::class)
+@Composable
+private fun GroupListItem(
+    group: Group,
+    isDefault: Boolean = false,
+) {
+    ElevatedCard(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 16.dp)
+            .size(124.dp),
+        shape = RoundedCornerShape(20.dp),
+        elevation = CardDefaults.elevatedCardElevation(
+            defaultElevation = 8.dp
+        ),
+        colors = CardDefaults.elevatedCardColors(
+            containerColor = SplitTheme.colors.secondary.backgroundMedium
+        )
+    ) {
+        ConstraintLayout(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            val (backgroundImage, groupName, members, default) = createRefs()
+            if (group.bannerImage.isNotEmpty()) {
+                GlideImage(
+                    modifier = Modifier
+                        .constrainAs(backgroundImage) {
+                            top.linkTo(parent.top)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                            bottom.linkTo(parent.bottom)
+                        },
+                    contentScale = ContentScale.Crop,
+                    model = group.bannerImage,
+                    contentDescription = stringResource(id = R.string.group_banner_image)
+                )
+            } else {
+                Image(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .rotate(180f)
+                        .constrainAs(backgroundImage) {
+                            top.linkTo(parent.top)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                            bottom.linkTo(parent.bottom)
+                        },
+                    contentScale = ContentScale.Crop,
+                    painter = painterResource(id = R.drawable.default_group_banner_image),
+                    contentDescription = stringResource(id = R.string.group_banner_image),
+                )
+            }
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(
+                        brush = Brush.verticalGradient(
+                            colors = listOf(
+                                Color.Black,
+                                Color.Transparent
+                            ),
+                            startY = Float.POSITIVE_INFINITY,
+                            endY = 0f
+                        )
+                    )
+            )
+            MembersListItemList(
+                members = group.members,
+                modifier = Modifier
+                    .constrainAs(members) {
+                        bottom.linkTo(parent.bottom, margin = 16.dp)
+                        start.linkTo(parent.start, margin = 16.dp)
+                    }
+            )
+            Text(
+                modifier = Modifier
+                    .constrainAs(groupName) {
+                        bottom.linkTo(members.top)
+                        start.linkTo(members.start)
+                    },
+                text = group.name,
+                style = SplitTheme.typography.heading.s,
+                color = SplitTheme.colors.neutral.textExtraWeak,
+            )
+            if (isDefault) {
+                Icon(
+                    modifier = Modifier
+                        .constrainAs(default) {
+                            bottom.linkTo(parent.bottom, margin = 16.dp)
+                            end.linkTo(parent.end, margin = 16.dp)
+                        },
+                    tint = SplitTheme.colors.neutral.iconExtraWeak,
+                    imageVector = Icons.Filled.Home,
+                    contentDescription = null
+                )
+            }
+        }
+
+    }
+}
+
 @Preview
 @Composable
-fun MyGroupsScreenPreview() {
-    MyGroupsScreen(
-        navController = rememberNavController()
+fun GroupListItemPreview() {
+    GroupListItem(
+        group = Group(
+            id = 10,
+            name = "Amsterdam",
+            description = "",
+            inviteCode = "R2PZMT",
+            image = "",
+            bannerImage = "",
+            createdDate = "2024-01-21 18:28:42",
+            members = listOf(
+                Member(
+                    id = 21,
+                    name = "adria",
+                    profileImage = "",
+                    user = 5,
+                    color = "",
+                    joinedDate = "2024-01-21 18:28:42",
+                    groupId = 10
+                ),
+                Member(
+                    id = 22,
+                    name = "david",
+                    profileImage = "",
+                    user = null,
+                    color = "",
+                    joinedDate = "2024-01-21 18:28:42",
+                    groupId = 10
+                ),
+                Member(
+                    id = 23,
+                    name = "Berni",
+                    profileImage = "",
+                    user = null,
+                    color = "",
+                    joinedDate = "2024-01-21 18:28:42",
+                    groupId = 10
+                ),
+                Member(
+                    id = 24,
+                    name = "Oscar",
+                    profileImage = "",
+                    user = null,
+                    color = "",
+                    joinedDate = "2024-01-21 18:28:42",
+                    groupId = 10
+                ),
+            )
+        ),
+        isDefault = true
     )
+}
+
+@OptIn(ExperimentalGlideComposeApi::class)
+@Composable
+fun MembersListItemList(
+    modifier: Modifier = Modifier,
+    members: List<Member>,
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy((-8).dp)
+    ) {
+        members.forEachIndexed { index, member ->
+            Box(
+                modifier = Modifier
+                    .shadow(
+                        elevation = 4.dp,
+                        shape = CircleShape
+                    )
+                    .background(
+                        color = SplitTheme.colors.secondary.backgroundMedium,
+                        shape = CircleShape
+                    )
+                    .size(24.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Row(
+                    modifier = Modifier,
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    if (!member.profileImage.isNullOrBlank()) {
+                        GlideImage(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .clip(CircleShape),
+                            model = member.profileImage,
+                            contentDescription = stringResource(
+                                id = R.string.user_profile_image_description
+                            ),
+                            contentScale = ContentScale.Crop,
+                        )
+                    } else {
+                        Text(
+                            text = member.name.firstOrNull().toString().uppercase(),
+                            style = SplitTheme.typography.heading.xxs,
+                            color = SplitTheme.colors.neutral.textTitle,
+                            modifier = Modifier
+                                .clip(CircleShape)
+                                .background(
+                                    color = SplitTheme.colors.secondary.backgroundMedium,
+                                    shape = CircleShape
+                                ),
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
+            }
+        }
+    }
 }

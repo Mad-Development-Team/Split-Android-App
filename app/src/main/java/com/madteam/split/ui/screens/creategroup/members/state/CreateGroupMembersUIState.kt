@@ -12,4 +12,5 @@ data class CreateGroupMembersUIState(
     val showDialogError: Boolean = false,
     val errorMessage: Int? = null,
     val showLoading: Boolean = false,
+    val createGroupSuccess: Boolean = false,
 )

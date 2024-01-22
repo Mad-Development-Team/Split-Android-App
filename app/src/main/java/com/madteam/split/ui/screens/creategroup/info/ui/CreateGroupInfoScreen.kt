@@ -60,6 +60,9 @@ fun CreateGroupInfoScreen(
                 onGroupDescriptionChanged = { description ->
                     viewModel.onEvent(CreateGroupInfoUIEvent.OnGroupDescriptionChange(description))
                 },
+                onNextClick = {
+                    viewModel.onEvent(CreateGroupInfoUIEvent.OnNextClick)
+                },
                 navigateTo = navController::navigate,
                 navigateBack = {
                     navController.popBackStack()
@@ -74,6 +77,7 @@ fun CreateGroupInfoScreenContent(
     state: CreateGroupInfoUIState,
     onGroupNameChanged: (String) -> Unit,
     onGroupDescriptionChanged: (String) -> Unit,
+    onNextClick: () -> Unit,
     navigateTo: (String) -> Unit,
     navigateBack: () -> Unit,
 ) {
@@ -146,6 +150,7 @@ fun CreateGroupInfoScreenContent(
             Spacer(modifier = Modifier.size(24.dp))
             PrimaryLargeButton(
                 onClick = {
+                    onNextClick()
                     navigateTo(Screens.CreateGroupMembersScreen.route)
                 },
                 text = R.string.continue_text,

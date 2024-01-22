@@ -8,6 +8,7 @@ sealed class CreateGroupMembersUIEvent {
     data class OnMemberSelected(val member: Member) : CreateGroupMembersUIEvent()
     data class OnShowErrorDialogChanged(val show: Boolean) : CreateGroupMembersUIEvent()
     data class OnShowLoadingDialogChanged(val show: Boolean) : CreateGroupMembersUIEvent()
+    data object OnNextClick : CreateGroupMembersUIEvent()
     data object OnAddMemberClicked : CreateGroupMembersUIEvent()
     data object OnDeleteSelectedMember : CreateGroupMembersUIEvent()
 }

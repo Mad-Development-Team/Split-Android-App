@@ -2,6 +2,7 @@ package com.madteam.split.ui.screens.mygroups.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.madteam.split.data.repository.group.GroupRepository
 import com.madteam.split.data.repository.user.UserRepository
 import com.madteam.split.ui.screens.mygroups.state.MyGroupsUIEvent
 import com.madteam.split.ui.screens.mygroups.state.MyGroupsUIState
@@ -15,13 +16,17 @@ import javax.inject.Inject
 @HiltViewModel
 class MyGroupsViewModel @Inject constructor(
     private val userRepository: UserRepository,
-): ViewModel() {
+    private val groupRepository: GroupRepository,
+) : ViewModel() {
 
     private val _state = MutableStateFlow(MyGroupsUIState())
     val state: StateFlow<MyGroupsUIState> = _state
 
     init {
         getUserInfo()
+        getUserGroups(
+            update = false
+        )
     }
 
     fun onEvent(event: MyGroupsUIEvent) {
@@ -29,13 +34,16 @@ class MyGroupsViewModel @Inject constructor(
             is MyGroupsUIEvent.OnCreateNewGroupClick -> {
                 //Not implemented yet
             }
+
+            is MyGroupsUIEvent.OnRefreshGroupsList -> {
+                reloadUserGroups()
+            }
         }
     }
 
     private fun getUserInfo() {
         viewModelScope.launch {
-            val user = userRepository.getUserInfo()
-            when (user) {
+            when (val user = userRepository.getUserInfo()) {
                 is Resource.Success -> {
                     user.data.let {
                         _state.value = _state.value.copy(
@@ -52,6 +60,47 @@ class MyGroupsViewModel @Inject constructor(
                     //Not necessary
                 }
             }
+        }
+    }
+
+    private fun getUserGroups(
+        update: Boolean = false,
+    ) {
+        viewModelScope.launch {
+            val groups = groupRepository.getUserGroups(
+                update = update
+            )
+            when (groups) {
+                is Resource.Success -> {
+                    groups.data.let {
+                        _state.value = _state.value.copy(
+                            userGroups = it
+                        )
+                    }
+                }
+
+                is Resource.Error -> {
+                    println("Error getting user groups")
+                }
+
+                is Resource.Loading -> {
+                    //Not necessary
+                }
+            }
+        }
+    }
+
+    private fun reloadUserGroups() {
+        viewModelScope.launch {
+            _state.value = _state.value.copy(
+                isGroupsListLoading = true
+            )
+            getUserGroups(
+                update = true
+            )
+            _state.value = _state.value.copy(
+                isGroupsListLoading = false
+            )
         }
     }
 }

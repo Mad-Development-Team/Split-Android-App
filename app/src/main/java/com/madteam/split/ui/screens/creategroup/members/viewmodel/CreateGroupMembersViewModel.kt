@@ -3,6 +3,7 @@ package com.madteam.split.ui.screens.creategroup.members.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.madteam.split.R
+import com.madteam.split.data.repository.group.GroupRepository
 import com.madteam.split.data.repository.user.UserRepository
 import com.madteam.split.domain.model.Member
 import com.madteam.split.ui.screens.creategroup.members.state.CreateGroupMembersUIEvent
@@ -18,44 +19,11 @@ import javax.inject.Inject
 @HiltViewModel
 class CreateGroupMembersViewModel @Inject constructor(
     private val userRepository: UserRepository,
+    private val createGroupRepository: GroupRepository,
 ) : ViewModel() {
 
     init {
         addMyUserToMembersList()
-    }
-
-    private fun addMyUserToMembersList() {
-        viewModelScope.launch {
-            when (val user = userRepository.getUserInfo()) {
-                is Resource.Success -> {
-                    val myMember = Member(
-                        id = 0,
-                        name = user.data.name,
-                        profileImage = user.data.profileImage,
-                        user = user.data.id,
-                        color = null,
-                        joinedDate = "",
-                        groupId = 0,
-                    )
-                    _state.value = _state.value.copy(
-                        membersList = _state.value.membersList + myMember
-                    )
-                }
-
-                else -> {
-                    showErrorMessage(
-                        message = R.string.error_adding_yourself_member
-                    )
-                }
-            }
-        }
-    }
-
-    private fun showErrorMessage(message: Int) {
-        _state.value = _state.value.copy(
-            showDialogError = true,
-            errorMessage = message
-        )
     }
 
     private val _state: MutableStateFlow<CreateGroupMembersUIState> =
@@ -91,7 +59,73 @@ class CreateGroupMembersViewModel @Inject constructor(
             is CreateGroupMembersUIEvent.OnShowLoadingDialogChanged -> {
                 showLoadingDialog(event.show)
             }
+
+            is CreateGroupMembersUIEvent.OnNextClick -> {
+                saveMembers()
+                createGroupIntent()
+            }
         }
+    }
+
+    private fun createGroupIntent() {
+        viewModelScope.launch {
+            showLoadingDialog(true)
+            val result = createGroupRepository.createGroup()
+            if (result is Resource.Success) {
+                createGroupRepository.getUserGroups(
+                    update = true
+                )
+                showLoadingDialog(false)
+                _state.value = _state.value.copy(
+                    createGroupSuccess = true
+                )
+            } else {
+                showLoadingDialog(false)
+                showErrorMessage(
+                    message = R.string.error_creating_group
+                )
+            }
+        }
+    }
+
+    private fun saveMembers() {
+        createGroupRepository.setMembers(
+            state.value.membersList
+        )
+    }
+
+    private fun addMyUserToMembersList() {
+        viewModelScope.launch {
+            when (val user = userRepository.getUserInfo()) {
+                is Resource.Success -> {
+                    val myMember = Member(
+                        id = 0,
+                        name = user.data.name,
+                        profileImage = user.data.profileImage,
+                        user = user.data.id,
+                        color = null,
+                        joinedDate = "",
+                        groupId = 0,
+                    )
+                    _state.value = _state.value.copy(
+                        membersList = _state.value.membersList + myMember
+                    )
+                }
+
+                else -> {
+                    showErrorMessage(
+                        message = R.string.error_adding_yourself_member
+                    )
+                }
+            }
+        }
+    }
+
+    private fun showErrorMessage(message: Int) {
+        _state.value = _state.value.copy(
+            showDialogError = true,
+            errorMessage = message
+        )
     }
 
     private fun showAddMemberDialog(state: Boolean) {
