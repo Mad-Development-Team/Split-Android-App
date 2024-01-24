@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.madteam.split.data.repository.group.GroupRepository
 import com.madteam.split.data.repository.user.UserRepository
+import com.madteam.split.domain.model.Group
 import com.madteam.split.ui.screens.mygroups.state.MyGroupsUIEvent
 import com.madteam.split.ui.screens.mygroups.state.MyGroupsUIState
 import com.madteam.split.utils.network.Resource
@@ -37,6 +38,10 @@ class MyGroupsViewModel @Inject constructor(
 
             is MyGroupsUIEvent.OnRefreshGroupsList -> {
                 reloadUserGroups()
+            }
+
+            is MyGroupsUIEvent.OnGroupSelected -> {
+                setSelectedGroup(event.group)
             }
         }
     }
@@ -102,5 +107,11 @@ class MyGroupsViewModel @Inject constructor(
                 isGroupsListLoading = false
             )
         }
+    }
+
+    private fun setSelectedGroup(group: Group?) {
+        _state.value = _state.value.copy(
+            groupSelected = group
+        )
     }
 }

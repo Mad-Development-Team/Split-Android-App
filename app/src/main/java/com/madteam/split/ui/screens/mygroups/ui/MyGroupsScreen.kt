@@ -2,6 +2,7 @@ package com.madteam.split.ui.screens.mygroups.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,6 +32,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -53,6 +55,7 @@ import com.madteam.split.ui.navigation.Screens
 import com.madteam.split.ui.screens.mygroups.state.MyGroupsUIEvent
 import com.madteam.split.ui.screens.mygroups.state.MyGroupsUIState
 import com.madteam.split.ui.screens.mygroups.viewmodel.MyGroupsViewModel
+import com.madteam.split.ui.theme.GroupSettingsModalBottomSheet
 import com.madteam.split.ui.theme.PrimaryLargeButton
 import com.madteam.split.ui.theme.ProfileImage
 import com.madteam.split.ui.theme.SecondaryLargeButton
@@ -71,6 +74,15 @@ fun MyGroupsScreen(
 
     val state by viewModel.state.collectAsStateWithLifecycle()
 
+    if (state.groupSelected != null) {
+        GroupSettingsModalBottomSheet(
+            group = state.groupSelected!!,
+            onClose = {
+                viewModel.onEvent(MyGroupsUIEvent.OnGroupSelected(null))
+            }
+        )
+    }
+
     Scaffold(
         containerColor = SplitTheme.colors.neutral.backgroundExtraWeak
     ) {
@@ -84,7 +96,10 @@ fun MyGroupsScreen(
                 onRefreshGroups = {
                     viewModel.onEvent(MyGroupsUIEvent.OnRefreshGroupsList)
                 },
-                navigateTo = navController::navigate
+                onGroupSelected = { group ->
+                    viewModel.onEvent(MyGroupsUIEvent.OnGroupSelected(group))
+                },
+                navigateTo = navController::navigate,
             )
         }
     }
@@ -95,6 +110,7 @@ fun MyGroupsContent(
     state: MyGroupsUIState,
     onRefreshGroups: () -> Unit,
     navigateTo: (String) -> Unit,
+    onGroupSelected: (Group) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -120,7 +136,8 @@ fun MyGroupsContent(
                 itemsIndexed(state.userGroups) { _, group ->
                     GroupListItem(
                         group = group,
-                        isDefault = false
+                        isDefault = false,
+                        onGroupSelected = { onGroupSelected(it) }
                     )
                 }
             }
@@ -188,12 +205,20 @@ fun MyGroupsTopBar(
 private fun GroupListItem(
     group: Group,
     isDefault: Boolean = false,
+    onGroupSelected: (Group) -> Unit,
 ) {
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 16.dp)
-            .size(124.dp),
+            .size(124.dp)
+            .pointerInput(Unit) {
+                detectTapGestures(
+                    onLongPress = {
+                        onGroupSelected(group)
+                    }
+                )
+            },
         shape = RoundedCornerShape(20.dp),
         elevation = CardDefaults.elevatedCardElevation(
             defaultElevation = 8.dp
@@ -336,7 +361,8 @@ fun GroupListItemPreview() {
                 ),
             )
         ),
-        isDefault = true
+        isDefault = true,
+        {}
     )
 }
 
