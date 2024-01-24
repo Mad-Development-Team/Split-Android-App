@@ -86,6 +86,9 @@ dependencies {
     //Glide
     implementation(libs.glide)
 
+    //Datastore
+    implementation(libs.datastore)
+
     //Room
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)

@@ -112,6 +112,7 @@ fun GroupSettingsModalBottomSheet(
     group: Group,
     isDefault: Boolean,
     onClose: () -> Unit,
+    onGroupDefault: (Int) -> Unit,
 ) {
     val modalBottomSheetState = rememberModalBottomSheetState()
     BackHandler {
@@ -196,6 +197,9 @@ fun GroupSettingsModalBottomSheet(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .clickable {
+                        onGroupDefault(group.id)
+                    }
             ) {
                 Icon(
                     imageVector = if (isDefault) {

@@ -79,6 +79,13 @@ fun MyGroupsScreen(
             isDefault = state.groupSelectedIsDefault,
             onClose = {
                 viewModel.onEvent(MyGroupsUIEvent.OnGroupSelected(null, false))
+            },
+            onGroupDefault = { selectedGroupId ->
+                viewModel.onEvent(
+                    MyGroupsUIEvent.OnGroupSelectedAsDefault(
+                        selectedGroupId
+                    )
+                )
             }
         )
     }
@@ -136,7 +143,7 @@ fun MyGroupsContent(
                 itemsIndexed(state.userGroups) { _, group ->
                     GroupListItem(
                         group = group,
-                        isDefault = false,
+                        isDefault = state.defaultGroup == group.id.toString(),
                         onGroupSelected = { selected, isDefault ->
                             onGroupSelected(selected, isDefault)
                         }

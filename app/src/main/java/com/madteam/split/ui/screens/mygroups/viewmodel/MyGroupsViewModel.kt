@@ -2,6 +2,7 @@ package com.madteam.split.ui.screens.mygroups.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.madteam.split.data.repository.datastore.DatastoreManager
 import com.madteam.split.data.repository.group.GroupRepository
 import com.madteam.split.data.repository.user.UserRepository
 import com.madteam.split.domain.model.Group
@@ -18,6 +19,7 @@ import javax.inject.Inject
 class MyGroupsViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val groupRepository: GroupRepository,
+    private val dataStoreManager: DatastoreManager,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(MyGroupsUIState())
@@ -45,6 +47,10 @@ class MyGroupsViewModel @Inject constructor(
                     group = event.group,
                     isDefault = event.isDefault
                 )
+            }
+
+            is MyGroupsUIEvent.OnGroupSelectedAsDefault -> {
+                setSelectedGroupAsDefault(event.groupId)
             }
         }
     }
@@ -117,5 +123,29 @@ class MyGroupsViewModel @Inject constructor(
             groupSelected = group,
             groupSelectedIsDefault = isDefault
         )
+    }
+
+    private fun setSelectedGroupAsDefault(groupId: Int) {
+        viewModelScope.launch {
+            try {
+                val actualMainGroup = dataStoreManager.getString("mainGroupId")
+                if (actualMainGroup.isNullOrBlank() || actualMainGroup != groupId.toString()) {
+                    dataStoreManager.saveString("mainGroupId", groupId.toString())
+                    _state.value = _state.value.copy(
+                        defaultGroup = groupId.toString()
+                    )
+                } else {
+                    dataStoreManager.removeValue("mainGroupId")
+                    _state.value = _state.value.copy(
+                        defaultGroup = ""
+                    )
+                }
+                _state.value = _state.value.copy(
+                    defaultGroup = groupId.toString()
+                )
+            } catch (e: Exception) {
+                println("Error saving default group")
+            }
+        }
     }
 }

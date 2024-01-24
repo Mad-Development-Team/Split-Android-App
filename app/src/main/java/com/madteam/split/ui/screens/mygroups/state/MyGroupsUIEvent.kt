@@ -6,4 +6,5 @@ sealed class MyGroupsUIEvent {
     data object OnCreateNewGroupClick : MyGroupsUIEvent()
     data object OnRefreshGroupsList : MyGroupsUIEvent()
     data class OnGroupSelected(val group: Group?, val isDefault: Boolean) : MyGroupsUIEvent()
+    data class OnGroupSelectedAsDefault(val groupId: Int) : MyGroupsUIEvent()
 }

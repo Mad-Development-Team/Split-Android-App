@@ -9,4 +9,5 @@ data class MyGroupsUIState(
     val isGroupsListLoading: Boolean = false,
     val groupSelected: Group? = null,
     val groupSelectedIsDefault: Boolean = false,
+    val defaultGroup: String = "",
 )
