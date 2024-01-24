@@ -2,11 +2,13 @@ package com.madteam.split.ui.theme
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -14,6 +16,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.RemoveCircle
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -24,11 +29,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
@@ -104,6 +110,7 @@ fun DSModalBottomSheet(
 @Composable
 fun GroupSettingsModalBottomSheet(
     group: Group,
+    isDefault: Boolean,
     onClose: () -> Unit,
 ) {
     val modalBottomSheetState = rememberModalBottomSheetState()
@@ -119,14 +126,13 @@ fun GroupSettingsModalBottomSheet(
     ) {
         ConstraintLayout(
             modifier = Modifier
-                .fillMaxSize()
         ) {
-            val (bannerImage) = createRefs()
+            val (bannerImage, degrade, groupName) = createRefs()
             if (group.bannerImage.isNotEmpty()) {
                 GlideImage(
                     modifier = Modifier
                         .wrapContentWidth()
-                        .height(60.dp)
+                        .height(100.dp)
                         .constrainAs(bannerImage) {
                             top.linkTo(parent.top)
                             start.linkTo(parent.start)
@@ -152,24 +158,68 @@ fun GroupSettingsModalBottomSheet(
                     contentDescription = stringResource(id = R.string.group_banner_image),
                 )
             }
+            Box(
+                modifier = Modifier
+                    .height(100.dp)
+                    .fillMaxWidth()
+                    .background(
+                        brush = Brush.verticalGradient(
+                            colors = listOf(
+                                Color.Transparent,
+                                Color.Black
+                            )
+                        )
+                    )
+                    .constrainAs(degrade) {
+                        top.linkTo(bannerImage.top)
+                        start.linkTo(bannerImage.start)
+                        end.linkTo(bannerImage.end)
+                        bottom.linkTo(bannerImage.bottom)
+                    }
+            )
+            Text(
+                modifier = Modifier
+                    .constrainAs(groupName) {
+                        bottom.linkTo(bannerImage.bottom, 16.dp)
+                        start.linkTo(parent.start, 24.dp)
+                    },
+                text = group.name,
+                style = SplitTheme.typography.heading.s,
+                color = SplitTheme.colors.neutral.textExtraWeak,
+            )
+
+        }
+        Column(
+            modifier = Modifier
+                .padding(24.dp)
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                Icon(
+                    imageVector = if (isDefault) {
+                        Icons.Filled.RemoveCircle
+                    } else {
+                        Icons.Filled.Home
+                    },
+                    contentDescription = null,
+                    tint = SplitTheme.colors.neutral.iconHeavy,
+                )
+                Spacer(modifier = Modifier.size(24.dp))
+                Text(
+                    text = if (isDefault) {
+                        stringResource(
+                            id = R.string.remove_this_group_as_default
+                        ) // It will be different when logic implemented
+                    } else {
+                        stringResource(id = R.string.mark_this_group_as_default)
+                    },
+                    style = SplitTheme.typography.body.l,
+                    color = SplitTheme.colors.neutral.textTitle,
+                )
+            }
+            Spacer(modifier = Modifier.size(32.dp))
         }
     }
-}
-
-@Preview
-@Composable
-fun DSModalBottomSheetPreview() {
-    GroupSettingsModalBottomSheet(
-        group = Group(
-            id = 1,
-            name = "Group Name",
-            members = listOf(),
-            description = "",
-            image = "",
-            inviteCode = "",
-            bannerImage = "",
-            createdDate = "23/11/2001"
-        ),
-        {}
-    )
 }

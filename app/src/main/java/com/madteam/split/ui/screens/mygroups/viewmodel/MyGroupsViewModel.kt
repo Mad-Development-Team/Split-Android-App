@@ -41,7 +41,10 @@ class MyGroupsViewModel @Inject constructor(
             }
 
             is MyGroupsUIEvent.OnGroupSelected -> {
-                setSelectedGroup(event.group)
+                setSelectedGroup(
+                    group = event.group,
+                    isDefault = event.isDefault
+                )
             }
         }
     }
@@ -109,9 +112,10 @@ class MyGroupsViewModel @Inject constructor(
         }
     }
 
-    private fun setSelectedGroup(group: Group?) {
+    private fun setSelectedGroup(group: Group?, isDefault: Boolean) {
         _state.value = _state.value.copy(
-            groupSelected = group
+            groupSelected = group,
+            groupSelectedIsDefault = isDefault
         )
     }
 }

@@ -98,4 +98,6 @@
   <string name="go_to_my_groups">Go to my groups</string>
   <string name="error_creating_group">There has been an error trying to create the group. Try it later or contact support.</string>
   <string name="group_banner_image">Group banner image</string>
+  <string name="mark_this_group_as_default">Mark this group as default one.</string>
+  <string name="remove_this_group_as_default">Remove this group as default one.</string>
 </resources>

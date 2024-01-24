@@ -37,7 +37,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -77,8 +76,9 @@ fun MyGroupsScreen(
     if (state.groupSelected != null) {
         GroupSettingsModalBottomSheet(
             group = state.groupSelected!!,
+            isDefault = state.groupSelectedIsDefault,
             onClose = {
-                viewModel.onEvent(MyGroupsUIEvent.OnGroupSelected(null))
+                viewModel.onEvent(MyGroupsUIEvent.OnGroupSelected(null, false))
             }
         )
     }
@@ -96,8 +96,8 @@ fun MyGroupsScreen(
                 onRefreshGroups = {
                     viewModel.onEvent(MyGroupsUIEvent.OnRefreshGroupsList)
                 },
-                onGroupSelected = { group ->
-                    viewModel.onEvent(MyGroupsUIEvent.OnGroupSelected(group))
+                onGroupSelected = { group, isDefault ->
+                    viewModel.onEvent(MyGroupsUIEvent.OnGroupSelected(group, isDefault))
                 },
                 navigateTo = navController::navigate,
             )
@@ -110,7 +110,7 @@ fun MyGroupsContent(
     state: MyGroupsUIState,
     onRefreshGroups: () -> Unit,
     navigateTo: (String) -> Unit,
-    onGroupSelected: (Group) -> Unit,
+    onGroupSelected: (Group, Boolean) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -137,7 +137,9 @@ fun MyGroupsContent(
                     GroupListItem(
                         group = group,
                         isDefault = false,
-                        onGroupSelected = { onGroupSelected(it) }
+                        onGroupSelected = { selected, isDefault ->
+                            onGroupSelected(selected, isDefault)
+                        }
                     )
                 }
             }
@@ -205,7 +207,7 @@ fun MyGroupsTopBar(
 private fun GroupListItem(
     group: Group,
     isDefault: Boolean = false,
-    onGroupSelected: (Group) -> Unit,
+    onGroupSelected: (Group, Boolean) -> Unit,
 ) {
     ElevatedCard(
         modifier = Modifier
@@ -215,7 +217,7 @@ private fun GroupListItem(
             .pointerInput(Unit) {
                 detectTapGestures(
                     onLongPress = {
-                        onGroupSelected(group)
+                        onGroupSelected(group, isDefault)
                     }
                 )
             },
@@ -308,62 +310,6 @@ private fun GroupListItem(
         }
 
     }
-}
-
-@Preview
-@Composable
-fun GroupListItemPreview() {
-    GroupListItem(
-        group = Group(
-            id = 10,
-            name = "Amsterdam",
-            description = "",
-            inviteCode = "R2PZMT",
-            image = "",
-            bannerImage = "",
-            createdDate = "2024-01-21 18:28:42",
-            members = listOf(
-                Member(
-                    id = 21,
-                    name = "adria",
-                    profileImage = "",
-                    user = 5,
-                    color = "",
-                    joinedDate = "2024-01-21 18:28:42",
-                    groupId = 10
-                ),
-                Member(
-                    id = 22,
-                    name = "david",
-                    profileImage = "",
-                    user = null,
-                    color = "",
-                    joinedDate = "2024-01-21 18:28:42",
-                    groupId = 10
-                ),
-                Member(
-                    id = 23,
-                    name = "Berni",
-                    profileImage = "",
-                    user = null,
-                    color = "",
-                    joinedDate = "2024-01-21 18:28:42",
-                    groupId = 10
-                ),
-                Member(
-                    id = 24,
-                    name = "Oscar",
-                    profileImage = "",
-                    user = null,
-                    color = "",
-                    joinedDate = "2024-01-21 18:28:42",
-                    groupId = 10
-                ),
-            )
-        ),
-        isDefault = true,
-        {}
-    )
 }
 
 @OptIn(ExperimentalGlideComposeApi::class)
