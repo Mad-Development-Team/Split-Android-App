@@ -45,8 +45,7 @@ class MyGroupsViewModel @Inject constructor(
 
             is MyGroupsUIEvent.OnGroupSelected -> {
                 setSelectedGroup(
-                    group = event.group,
-                    isDefault = event.isDefault
+                    group = event.group
                 )
             }
 
@@ -119,20 +118,19 @@ class MyGroupsViewModel @Inject constructor(
         }
     }
 
-    private fun setSelectedGroup(group: Group?, isDefault: Boolean) {
+    private fun setSelectedGroup(group: Group?) {
         _state.value = _state.value.copy(
-            groupSelected = group,
-            groupSelectedIsDefault = isDefault
+            groupSelected = group
         )
     }
 
     private fun retrieveDefaultGroup() {
         viewModelScope.launch {
             try {
-                val defaultGroup = dataStoreManager.getString("mainGroupId")
-                if (defaultGroup.isNullOrBlank()) {
+                val defaultGroup = dataStoreManager.getInt("mainGroupId")
+                if (defaultGroup == null) {
                     _state.value = _state.value.copy(
-                        defaultGroup = ""
+                        defaultGroup = null
                     )
                 } else {
                     _state.value = _state.value.copy(
@@ -148,20 +146,20 @@ class MyGroupsViewModel @Inject constructor(
     private fun setSelectedGroupAsDefault(groupId: Int) {
         viewModelScope.launch {
             try {
-                val actualMainGroup = dataStoreManager.getString("mainGroupId")
-                if (actualMainGroup.isNullOrBlank() || actualMainGroup != groupId.toString()) {
-                    dataStoreManager.saveString("mainGroupId", groupId.toString())
+                val actualMainGroup = dataStoreManager.getInt("mainGroupId")
+                if (actualMainGroup == null || actualMainGroup != groupId) {
+                    dataStoreManager.saveInt("mainGroupId", groupId)
                     _state.value = _state.value.copy(
-                        defaultGroup = groupId.toString()
+                        defaultGroup = groupId
                     )
                 } else {
                     dataStoreManager.removeValue("mainGroupId")
                     _state.value = _state.value.copy(
-                        defaultGroup = ""
+                        defaultGroup = null
                     )
                 }
             } catch (e: Exception) {
-                println("Error saving default group")
+                println("Error saving default group: ${e.message}")
             }
         }
     }

@@ -80,7 +80,7 @@ fun MyGroupsScreen(
     if (state.groupSelected != null) {
         GroupSettingsModalBottomSheet(
             group = state.groupSelected!!,
-            isDefault = state.groupSelected!!.id.toString() == state.defaultGroup,
+            isDefault = state.groupSelected!!.id == state.defaultGroup,
             onClose = {
                 viewModel.onEvent(MyGroupsUIEvent.OnGroupSelected(null, false))
             },
@@ -134,7 +134,7 @@ fun MyGroupsContent(
             navigateTo = navigateTo
         )
         Spacer(modifier = Modifier.size(8.dp))
-        AnimatedVisibility(visible = state.defaultGroup == "") {
+        AnimatedVisibility(visible = state.defaultGroup == null) {
             InfoMessage(
                 messageText = R.string.select_default_group_info_message,
                 titleText = R.string.pro_tip,
@@ -153,7 +153,7 @@ fun MyGroupsContent(
                 itemsIndexed(state.userGroups) { _, group ->
                     GroupListItem(
                         group = group,
-                        isDefault = state.defaultGroup == group.id.toString(),
+                        isDefault = state.defaultGroup == group.id,
                         onGroupSelected = { selected, isDefault ->
                             onGroupSelected(selected, isDefault)
                         }
@@ -348,7 +348,7 @@ fun MembersListItemList(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy((-8).dp)
     ) {
-        members.forEachIndexed { index, member ->
+        members.forEachIndexed { _, member ->
             Box(
                 modifier = Modifier
                     .shadow(
