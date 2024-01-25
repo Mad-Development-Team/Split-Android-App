@@ -30,6 +30,7 @@ class MyGroupsViewModel @Inject constructor(
         getUserGroups(
             update = false
         )
+        retrieveDefaultGroup()
     }
 
     fun onEvent(event: MyGroupsUIEvent) {
@@ -125,6 +126,25 @@ class MyGroupsViewModel @Inject constructor(
         )
     }
 
+    private fun retrieveDefaultGroup() {
+        viewModelScope.launch {
+            try {
+                val defaultGroup = dataStoreManager.getString("mainGroupId")
+                if (defaultGroup.isNullOrBlank()) {
+                    _state.value = _state.value.copy(
+                        defaultGroup = ""
+                    )
+                } else {
+                    _state.value = _state.value.copy(
+                        defaultGroup = defaultGroup
+                    )
+                }
+            } catch (e: Exception) {
+                println("Error retrieving default group")
+            }
+        }
+    }
+
     private fun setSelectedGroupAsDefault(groupId: Int) {
         viewModelScope.launch {
             try {
@@ -140,9 +160,6 @@ class MyGroupsViewModel @Inject constructor(
                         defaultGroup = ""
                     )
                 }
-                _state.value = _state.value.copy(
-                    defaultGroup = groupId.toString()
-                )
             } catch (e: Exception) {
                 println("Error saving default group")
             }

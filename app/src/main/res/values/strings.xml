@@ -100,4 +100,6 @@
   <string name="group_banner_image">Group banner image</string>
   <string name="mark_this_group_as_default">Mark this group as default one.</string>
   <string name="remove_this_group_as_default">Remove this group as default one.</string>
+  <string name="pro_tip">Pro tip!</string>
+  <string name="select_default_group_info_message">You can select a default group that will be opened directly when you launch Split. Just make a long press on the group and make it your default one!</string>
 </resources>

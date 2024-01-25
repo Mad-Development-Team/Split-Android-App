@@ -1,5 +1,6 @@
 package com.madteam.split.ui.screens.mygroups.ui
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -34,6 +35,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -55,10 +57,12 @@ import com.madteam.split.ui.screens.mygroups.state.MyGroupsUIEvent
 import com.madteam.split.ui.screens.mygroups.state.MyGroupsUIState
 import com.madteam.split.ui.screens.mygroups.viewmodel.MyGroupsViewModel
 import com.madteam.split.ui.theme.GroupSettingsModalBottomSheet
+import com.madteam.split.ui.theme.InfoMessage
 import com.madteam.split.ui.theme.PrimaryLargeButton
 import com.madteam.split.ui.theme.ProfileImage
 import com.madteam.split.ui.theme.SecondaryLargeButton
 import com.madteam.split.ui.theme.SplitTheme
+import com.madteam.split.utils.misc.VibrationUtils
 import com.madteam.split.utils.ui.BackPressHandler
 
 @Composable
@@ -76,7 +80,7 @@ fun MyGroupsScreen(
     if (state.groupSelected != null) {
         GroupSettingsModalBottomSheet(
             group = state.groupSelected!!,
-            isDefault = state.groupSelectedIsDefault,
+            isDefault = state.groupSelected!!.id.toString() == state.defaultGroup,
             onClose = {
                 viewModel.onEvent(MyGroupsUIEvent.OnGroupSelected(null, false))
             },
@@ -130,6 +134,12 @@ fun MyGroupsContent(
             navigateTo = navigateTo
         )
         Spacer(modifier = Modifier.size(8.dp))
+        AnimatedVisibility(visible = state.defaultGroup == "") {
+            InfoMessage(
+                messageText = R.string.select_default_group_info_message,
+                titleText = R.string.pro_tip,
+            )
+        }
         SwipeRefresh(
             state = swipeRefreshState,
             onRefresh = {
@@ -216,6 +226,7 @@ private fun GroupListItem(
     isDefault: Boolean = false,
     onGroupSelected: (Group, Boolean) -> Unit,
 ) {
+    val context = LocalContext.current
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
@@ -225,12 +236,20 @@ private fun GroupListItem(
                 detectTapGestures(
                     onLongPress = {
                         onGroupSelected(group, isDefault)
+                        VibrationUtils.vibrate(
+                            context = context,
+                            duration = 50
+                        )
+                    },
+                    onTap = {
+                        //Not implemented yet
                     }
                 )
             },
         shape = RoundedCornerShape(20.dp),
         elevation = CardDefaults.elevatedCardElevation(
-            defaultElevation = 8.dp
+            defaultElevation = 8.dp,
+            pressedElevation = 0.dp,
         ),
         colors = CardDefaults.elevatedCardColors(
             containerColor = SplitTheme.colors.secondary.backgroundMedium
