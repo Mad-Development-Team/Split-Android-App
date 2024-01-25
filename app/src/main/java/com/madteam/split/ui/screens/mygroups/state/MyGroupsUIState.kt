@@ -7,4 +7,6 @@ data class MyGroupsUIState(
     val userInfo: User = User(0, "", "", "", ""),
     val userGroups: List<Group> = listOf(),
     val isGroupsListLoading: Boolean = false,
+    val groupSelected: Group? = null,
+    val defaultGroup: Int? = null,
 )

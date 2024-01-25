@@ -2,8 +2,10 @@ package com.madteam.split.ui.screens.mygroups.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.madteam.split.data.repository.datastore.DatastoreManager
 import com.madteam.split.data.repository.group.GroupRepository
 import com.madteam.split.data.repository.user.UserRepository
+import com.madteam.split.domain.model.Group
 import com.madteam.split.ui.screens.mygroups.state.MyGroupsUIEvent
 import com.madteam.split.ui.screens.mygroups.state.MyGroupsUIState
 import com.madteam.split.utils.network.Resource
@@ -17,6 +19,7 @@ import javax.inject.Inject
 class MyGroupsViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val groupRepository: GroupRepository,
+    private val dataStoreManager: DatastoreManager,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(MyGroupsUIState())
@@ -27,6 +30,7 @@ class MyGroupsViewModel @Inject constructor(
         getUserGroups(
             update = false
         )
+        retrieveDefaultGroup()
     }
 
     fun onEvent(event: MyGroupsUIEvent) {
@@ -37,6 +41,16 @@ class MyGroupsViewModel @Inject constructor(
 
             is MyGroupsUIEvent.OnRefreshGroupsList -> {
                 reloadUserGroups()
+            }
+
+            is MyGroupsUIEvent.OnGroupSelected -> {
+                setSelectedGroup(
+                    group = event.group
+                )
+            }
+
+            is MyGroupsUIEvent.OnGroupSelectedAsDefault -> {
+                setSelectedGroupAsDefault(event.groupId)
             }
         }
     }
@@ -101,6 +115,52 @@ class MyGroupsViewModel @Inject constructor(
             _state.value = _state.value.copy(
                 isGroupsListLoading = false
             )
+        }
+    }
+
+    private fun setSelectedGroup(group: Group?) {
+        _state.value = _state.value.copy(
+            groupSelected = group
+        )
+    }
+
+    private fun retrieveDefaultGroup() {
+        viewModelScope.launch {
+            try {
+                val defaultGroup = dataStoreManager.getInt("mainGroupId")
+                if (defaultGroup == null) {
+                    _state.value = _state.value.copy(
+                        defaultGroup = null
+                    )
+                } else {
+                    _state.value = _state.value.copy(
+                        defaultGroup = defaultGroup
+                    )
+                }
+            } catch (e: Exception) {
+                println("Error retrieving default group")
+            }
+        }
+    }
+
+    private fun setSelectedGroupAsDefault(groupId: Int) {
+        viewModelScope.launch {
+            try {
+                val actualMainGroup = dataStoreManager.getInt("mainGroupId")
+                if (actualMainGroup == null || actualMainGroup != groupId) {
+                    dataStoreManager.saveInt("mainGroupId", groupId)
+                    _state.value = _state.value.copy(
+                        defaultGroup = groupId
+                    )
+                } else {
+                    dataStoreManager.removeValue("mainGroupId")
+                    _state.value = _state.value.copy(
+                        defaultGroup = null
+                    )
+                }
+            } catch (e: Exception) {
+                println("Error saving default group: ${e.message}")
+            }
         }
     }
 }
