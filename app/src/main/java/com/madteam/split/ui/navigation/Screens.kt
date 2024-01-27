@@ -13,4 +13,5 @@ sealed class Screens(
     data object CreateGroupInfoScreen : Screens("create_group_info_screen")
     data object CreateGroupMembersScreen : Screens("create_group_members_screen")
     data object CreateGroupInviteScreen : Screens("create_group_invite_screen")
+    data object GroupInfoScreen : Screens("group_info_screen")
 }
