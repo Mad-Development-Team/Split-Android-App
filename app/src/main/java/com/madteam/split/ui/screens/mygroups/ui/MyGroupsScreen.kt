@@ -64,6 +64,7 @@ import com.madteam.split.ui.theme.SecondaryLargeButton
 import com.madteam.split.ui.theme.SplitTheme
 import com.madteam.split.utils.misc.VibrationUtils
 import com.madteam.split.utils.ui.BackPressHandler
+import com.madteam.split.utils.ui.navigateWithPopUpTo
 
 @Composable
 fun MyGroupsScreen(
@@ -111,6 +112,13 @@ fun MyGroupsScreen(
                     viewModel.onEvent(MyGroupsUIEvent.OnGroupSelected(group, isDefault))
                 },
                 navigateTo = navController::navigate,
+                popUpTo = { route ->
+                    navController.navigateWithPopUpTo(
+                        route = route,
+                        popUpTo = Screens.MyGroupsScreen.route,
+                        inclusive = true
+                    )
+                }
             )
         }
     }
@@ -121,6 +129,7 @@ fun MyGroupsContent(
     state: MyGroupsUIState,
     onRefreshGroups: () -> Unit,
     navigateTo: (String) -> Unit,
+    popUpTo: (String) -> Unit,
     onGroupSelected: (Group, Boolean) -> Unit,
 ) {
     Column(
@@ -156,6 +165,9 @@ fun MyGroupsContent(
                         isDefault = state.defaultGroup == group.id,
                         onGroupSelected = { selected, isDefault ->
                             onGroupSelected(selected, isDefault)
+                        },
+                        onGroupClicked = { group ->
+                            popUpTo(Screens.GroupInfoScreen.route)
                         }
                     )
                 }
@@ -225,6 +237,7 @@ private fun GroupListItem(
     group: Group,
     isDefault: Boolean = false,
     onGroupSelected: (Group, Boolean) -> Unit,
+    onGroupClicked: (Group) -> Unit,
 ) {
     val context = LocalContext.current
     ElevatedCard(
@@ -242,7 +255,7 @@ private fun GroupListItem(
                         )
                     },
                     onTap = {
-                        //Not implemented yet
+                        onGroupClicked(group)
                     }
                 )
             },

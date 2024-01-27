@@ -12,6 +12,9 @@ import com.madteam.split.ui.screens.creategroup.info.ui.CreateGroupInfoScreen
 import com.madteam.split.ui.screens.creategroup.invite.ui.CreateGroupInviteScreen
 import com.madteam.split.ui.screens.creategroup.members.ui.CreateGroupMembersScreen
 import com.madteam.split.ui.screens.forgotpassword.ui.ForgotPasswordScreen
+import com.madteam.split.ui.screens.groupbalance.ui.GroupBalanceScreen
+import com.madteam.split.ui.screens.groupexpenses.ui.GroupExpensesScreen
+import com.madteam.split.ui.screens.grouphome.ui.GroupHomeScreen
 import com.madteam.split.ui.screens.groupinfo.ui.GroupInfoScreen
 import com.madteam.split.ui.screens.mygroups.ui.MyGroupsScreen
 import com.madteam.split.ui.screens.myuser.ui.MyUserScreen
@@ -179,6 +182,7 @@ fun Navigation() {
                 when (targetState.destination.route) {
                     Screens.CreateGroupInfoScreen.route,
                     Screens.MyUserScreen.route,
+                    Screens.GroupInfoScreen.route,
                     -> {
                         slideOutOfContainer(
                             AnimatedContentTransitionScope.SlideDirection.Left,
@@ -338,19 +342,57 @@ fun Navigation() {
         composable(
             route = Screens.GroupInfoScreen.route,
             enterTransition = {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Left,
-                    animationSpec = tween(DEFAULT_ANIMATION_DURATION_IN_MILLIS)
-                )
+                when (initialState.destination.route) {
+                    Screens.MyGroupsScreen.route -> {
+                        slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Left,
+                            animationSpec = tween(DEFAULT_ANIMATION_DURATION_IN_MILLIS)
+                        )
+                    }
+
+                    else -> {
+                        EnterTransition.None
+                    }
+                }
             },
-            exitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Right,
-                    animationSpec = tween(DEFAULT_ANIMATION_DURATION_IN_MILLIS)
-                )
-            }
         ) {
             GroupInfoScreen(navController = navController)
+        }
+
+        composable(
+            route = Screens.GroupHomeScreen.route,
+            enterTransition = {
+                EnterTransition.None
+            },
+            exitTransition = {
+                ExitTransition.None
+            }
+        ) {
+            GroupHomeScreen(navController = navController)
+        }
+
+        composable(
+            route = Screens.GroupExpensesScreen.route,
+            enterTransition = {
+                EnterTransition.None
+            },
+            exitTransition = {
+                ExitTransition.None
+            }
+        ) {
+            GroupExpensesScreen(navController = navController)
+        }
+
+        composable(
+            route = Screens.GroupBalanceScreen.route,
+            enterTransition = {
+                EnterTransition.None
+            },
+            exitTransition = {
+                ExitTransition.None
+            }
+        ) {
+            GroupBalanceScreen(navController = navController)
         }
     }
 }
