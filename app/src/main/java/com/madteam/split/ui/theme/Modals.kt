@@ -16,7 +16,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.RemoveCircle
 import androidx.compose.material3.BottomSheetDefaults
@@ -225,5 +227,80 @@ fun GroupSettingsModalBottomSheet(
             }
             Spacer(modifier = Modifier.size(32.dp))
         }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalGlideComposeApi::class)
+@Composable
+fun GroupsListModalBottomSheet(
+    groupsList: List<Group>,
+    currentGroupId: Int,
+    onClose: () -> Unit,
+    onGroupSelected: (Int) -> Unit,
+    onNavigateHomeSelected: () -> Unit,
+) {
+
+    val modalBottomSheetState = rememberModalBottomSheetState()
+    BackHandler {
+        onClose()
+    }
+
+    ModalBottomSheet(
+        onDismissRequest = { onClose() },
+        sheetState = modalBottomSheetState,
+        dragHandle = {},
+        containerColor = SplitTheme.colors.neutral.backgroundExtraWeak,
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp)
+        ) {
+            groupsList.forEach { group ->
+                val isCurrentGroup = group.id == currentGroupId
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            onGroupSelected(group.id)
+                        },
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    GlideImage(
+                        modifier = Modifier
+                            .size(48.dp)
+                            .background(
+                                color = SplitTheme.colors.neutral.backgroundExtraWeak,
+                                shape = CircleShape
+                            ),
+                        model = group.image.ifBlank { R.drawable.default_group_banner_image },
+                        contentDescription = null
+                    )
+                    Spacer(modifier = Modifier.size(8.dp))
+                    Text(
+                        modifier = Modifier
+                            .weight(1f),
+                        text = group.name,
+                        style = SplitTheme.typography.heading.s,
+                        color = SplitTheme.colors.neutral.textExtraWeak,
+                    )
+                    if (isCurrentGroup) {
+                        Icon(
+                            modifier = Modifier,
+                            imageVector = Icons.Filled.CheckCircle,
+                            contentDescription = stringResource(id = R.string.group_selected)
+                        )
+                    }
+                }
+            }
+            Spacer(modifier = Modifier.size(16.dp))
+            PrimaryLargeButton(
+                onClick = {
+                    onNavigateHomeSelected()
+                },
+                text = R.string.go_to_my_groups
+            )
+        }
+
     }
 }

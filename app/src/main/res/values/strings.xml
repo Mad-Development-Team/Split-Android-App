@@ -106,4 +106,6 @@
   <string name="menu_tab_expenses">Expenses</string>
   <string name="menu_tab_balance">Balance</string>
   <string name="menu_tab_group">Group</string>
+  <string name="icon_show_groups_list_description">Show groups list</string>
+  <string name="group_selected">Group selected</string>
 </resources>
