@@ -8,6 +8,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.room.Room
+import com.madteam.split.data.database.group.GroupDatabase
 import com.madteam.split.data.database.user.UserDatabase
 import com.madteam.split.data.repository.datastore.DatastoreManager
 import com.madteam.split.data.repository.datastore.DatastoreManagerImpl
@@ -58,4 +59,13 @@ object StorageModule {
         Room.databaseBuilder(
             context, UserDatabase::class.java, USER_DATABASE_NAME
         ).build()
+
+    @Provides
+    @Named("GroupDatabase")
+    fun provideGroupDatabase(@ApplicationContext context: Context): GroupDatabase {
+        return Room.databaseBuilder(
+            context,
+            GroupDatabase::class.java, "group_database"
+        ).build()
+    }
 }
