@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -30,6 +31,7 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -246,61 +248,91 @@ fun GroupsListModalBottomSheet(
     }
 
     ModalBottomSheet(
+        modifier = Modifier,
         onDismissRequest = { onClose() },
         sheetState = modalBottomSheetState,
         dragHandle = {},
         containerColor = SplitTheme.colors.neutral.backgroundExtraWeak,
     ) {
-        Column(
+        LazyColumn(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 24.dp)
+                .padding(
+                    top = 24.dp,
+                    end = 24.dp,
+                    start = 24.dp
+                )
+                .fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            groupsList.forEach { group ->
+            itemsIndexed(groupsList) { _, group ->
                 val isCurrentGroup = group.id == currentGroupId
-                Row(
+                ConstraintLayout(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable {
-                            onGroupSelected(group.id)
-                        },
-                    verticalAlignment = Alignment.CenterVertically
+                        .clickable(
+                            onClick = {
+                                if (!isCurrentGroup) {
+                                    onGroupSelected(group.id)
+                                } else {
+                                    onClose()
+                                }
+                            }
+                        )
                 ) {
+                    val (groupImage, groupName, groupSelected) = createRefs()
                     GlideImage(
                         modifier = Modifier
-                            .size(48.dp)
+                            .size(54.dp)
                             .background(
                                 color = SplitTheme.colors.neutral.backgroundExtraWeak,
                                 shape = CircleShape
-                            ),
+                            )
+                            .clip(CircleShape)
+                            .constrainAs(groupImage) {
+                                top.linkTo(parent.top)
+                                start.linkTo(parent.start)
+                                bottom.linkTo(parent.bottom)
+                            },
                         model = group.image.ifBlank { R.drawable.default_group_banner_image },
-                        contentDescription = null
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
                     )
-                    Spacer(modifier = Modifier.size(8.dp))
                     Text(
                         modifier = Modifier
-                            .weight(1f),
+                            .constrainAs(groupName) {
+                                top.linkTo(groupImage.top)
+                                bottom.linkTo(groupImage.bottom)
+                                start.linkTo(groupImage.end, 16.dp)
+                            },
                         text = group.name,
                         style = SplitTheme.typography.heading.s,
-                        color = SplitTheme.colors.neutral.textExtraWeak,
+                        color = SplitTheme.colors.neutral.textTitle,
                     )
                     if (isCurrentGroup) {
                         Icon(
-                            modifier = Modifier,
+                            modifier = Modifier
+                                .constrainAs(groupSelected) {
+                                    top.linkTo(groupImage.top)
+                                    bottom.linkTo(groupImage.bottom)
+                                    end.linkTo(parent.end)
+                                },
+                            tint = SplitTheme.colors.primary.iconDefault,
                             imageVector = Icons.Filled.CheckCircle,
                             contentDescription = stringResource(id = R.string.group_selected)
                         )
                     }
                 }
             }
-            Spacer(modifier = Modifier.size(16.dp))
-            PrimaryLargeButton(
-                onClick = {
-                    onNavigateHomeSelected()
-                },
-                text = R.string.go_to_my_groups
-            )
         }
-
+        Spacer(modifier = Modifier.size(16.dp))
+        PrimaryLargeButton(
+            modifier = Modifier
+                .padding(horizontal = 24.dp)
+                .navigationBarsPadding(),
+            onClick = {
+                onNavigateHomeSelected()
+            },
+            text = R.string.go_to_my_groups
+        )
     }
 }
