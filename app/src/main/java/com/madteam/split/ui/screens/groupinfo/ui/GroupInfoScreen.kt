@@ -1,20 +1,36 @@
 package com.madteam.split.ui.screens.groupinfo.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
+import com.madteam.split.R
 import com.madteam.split.ui.navigation.Screens
+import com.madteam.split.ui.screens.group.state.GroupUIState
 import com.madteam.split.ui.screens.group.viewmodel.GroupViewModel
 import com.madteam.split.ui.screens.groupinfo.state.GroupInfoUIEvent
+import com.madteam.split.ui.screens.groupinfo.state.GroupInfoUIState
 import com.madteam.split.ui.screens.groupinfo.viewmodel.GroupInfoViewModel
 import com.madteam.split.ui.theme.DSBottomNavigation
 import com.madteam.split.ui.theme.GroupNavigationTopAppBar
@@ -85,14 +101,65 @@ fun GroupInfoScreen(
                 .padding(it)
         ) {
             GroupInfoContent(
+                state = state,
+                commonState = commonState
             )
         }
     }
 }
 
+@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun GroupInfoContent(
+    state: GroupInfoUIState,
+    commonState: GroupUIState,
 ) {
+    val currentGroup = commonState.userGroups.first { it.id == commonState.currentGroupId }
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        ConstraintLayout(
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
+            val (bannerImage, image) = createRefs()
+            GlideImage(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(180.dp)
+                    .constrainAs(bannerImage) {
+                        top.linkTo(parent.top)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    },
+                model = currentGroup.bannerImage.ifBlank { R.drawable.default_group_banner_image },
+                contentScale = ContentScale.Crop,
+                contentDescription = null
+            )
+            GlideImage(
+                modifier = Modifier
+                    .size(150.dp)
+                    .shadow(
+                        elevation = 4.dp,
+                        shape = CircleShape
+                    )
+                    .background(
+                        SplitTheme.colors.neutral.backgroundMedium,
+                        CircleShape
+                    )
+                    .clip(CircleShape)
+                    .constrainAs(image) {
+                        top.linkTo(bannerImage.bottom, (-78).dp)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    },
+                model = currentGroup.image.ifBlank { R.drawable.default_group_banner_image },
+                contentScale = ContentScale.Crop,
+                contentDescription = null
+            )
+        }
+    }
 }
 
 @Preview
