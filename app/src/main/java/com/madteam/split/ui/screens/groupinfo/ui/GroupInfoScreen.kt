@@ -3,6 +3,7 @@ package com.madteam.split.ui.screens.groupinfo.ui
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -10,12 +11,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -159,6 +165,35 @@ fun GroupInfoContent(
                 contentDescription = null
             )
         }
+        Spacer(modifier = Modifier.size(16.dp))
+        Text(
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(horizontal = 24.dp),
+            text = currentGroup.name,
+            style = SplitTheme.typography.heading.l,
+            color = SplitTheme.colors.neutral.textTitle,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+        Spacer(modifier = Modifier.size(8.dp))
+        Text(
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(horizontal = 24.dp),
+            text = currentGroup.description.ifBlank {
+                stringResource(
+                    id = R.string.no_group_description_text
+                )
+            },
+            style = SplitTheme.typography.body.l,
+            textAlign = TextAlign.Center,
+            color = if (currentGroup.description.isEmpty()) {
+                SplitTheme.colors.neutral.textDisabled
+            } else SplitTheme.colors.neutral.textBody,
+            maxLines = 5,
+            overflow = TextOverflow.Ellipsis
+        )
     }
 }
 
