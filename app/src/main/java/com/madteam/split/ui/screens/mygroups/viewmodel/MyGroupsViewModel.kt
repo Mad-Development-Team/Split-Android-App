@@ -52,6 +52,10 @@ class MyGroupsViewModel @Inject constructor(
             is MyGroupsUIEvent.OnGroupSelectedAsDefault -> {
                 setSelectedGroupAsDefault(event.groupId)
             }
+
+            is MyGroupsUIEvent.OnGroupClicked -> {
+                setCurrentGroup(event.groupId)
+            }
         }
     }
 
@@ -74,6 +78,12 @@ class MyGroupsViewModel @Inject constructor(
                     //Not necessary
                 }
             }
+        }
+    }
+
+    private fun setCurrentGroup(groupId: Int) {
+        viewModelScope.launch {
+            groupRepository.setCurrentGroup(groupId)
         }
     }
 

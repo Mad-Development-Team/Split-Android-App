@@ -112,7 +112,8 @@ fun MyGroupsScreen(
                     viewModel.onEvent(MyGroupsUIEvent.OnGroupSelected(group, isDefault))
                 },
                 navigateTo = navController::navigate,
-                popUpTo = { route ->
+                popUpTo = { route, groupId ->
+                    viewModel.onEvent(MyGroupsUIEvent.OnGroupClicked(groupId))
                     navController.navigateWithPopUpTo(
                         route = route,
                         popUpTo = Screens.MyGroupsScreen.route,
@@ -129,7 +130,7 @@ fun MyGroupsContent(
     state: MyGroupsUIState,
     onRefreshGroups: () -> Unit,
     navigateTo: (String) -> Unit,
-    popUpTo: (String) -> Unit,
+    popUpTo: (String, Int) -> Unit,
     onGroupSelected: (Group, Boolean) -> Unit,
 ) {
     Column(
@@ -167,7 +168,7 @@ fun MyGroupsContent(
                             onGroupSelected(selected, isDefault)
                         },
                         onGroupClicked = { group ->
-                            popUpTo(Screens.GroupInfoScreen.route)
+                            popUpTo(Screens.GroupInfoScreen.route, group.id)
                         }
                     )
                 }

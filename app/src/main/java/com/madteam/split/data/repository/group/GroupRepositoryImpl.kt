@@ -13,6 +13,7 @@ class GroupRepositoryImpl @Inject constructor(
 
     private var newGroup: Group
     private var userGroups: List<Group> = listOf()
+    private var currentGroupId: Int? = null
 
     init {
         newGroup = Group(
@@ -86,4 +87,10 @@ class GroupRepositoryImpl @Inject constructor(
         }
         return Resource.Success(userGroups)
     }
+
+    override fun setCurrentGroup(groupId: Int) {
+        currentGroupId = groupId
+    }
+
+    override fun getCurrentGroup(): Int? = currentGroupId
 }

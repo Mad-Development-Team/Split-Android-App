@@ -10,7 +10,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GroupInfoViewModel @Inject constructor(
-
 ) : ViewModel() {
 
     private val _state: MutableStateFlow<GroupInfoUIState> = MutableStateFlow(GroupInfoUIState())
