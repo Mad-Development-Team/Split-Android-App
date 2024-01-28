@@ -109,7 +109,7 @@ fun InviteCodeContent(
             .fillMaxSize()
             .padding(24.dp),
         horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically  //testing
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
