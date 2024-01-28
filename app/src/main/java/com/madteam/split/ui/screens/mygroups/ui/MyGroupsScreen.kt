@@ -144,7 +144,7 @@ fun MyGroupsContent(
             navigateTo = navigateTo
         )
         Spacer(modifier = Modifier.size(8.dp))
-        AnimatedVisibility(visible = state.defaultGroup == null) {
+        AnimatedVisibility(visible = state.defaultGroup == null && state.userGroups.isNotEmpty()) {
             InfoMessage(
                 messageText = R.string.select_default_group_info_message,
                 titleText = R.string.pro_tip,
@@ -167,8 +167,8 @@ fun MyGroupsContent(
                         onGroupSelected = { selected, isDefault ->
                             onGroupSelected(selected, isDefault)
                         },
-                        onGroupClicked = { group ->
-                            popUpTo(Screens.GroupInfoScreen.route, group.id)
+                        onGroupClicked = { clickedGroup ->
+                            popUpTo(Screens.GroupInfoScreen.route, clickedGroup.id)
                         }
                     )
                 }
