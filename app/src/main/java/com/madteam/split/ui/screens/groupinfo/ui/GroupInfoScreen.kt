@@ -113,7 +113,8 @@ fun GroupInfoScreen(
         ) {
             GroupInfoContent(
                 state = state,
-                commonState = commonState
+                commonState = commonState,
+                navigateTo = navController::navigate
             )
         }
     }
@@ -124,6 +125,7 @@ fun GroupInfoScreen(
 fun GroupInfoContent(
     state: GroupInfoUIState,
     commonState: GroupUIState,
+    navigateTo: (String) -> Unit,
 ) {
     val currentGroup = commonState.userGroups.first { it.id == commonState.currentGroupId }
     Column(
@@ -226,6 +228,15 @@ fun GroupInfoContent(
             membersList = currentGroup.members
         )
         Spacer(modifier = Modifier.size(16.dp))
+        PrimaryLargeButton(
+            modifier = Modifier
+                .padding(horizontal = 24.dp),
+            onClick = {
+                navigateTo(Screens.InviteCodeScreen.route)
+            },
+            text = R.string.see_invite_code
+        )
+        Spacer(modifier = Modifier.size(8.dp))
         SecondaryLargeButton(
             modifier = Modifier
                 .padding(horizontal = 24.dp),

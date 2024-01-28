@@ -16,6 +16,7 @@ import com.madteam.split.ui.screens.groupbalance.ui.GroupBalanceScreen
 import com.madteam.split.ui.screens.groupexpenses.ui.GroupExpensesScreen
 import com.madteam.split.ui.screens.grouphome.ui.GroupHomeScreen
 import com.madteam.split.ui.screens.groupinfo.ui.GroupInfoScreen
+import com.madteam.split.ui.screens.invitecode.ui.InviteCodeScreen
 import com.madteam.split.ui.screens.mygroups.ui.MyGroupsScreen
 import com.madteam.split.ui.screens.myuser.ui.MyUserScreen
 import com.madteam.split.ui.screens.signin.email.ui.SignInEmailScreen
@@ -393,6 +394,24 @@ fun Navigation() {
             }
         ) {
             GroupBalanceScreen(navController = navController)
+        }
+
+        composable(
+            route = Screens.InviteCodeScreen.route,
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left,
+                    animationSpec = tween(DEFAULT_ANIMATION_DURATION_IN_MILLIS)
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Right,
+                    animationSpec = tween(DEFAULT_ANIMATION_DURATION_IN_MILLIS)
+                )
+            }
+        ) {
+            InviteCodeScreen(navController = navController)
         }
     }
 }

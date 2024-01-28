@@ -111,4 +111,5 @@
   <string name="no_group_description_text">This group has no description, edit group info to add it.</string>
   <string name="edit_group_info">Edit group info</string>
   <string name="manage_members">Manage members</string>
+  <string name="see_invite_code">See invite code</string>
 </resources>
