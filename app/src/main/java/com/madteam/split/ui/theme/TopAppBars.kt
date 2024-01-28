@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Settings
@@ -87,6 +88,7 @@ fun GroupNavigationTopAppBar(
                 color = SplitTheme.colors.neutral.backgroundExtraWeak
             )
             .fillMaxWidth()
+            .statusBarsPadding()
             .height(68.dp)
             .padding(horizontal = 24.dp),
         horizontalArrangement = Arrangement.Start,
