@@ -12,4 +12,7 @@ interface GroupRepository {
     suspend fun getUserGroups(
         update: Boolean = false,
     ): Resource<List<Group>>
+
+    fun setCurrentGroup(groupId: Int)
+    fun getCurrentGroup(): Int?
 }

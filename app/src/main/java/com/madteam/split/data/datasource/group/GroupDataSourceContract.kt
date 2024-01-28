@@ -12,7 +12,17 @@ interface GroupDataSourceContract {
             description: String,
             members: List<Member>,
         ): Resource<Group>
+    }
 
-        suspend fun getUserGroups(): Resource<List<Group>>
+    interface Local {
+        suspend fun insertUserGroups(groups: List<Group>)
+        suspend fun deleteAllUserGroups()
+        suspend fun getUserGroups(
+            refresh: Boolean,
+        ): Resource<List<Group>>
+
+        suspend fun getUserGroupById(groupId: Int): Resource<Group>
+        suspend fun deleteUserGroupById(groupId: Int)
+        suspend fun updateUserGroup(group: Group)
     }
 }

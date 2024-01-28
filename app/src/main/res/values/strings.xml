@@ -102,4 +102,14 @@
   <string name="remove_this_group_as_default">Remove this group as default one.</string>
   <string name="pro_tip">Pro tip!</string>
   <string name="select_default_group_info_message">You can select a default group that will be opened directly when you launch Split. Just make a long press on the group and make it your default one!</string>
+  <string name="menu_tab_home">Home</string>
+  <string name="menu_tab_expenses">Expenses</string>
+  <string name="menu_tab_balance">Balance</string>
+  <string name="menu_tab_group">Group</string>
+  <string name="icon_show_groups_list_description">Show groups list</string>
+  <string name="group_selected">Group selected</string>
+  <string name="no_group_description_text">This group has no description, edit group info to add it.</string>
+  <string name="edit_group_info">Edit group info</string>
+  <string name="manage_members">Manage members</string>
+  <string name="see_invite_code">See invite code</string>
 </resources>

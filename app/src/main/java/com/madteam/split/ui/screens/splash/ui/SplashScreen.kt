@@ -61,11 +61,19 @@ fun SplashScreen(
             delay(700)
             when (state.isAuthenticated) {
                 is AuthResult.Authorized -> {
-                    navController.navigateWithPopUpTo(
-                        route = Screens.MyGroupsScreen.route,
-                        popUpTo = Screens.SplashScreen.route,
-                        inclusive = true
-                    )
+                    if (state.defaultGroup != null) {
+                        navController.navigateWithPopUpTo(
+                            route = Screens.GroupInfoScreen.route,
+                            popUpTo = Screens.SplashScreen.route,
+                            inclusive = true
+                        )
+                    } else {
+                        navController.navigateWithPopUpTo(
+                            route = Screens.MyGroupsScreen.route,
+                            popUpTo = Screens.SplashScreen.route,
+                            inclusive = true
+                        )
+                    }
                 }
 
                 is AuthResult.Unauthorized -> {

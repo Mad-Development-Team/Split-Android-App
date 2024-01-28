@@ -64,6 +64,7 @@ import com.madteam.split.ui.theme.SecondaryLargeButton
 import com.madteam.split.ui.theme.SplitTheme
 import com.madteam.split.utils.misc.VibrationUtils
 import com.madteam.split.utils.ui.BackPressHandler
+import com.madteam.split.utils.ui.navigateWithPopUpTo
 
 @Composable
 fun MyGroupsScreen(
@@ -111,6 +112,14 @@ fun MyGroupsScreen(
                     viewModel.onEvent(MyGroupsUIEvent.OnGroupSelected(group, isDefault))
                 },
                 navigateTo = navController::navigate,
+                popUpTo = { route, groupId ->
+                    viewModel.onEvent(MyGroupsUIEvent.OnGroupClicked(groupId))
+                    navController.navigateWithPopUpTo(
+                        route = route,
+                        popUpTo = Screens.MyGroupsScreen.route,
+                        inclusive = true
+                    )
+                }
             )
         }
     }
@@ -121,6 +130,7 @@ fun MyGroupsContent(
     state: MyGroupsUIState,
     onRefreshGroups: () -> Unit,
     navigateTo: (String) -> Unit,
+    popUpTo: (String, Int) -> Unit,
     onGroupSelected: (Group, Boolean) -> Unit,
 ) {
     Column(
@@ -134,7 +144,7 @@ fun MyGroupsContent(
             navigateTo = navigateTo
         )
         Spacer(modifier = Modifier.size(8.dp))
-        AnimatedVisibility(visible = state.defaultGroup == null) {
+        AnimatedVisibility(visible = state.defaultGroup == null && state.userGroups.isNotEmpty()) {
             InfoMessage(
                 messageText = R.string.select_default_group_info_message,
                 titleText = R.string.pro_tip,
@@ -156,6 +166,9 @@ fun MyGroupsContent(
                         isDefault = state.defaultGroup == group.id,
                         onGroupSelected = { selected, isDefault ->
                             onGroupSelected(selected, isDefault)
+                        },
+                        onGroupClicked = { clickedGroup ->
+                            popUpTo(Screens.GroupInfoScreen.route, clickedGroup.id)
                         }
                     )
                 }
@@ -225,6 +238,7 @@ private fun GroupListItem(
     group: Group,
     isDefault: Boolean = false,
     onGroupSelected: (Group, Boolean) -> Unit,
+    onGroupClicked: (Group) -> Unit,
 ) {
     val context = LocalContext.current
     ElevatedCard(
@@ -242,7 +256,7 @@ private fun GroupListItem(
                         )
                     },
                     onTap = {
-                        //Not implemented yet
+                        onGroupClicked(group)
                     }
                 )
             },

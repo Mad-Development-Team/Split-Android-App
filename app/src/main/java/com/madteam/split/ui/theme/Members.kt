@@ -1,7 +1,11 @@
 package com.madteam.split.ui.theme
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
@@ -14,8 +18,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -23,6 +30,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
 import com.madteam.split.R
 import com.madteam.split.domain.model.Member
 
@@ -101,6 +110,91 @@ fun AddMembersHorizontalList(
                     )
                 }
             }
+        }
+    }
+}
+
+@OptIn(ExperimentalGlideComposeApi::class)
+@Composable
+fun MembersHorizontalList(
+    modifier: Modifier = Modifier,
+    membersList: List<Member>,
+) {
+    LazyRow(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        item {
+            Spacer(modifier = Modifier.size(8.dp))
+        }
+        itemsIndexed(membersList) { _, member ->
+            val hexColor = member.color?.removePrefix("0x")?.toLong(16) ?: 0xFF000000
+            val color = Color(hexColor)
+            ConstraintLayout(
+                modifier = Modifier
+                    .shadow(
+                        elevation = 8.dp,
+                        shape = CircleShape
+                    )
+            ) {
+                val (image, name, degrade) = createRefs()
+                GlideImage(
+                    model = member.profileImage,
+                    contentDescription = stringResource(
+                        id = R.string.user_profile_image_description
+                    ),
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .constrainAs(image) {
+                            top.linkTo(parent.top)
+                            bottom.linkTo(parent.bottom)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                        }
+                        .size(120.dp)
+                        .background(
+                            color,
+                            CircleShape
+                        )
+                        .clip(CircleShape)
+                )
+                Box(
+                    modifier = Modifier
+                        .size(120.dp)
+                        .clip(CircleShape)
+                        .background(
+                            brush = Brush.verticalGradient(
+                                colors = listOf(
+                                    Color.Transparent,
+                                    Color.Black
+                                )
+                            )
+                        )
+                        .constrainAs(degrade) {
+                            top.linkTo(image.top)
+                            start.linkTo(image.start)
+                            end.linkTo(image.end)
+                            bottom.linkTo(image.bottom)
+                        }
+                )
+                Text(
+                    modifier = Modifier
+                        .constrainAs(name) {
+                            start.linkTo(image.start)
+                            end.linkTo(image.end)
+                            bottom.linkTo(image.bottom, 30.dp)
+                        },
+                    text = member.name,
+                    color = Color.White,
+                    textAlign = TextAlign.Center,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    style = SplitTheme.typography.heading.m
+                )
+            }
+        }
+        item {
+            Spacer(modifier = Modifier.size(8.dp))
         }
     }
 }

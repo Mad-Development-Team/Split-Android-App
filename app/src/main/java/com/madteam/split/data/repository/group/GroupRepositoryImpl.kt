@@ -7,11 +7,13 @@ import com.madteam.split.utils.network.Resource
 import javax.inject.Inject
 
 class GroupRepositoryImpl @Inject constructor(
+    private val createGroupDataSource: GroupDataSourceContract.Local,
     private val createGroupRemoteDataSource: GroupDataSourceContract.Remote,
 ) : GroupRepository {
 
     private var newGroup: Group
     private var userGroups: List<Group> = listOf()
+    private var currentGroupId: Int? = null
 
     init {
         newGroup = Group(
@@ -67,7 +69,7 @@ class GroupRepositoryImpl @Inject constructor(
     override suspend fun getUserGroups(update: Boolean): Resource<List<Group>> {
         if (update || userGroups.isEmpty()) {
             try {
-                val response = createGroupRemoteDataSource.getUserGroups()
+                val response = createGroupDataSource.getUserGroups(true)
                 if (response is Resource.Success) {
                     userGroups = response.data
                     return Resource.Success(userGroups)
@@ -85,4 +87,10 @@ class GroupRepositoryImpl @Inject constructor(
         }
         return Resource.Success(userGroups)
     }
+
+    override fun setCurrentGroup(groupId: Int) {
+        currentGroupId = groupId
+    }
+
+    override fun getCurrentGroup(): Int? = currentGroupId
 }
