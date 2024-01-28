@@ -6,5 +6,6 @@ import com.madteam.split.domain.model.User
 data class SplashUIState(
     val isReadyToGo: Boolean = false,
     val isAuthenticated: AuthResult<Unit>? = null,
-    val userInfo: User? = null
+    val userInfo: User? = null,
+    val defaultGroup: Int? = null,
 )

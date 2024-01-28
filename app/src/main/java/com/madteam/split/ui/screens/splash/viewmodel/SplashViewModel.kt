@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.madteam.split.data.model.utils.AuthResult
 import com.madteam.split.data.repository.authentication.AuthenticationRepository
+import com.madteam.split.data.repository.datastore.DatastoreManager
 import com.madteam.split.data.repository.group.GroupRepository
 import com.madteam.split.data.repository.user.UserRepository
 import com.madteam.split.ui.screens.splash.state.SplashUIState
@@ -19,6 +20,7 @@ class SplashViewModel @Inject constructor(
     private val authenticationRepository: AuthenticationRepository,
     private val userRepository: UserRepository,
     private val groupRepository: GroupRepository,
+    private val datastoreManager: DatastoreManager,
 ) : ViewModel() {
 
     private val _state: MutableStateFlow<SplashUIState> = MutableStateFlow(SplashUIState())
@@ -26,6 +28,27 @@ class SplashViewModel @Inject constructor(
 
     init {
         checkIfUserIsAuthenticated()
+    }
+
+    private fun checkIfUserHasDefaultGroup() {
+        viewModelScope.launch {
+            try {
+                val defaultGroup = datastoreManager.getInt("mainGroupId")
+                if (defaultGroup == null) {
+                    _state.value = _state.value.copy(
+                        defaultGroup = null
+                    )
+                } else {
+                    groupRepository.setCurrentGroup(defaultGroup)
+                    _state.value = _state.value.copy(
+                        defaultGroup = defaultGroup
+                    )
+                }
+            } catch (e: Exception) {
+                println("Error retrieving default group")
+            }
+            onReadyToGo()
+        }
     }
 
     private fun checkIfUserIsAuthenticated() {
@@ -44,7 +67,6 @@ class SplashViewModel @Inject constructor(
                     deleteUserFromDatabase()
                 }
             }
-            onReadyToGo()
         }
     }
 
@@ -53,6 +75,7 @@ class SplashViewModel @Inject constructor(
             groupRepository.getUserGroups(
                 update = true
             )
+            checkIfUserHasDefaultGroup()
         }
     }
 
@@ -85,5 +108,4 @@ class SplashViewModel @Inject constructor(
             isReadyToGo = true
         )
     }
-
 }
