@@ -109,4 +109,6 @@
   <string name="icon_show_groups_list_description">Show groups list</string>
   <string name="group_selected">Group selected</string>
   <string name="no_group_description_text">This group has no description, edit group info to add it.</string>
+  <string name="edit_group_info">Edit group info</string>
+  <string name="manage_members">Manage members</string>
 </resources>

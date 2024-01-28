@@ -9,7 +9,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -41,6 +43,9 @@ import com.madteam.split.ui.screens.groupinfo.viewmodel.GroupInfoViewModel
 import com.madteam.split.ui.theme.DSBottomNavigation
 import com.madteam.split.ui.theme.GroupNavigationTopAppBar
 import com.madteam.split.ui.theme.GroupsListModalBottomSheet
+import com.madteam.split.ui.theme.MembersHorizontalList
+import com.madteam.split.ui.theme.PrimaryLargeButton
+import com.madteam.split.ui.theme.SecondaryLargeButton
 import com.madteam.split.ui.theme.SplitTheme
 import com.madteam.split.utils.ui.BackPressHandler
 import com.madteam.split.utils.ui.navigateWithPopUpTo
@@ -124,6 +129,9 @@ fun GroupInfoContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(
+                rememberScrollState()
+            )
     ) {
         ConstraintLayout(
             modifier = Modifier
@@ -193,6 +201,37 @@ fun GroupInfoContent(
             } else SplitTheme.colors.neutral.textBody,
             maxLines = 5,
             overflow = TextOverflow.Ellipsis
+        )
+        Spacer(modifier = Modifier.size(16.dp))
+        PrimaryLargeButton(
+            modifier = Modifier
+                .padding(horizontal = 24.dp),
+            onClick = { /*TODO*/ },
+            text = R.string.edit_group_info,
+            enabled = false
+        )
+        Spacer(modifier = Modifier.size(24.dp))
+        Text(
+            modifier = Modifier
+                .align(Alignment.Start)
+                .padding(horizontal = 24.dp),
+            text = stringResource(id = R.string.group_members),
+            style = SplitTheme.typography.heading.m,
+            color = SplitTheme.colors.neutral.textTitle
+        )
+        Spacer(modifier = Modifier.size(16.dp))
+        MembersHorizontalList(
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally),
+            membersList = currentGroup.members
+        )
+        Spacer(modifier = Modifier.size(16.dp))
+        SecondaryLargeButton(
+            modifier = Modifier
+                .padding(horizontal = 24.dp),
+            onClick = { /*TODO*/ },
+            enabled = false,
+            text = R.string.manage_members
         )
     }
 }
