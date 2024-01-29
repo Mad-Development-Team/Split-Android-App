@@ -112,4 +112,7 @@
   <string name="edit_group_info">Edit group info</string>
   <string name="manage_members">Manage members</string>
   <string name="see_invite_code">See invite code</string>
+  <string name="total_expenses">Total expenses</string>
+  <string name="last_day_expenses">Last day</string>
+  <string name="last_week_expenses">Last week</string>
 </resources>

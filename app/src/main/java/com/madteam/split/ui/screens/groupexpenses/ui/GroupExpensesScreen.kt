@@ -3,23 +3,33 @@ package com.madteam.split.ui.screens.groupexpenses.ui
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ChevronLeft
+import androidx.compose.material.icons.outlined.ChevronRight
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.madteam.split.R
 import com.madteam.split.ui.navigation.Screens
 import com.madteam.split.ui.screens.group.viewmodel.GroupViewModel
@@ -31,7 +41,6 @@ import com.madteam.split.ui.theme.GroupsListModalBottomSheet
 import com.madteam.split.ui.theme.SplitTheme
 import com.madteam.split.utils.ui.BackPressHandler
 import com.madteam.split.utils.ui.navigateWithPopUpTo
-import java.math.BigDecimal
 
 @Composable
 fun GroupExpensesScreen(
@@ -105,68 +114,131 @@ fun GroupExpensesContent() {
         modifier = Modifier
             .fillMaxSize()
     ) {
-
+        GroupExpensesSummarySection(
+            values = mapOf(
+                R.string.last_day_expenses to 123.45,
+                R.string.total_expenses to 3461.33,
+                R.string.last_week_expenses to 456.0,
+            ),
+            currency = "€"
+        )
     }
 }
 
 @Composable
 fun GroupExpensesSummarySection(
     modifier: Modifier = Modifier,
-    values: Map<String, BigDecimal>,
+    values: Map<Int, Double>,
     currency: String,
 ) {
-    ConstraintLayout(
-        modifier = modifier
-            .fillMaxWidth()
-    ) {
-        val (blob, amount, decimalAmount, currency) = createRefs()
-        val totalExpenses = values.values.elementAt(0)
-        val lastDay = values.values.elementAt(1)
-        val lastWeek = values.values.elementAt(2)
-        Image(
-            modifier = Modifier
-                .constrainAs(blob) {
-                    top.linkTo(parent.top)
-                    bottom.linkTo(parent.bottom)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                }
-                .size(150.dp),
-            painter = painterResource(id = R.drawable.blob2),
-            contentDescription = null
-        )
-        Text(
-            modifier = Modifier
-                .constrainAs(amount) {
-                    top.linkTo(blob.top)
-                    bottom.linkTo(blob.bottom)
-                    start.linkTo(blob.start)
-                    end.linkTo(blob.end)
-                },
-            text = totalExpenses.toInt().toString(),
-            color = SplitTheme.colors.neutral.textExtraWeak,
-            style = SplitTheme.typography.display.s
+
+    var index by remember { mutableStateOf(1) }
+    val amountValue = values.values.elementAt(index)
+    val text by remember {
+        mutableStateOf(
+            values.keys.elementAt(index)
         )
     }
-}
+    val indexOfDecimal = amountValue.toString().indexOf('.')
+    val decimalPart = amountValue.toString().substring(indexOfDecimal + 1)
 
-@Preview
-@Composable
-fun GroupExpensesSummarySectionPreview() {
-    GroupExpensesSummarySection(
-        values = mapOf(
-            "Total expenses" to BigDecimal(1546.33),
-            "Last day" to BigDecimal(54.87),
-            "Last week" to BigDecimal(349)
-        ),
-        currency = "€"
-    )
-}
-
-@Preview
-@Composable
-fun GroupExpensesScreenPreview() {
-    GroupExpensesScreen(
-        navController = rememberNavController()
-    )
+    Column(
+        modifier = modifier
+            .fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        ConstraintLayout(
+            modifier = modifier
+        ) {
+            val (blob, amount, chevronLeft, chevronRight) = createRefs()
+            Image(
+                modifier = Modifier
+                    .constrainAs(blob) {
+                        top.linkTo(parent.top)
+                        bottom.linkTo(parent.bottom)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    }
+                    .size(150.dp),
+                painter = painterResource(id = R.drawable.blob2),
+                contentDescription = null
+            )
+            Row(
+                modifier = Modifier
+                    .constrainAs(amount) {
+                        top.linkTo(parent.top)
+                        bottom.linkTo(parent.bottom)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    }
+            ) {
+                Text(
+                    modifier = Modifier,
+                    text = amountValue.toInt().toString(),
+                    color = SplitTheme.colors.neutral.textExtraWeak,
+                    style = SplitTheme.typography.display.s
+                )
+                Text(
+                    modifier = Modifier
+                        .padding(top = 4.dp),
+                    text = if (decimalPart == "0" || decimalPart == "00") "" else decimalPart,
+                    color = SplitTheme.colors.neutral.textExtraWeak,
+                    style = SplitTheme.typography.heading.s
+                )
+                Text(
+                    modifier = Modifier
+                        .padding(top = 4.dp),
+                    text = currency,
+                    color = SplitTheme.colors.neutral.textExtraWeak,
+                    style = SplitTheme.typography.heading.s
+                )
+            }
+            IconButton(
+                modifier = Modifier
+                    .constrainAs(chevronLeft) {
+                        top.linkTo(parent.top)
+                        bottom.linkTo(parent.bottom)
+                        end.linkTo(blob.start, 16.dp)
+                    },
+                onClick = {
+                    if (index > 0) {
+                        index--
+                    } else {
+                        index = values.size - 1
+                    }
+                }
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.ChevronLeft,
+                    contentDescription = null
+                )
+            }
+            IconButton(
+                modifier = Modifier
+                    .constrainAs(chevronRight) {
+                        top.linkTo(parent.top)
+                        bottom.linkTo(parent.bottom)
+                        start.linkTo(blob.end, 16.dp)
+                    },
+                onClick = {
+                    if (index < 2) {
+                        index++
+                    } else {
+                        index = 0
+                    }
+                }
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.ChevronRight,
+                    contentDescription = null
+                )
+            }
+        }
+        Spacer(modifier = Modifier.size(8.dp))
+        Text(
+            text = stringResource(id = text),
+            style = SplitTheme.typography.heading.s,
+            color = SplitTheme.colors.neutral.textTitle
+        )
+    }
 }
