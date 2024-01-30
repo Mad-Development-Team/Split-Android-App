@@ -1,6 +1,7 @@
 package com.madteam.split.ui.screens.groupexpenses.ui
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ChevronLeft
 import androidx.compose.material.icons.outlined.ChevronRight
@@ -32,12 +35,15 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.madteam.split.R
 import com.madteam.split.ui.navigation.Screens
+import com.madteam.split.ui.screens.group.state.GroupUIState
 import com.madteam.split.ui.screens.group.viewmodel.GroupViewModel
 import com.madteam.split.ui.screens.groupexpenses.state.GroupExpensesUIEvent
+import com.madteam.split.ui.screens.groupexpenses.state.GroupExpensesUIState
 import com.madteam.split.ui.screens.groupexpenses.viewmodel.GroupExpensesViewModel
 import com.madteam.split.ui.theme.DSBottomNavigation
 import com.madteam.split.ui.theme.GroupNavigationTopAppBar
 import com.madteam.split.ui.theme.GroupsListModalBottomSheet
+import com.madteam.split.ui.theme.SmallSecondaryButton
 import com.madteam.split.ui.theme.SplitTheme
 import com.madteam.split.utils.ui.BackPressHandler
 import com.madteam.split.utils.ui.navigateWithPopUpTo
@@ -103,13 +109,19 @@ fun GroupExpensesScreen(
                 .fillMaxSize()
                 .padding(it)
         ) {
-            GroupExpensesContent()
+            GroupExpensesContent(
+                state = state,
+                commonState = commonState
+            )
         }
     }
 }
 
 @Composable
-fun GroupExpensesContent() {
+fun GroupExpensesContent(
+    state: GroupExpensesUIState,
+    commonState: GroupUIState,
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -122,6 +134,26 @@ fun GroupExpensesContent() {
             ),
             currency = "€"
         )
+        Spacer(modifier = Modifier.size(16.dp))
+        LazyRow(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            item {
+                Spacer(modifier = Modifier.size(16.dp))
+            }
+            itemsIndexed(state.availableFilters) { _, filter ->
+                SmallSecondaryButton(
+                    buttonText = filter.title,
+                    icon = filter.icon,
+                    enabled = filter.enabled
+                )
+            }
+            item {
+                Spacer(modifier = Modifier.size(16.dp))
+            }
+        }
     }
 }
 

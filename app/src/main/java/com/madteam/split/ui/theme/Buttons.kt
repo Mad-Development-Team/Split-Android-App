@@ -12,6 +12,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
@@ -188,6 +189,57 @@ fun ElevatedIconButton(
             tint = SplitTheme.colors.neutral.iconHeavy
         )
     }
+}
+
+@Composable
+fun SmallSecondaryButton(
+    modifier: Modifier = Modifier,
+    icon: ImageVector? = null,
+    buttonText: Int,
+    enabled: Boolean = true,
+) {
+    ElevatedButton(
+        modifier = modifier,
+        elevation = ButtonDefaults.elevatedButtonElevation(
+            defaultElevation = 4.dp,
+            pressedElevation = 2.dp,
+            disabledElevation = 0.dp
+        ),
+        colors = ButtonDefaults.elevatedButtonColors(
+            containerColor = SplitTheme.colors.neutral.backgroundHeavy,
+            disabledContainerColor = SplitTheme.colors.neutral.backgroundMedium,
+            contentColor = SplitTheme.colors.neutral.textExtraWeak,
+            disabledContentColor = SplitTheme.colors.neutral.textExtraWeak
+        ),
+        onClick = {
+            //TODO: Add action
+        },
+        enabled = enabled
+    ) {
+        if (icon != null) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = SplitTheme.colors.neutral.iconExtraWeak
+            )
+            Spacer(modifier = Modifier.size(8.dp))
+        }
+        Text(
+            text = stringResource(id = buttonText),
+            style = SplitTheme.typography.body.l,
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SmallSecondaryButtonPreview() {
+    SmallSecondaryButton(
+        modifier = Modifier,
+        icon = Icons.Outlined.CalendarMonth,
+        buttonText = R.string.discard_changes,
+        enabled = true
+    )
 }
 
 @Preview

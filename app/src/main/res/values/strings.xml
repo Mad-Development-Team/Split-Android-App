@@ -115,4 +115,8 @@
   <string name="total_expenses">Total expenses</string>
   <string name="last_day_expenses">Last day</string>
   <string name="last_week_expenses">Last week</string>
+  <string name="date">Date</string>
+  <string name="category">Category</string>
+  <string name="amount">Amount</string>
+  <string name="payer">Payer</string>
 </resources>
