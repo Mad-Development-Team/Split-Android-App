@@ -11,10 +11,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -27,6 +30,7 @@ import com.madteam.split.ui.screens.groupexpenses.state.GroupExpensesUIEvent
 import com.madteam.split.ui.screens.groupexpenses.state.GroupExpensesUIState
 import com.madteam.split.ui.screens.groupexpenses.viewmodel.GroupExpensesViewModel
 import com.madteam.split.ui.theme.DSBottomNavigation
+import com.madteam.split.ui.theme.DefaultFloatingButton
 import com.madteam.split.ui.theme.GroupNavigationTopAppBar
 import com.madteam.split.ui.theme.GroupsListModalBottomSheet
 import com.madteam.split.ui.theme.SmallSecondaryButton
@@ -87,6 +91,15 @@ fun GroupExpensesScreen(
                         )
                     )
                 }
+            )
+        },
+        floatingActionButton = {
+            DefaultFloatingButton(
+                icon = Icons.Outlined.Add,
+                onClick = {
+                    //TODO: Navigate to add expense screen
+                },
+                contentDescription = stringResource(id = R.string.add_expense)
             )
         }
     ) {
