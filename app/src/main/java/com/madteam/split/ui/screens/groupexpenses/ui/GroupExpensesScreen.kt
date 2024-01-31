@@ -97,7 +97,7 @@ fun GroupExpensesScreen(
             DefaultFloatingButton(
                 icon = Icons.Outlined.Add,
                 onClick = {
-                    //TODO: Navigate to add expense screen
+                    navController.navigate(Screens.CreateExpenseScreen.route)
                 },
                 contentDescription = stringResource(id = R.string.add_expense)
             )
