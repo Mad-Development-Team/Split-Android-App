@@ -1,7 +1,6 @@
 package com.madteam.split.ui.screens.groupexpenses.ui
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
@@ -163,7 +162,6 @@ fun GroupExpensesContent(
     }
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun GroupExpensesSummarySection(
     modifier: Modifier = Modifier,
