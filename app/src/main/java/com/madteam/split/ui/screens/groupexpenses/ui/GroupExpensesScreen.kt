@@ -1,5 +1,10 @@
 package com.madteam.split.ui.screens.groupexpenses.ui
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -47,6 +52,7 @@ import com.madteam.split.ui.theme.SmallSecondaryButton
 import com.madteam.split.ui.theme.SplitTheme
 import com.madteam.split.utils.ui.BackPressHandler
 import com.madteam.split.utils.ui.navigateWithPopUpTo
+import kotlin.math.absoluteValue
 
 @Composable
 fun GroupExpensesScreen(
@@ -157,6 +163,7 @@ fun GroupExpensesContent(
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun GroupExpensesSummarySection(
     modifier: Modifier = Modifier,
@@ -166,11 +173,6 @@ fun GroupExpensesSummarySection(
 
     var index by remember { mutableStateOf(1) }
     val amountValue = values.values.elementAt(index)
-    val text by remember {
-        mutableStateOf(
-            values.keys.elementAt(index)
-        )
-    }
     val indexOfDecimal = amountValue.toString().indexOf('.')
     val decimalPart = amountValue.toString().substring(indexOfDecimal + 1)
 
@@ -204,19 +206,42 @@ fun GroupExpensesSummarySection(
                         end.linkTo(parent.end)
                     }
             ) {
-                Text(
-                    modifier = Modifier,
-                    text = amountValue.toInt().toString(),
-                    color = SplitTheme.colors.neutral.textExtraWeak,
-                    style = SplitTheme.typography.display.s
-                )
-                Text(
-                    modifier = Modifier
-                        .padding(top = 4.dp),
-                    text = if (decimalPart == "0" || decimalPart == "00") "" else decimalPart,
-                    color = SplitTheme.colors.neutral.textExtraWeak,
-                    style = SplitTheme.typography.heading.s
-                )
+                AnimatedContent(
+                    targetState = amountValue.toInt(),
+                    transitionSpec = {
+                        if (targetState > initialState) {
+                            slideInVertically { -it } togetherWith slideOutVertically { it }
+                        } else {
+                            slideInVertically { it } togetherWith slideOutVertically { -it }
+                        }
+                    }, label = ""
+                ) { animatedAmountValue ->
+                    Text(
+                        modifier = Modifier,
+                        text = animatedAmountValue.absoluteValue.toString(),
+                        color = SplitTheme.colors.neutral.textExtraWeak,
+                        style = SplitTheme.typography.display.s
+                    )
+                }
+                AnimatedContent(
+                    targetState = decimalPart.toInt(),
+                    transitionSpec = {
+                        if (targetState > initialState) {
+                            slideInVertically { -it } togetherWith slideOutVertically { it }
+                        } else {
+                            slideInVertically { it } togetherWith slideOutVertically { -it }
+                        }
+                    }, label = ""
+                ) { animatedDecimalValue ->
+                    Text(
+                        modifier = Modifier
+                            .padding(top = 4.dp),
+                        text = if (decimalPart == "0" || decimalPart == "00") ""
+                        else animatedDecimalValue.toString(),
+                        color = SplitTheme.colors.neutral.textExtraWeak,
+                        style = SplitTheme.typography.heading.s
+                    )
+                }
                 Text(
                     modifier = Modifier
                         .padding(top = 4.dp),
@@ -268,7 +293,7 @@ fun GroupExpensesSummarySection(
         }
         Spacer(modifier = Modifier.size(8.dp))
         Text(
-            text = stringResource(id = text),
+            text = stringResource(id = values.keys.elementAt(index)),
             style = SplitTheme.typography.heading.s,
             color = SplitTheme.colors.neutral.textTitle
         )
