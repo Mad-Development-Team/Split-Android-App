@@ -25,6 +25,9 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.madteam.split.R
 import com.madteam.split.ui.navigation.Screens
+import com.madteam.split.ui.theme.DSBasicTextField
+import com.madteam.split.ui.theme.DSNumericTextField
+import com.madteam.split.ui.theme.SmallIconButton
 import com.madteam.split.ui.theme.SplitTheme
 import com.madteam.split.utils.ui.BackPressHandler
 import com.madteam.split.utils.ui.navigateWithPopUpTo
@@ -85,6 +88,55 @@ fun CreateExpenseContent(
                 text = stringResource(id = R.string.add_expense),
                 style = SplitTheme.typography.heading.m,
                 color = SplitTheme.colors.neutral.textTitle,
+            )
+        }
+        Spacer(modifier = Modifier.size(32.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            DSBasicTextField(
+                modifier = Modifier.weight(1f),
+                value = "",
+                onValueChange = {},
+                placeholder = R.string.expense_title
+            )
+            Spacer(modifier = Modifier.size(8.dp))
+            SmallIconButton(
+                onClick = {},
+                image = R.drawable.emoji_hamburguer
+            )
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp),
+        ) {
+            DSBasicTextField(
+                value = "",
+                onValueChange = {},
+                placeholder = R.string.expense_description,
+                maxLines = 3
+            )
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            DSNumericTextField(
+                modifier = Modifier.weight(1f),
+                value = "",
+                onValueChange = {},
+                placeholder = R.string.expense_amount,
+            )
+            Spacer(modifier = Modifier.size(8.dp))
+            SmallIconButton(
+                onClick = {},
+                image = R.drawable.emoji_euro_bill
             )
         }
     }

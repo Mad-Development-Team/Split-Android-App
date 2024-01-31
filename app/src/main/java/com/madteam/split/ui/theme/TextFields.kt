@@ -139,6 +139,36 @@ fun DSEmailTextField(
 }
 
 @Composable
+fun DSNumericTextField(
+    modifier: Modifier = Modifier,
+    value: String,
+    onValueChange: (String) -> Unit,
+    enabled: Boolean = true,
+    isError: Boolean = false,
+    isSuccess: Boolean = false,
+    imeAction: ImeAction = ImeAction.Next,
+    @StringRes placeholder: Int,
+    @StringRes supportingText: Int? = null,
+) {
+    DSTextField(
+        modifier = modifier,
+        value = value,
+        onValueChange = { onValueChange(it) },
+        placeholder = placeholder,
+        supportingText = supportingText,
+        enabled = enabled,
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Number,
+            imeAction = imeAction
+        ),
+        maxLines = 1,
+        isError = isError,
+        isSuccess = isSuccess,
+        visualTransformation = VisualTransformation.None
+    )
+}
+
+@Composable
 fun DSBasicTextField(
     modifier: Modifier = Modifier,
     value: String,

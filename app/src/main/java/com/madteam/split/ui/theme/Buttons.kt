@@ -2,17 +2,20 @@ package com.madteam.split.ui.theme
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.outlined.CalendarMonth
+import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
@@ -25,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -229,6 +233,40 @@ fun SmallSecondaryButton(
             style = SplitTheme.typography.body.l,
         )
     }
+}
+
+@Composable
+fun SmallIconButton(
+    modifier: Modifier = Modifier,
+    @DrawableRes image: Int,
+    onClick: () -> Unit,
+) {
+    Button(
+        modifier = modifier
+            .height(56.dp),
+        shape = RoundedCornerShape(20.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = SplitTheme.colors.secondary.backgroundMedium
+        ),
+        onClick = { onClick() }
+    ) {
+        Image(
+            modifier = Modifier.size(32.dp),
+            painter = painterResource(id = image),
+            contentScale = ContentScale.Crop,
+            contentDescription = null
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SmallIconButtonPreview() {
+    SmallIconButton(
+        modifier = Modifier,
+        image = R.drawable.emoji_euro_bill,
+        onClick = {}
+    )
 }
 
 @Preview(showBackground = true)

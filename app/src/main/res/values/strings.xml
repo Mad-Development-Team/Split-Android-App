@@ -120,4 +120,7 @@
   <string name="amount">Amount</string>
   <string name="payer">Payer</string>
   <string name="add_expense">Add expense</string>
+  <string name="expense_title">Expense title</string>
+  <string name="expense_description">Expense description</string>
+  <string name="expense_amount">Expense amount</string>
 </resources>

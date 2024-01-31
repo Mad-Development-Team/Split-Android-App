@@ -62,7 +62,7 @@ fun GroupExpensesSummarySection(
                         end.linkTo(parent.end)
                     }
                     .size(150.dp),
-                painter = painterResource(id = R.drawable.blob2),
+                painter = painterResource(id = R.drawable.blob),
                 contentDescription = null
             )
             Row(
