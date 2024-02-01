@@ -6,6 +6,7 @@ private const val MIN_CHAR_GROUP_NAME_LENGTH = 1
 private const val MAX_CHAR_NAME_LENGTH = 20
 private const val MAX_CHAR_GROUP_NAME_LENGTH = 20
 private const val MAX_CHAR_EXPENSE_TITLE_LENGTH = 20
+private const val MAX_CHAR_EXPENSE_DESCRIPTION_LENGTH = 250
 
 private const val VALID_EMAIL_REGEX = "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}"
 
@@ -36,5 +37,9 @@ fun validateGroupName(name: String): Boolean {
 
 fun validateExpenseTitle(title: String): Boolean {
     return title.length in 1..MAX_CHAR_EXPENSE_TITLE_LENGTH
+}
+
+fun validateExpenseDescription(description: String): Boolean {
+    return description.length < MAX_CHAR_EXPENSE_DESCRIPTION_LENGTH
 }
 

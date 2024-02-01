@@ -6,4 +6,12 @@ data class ExpenseType(
     val description: String?,
     val icon: String,
     val group: Int,
-)
+) {
+    constructor() : this(
+        id = 0,
+        title = "",
+        description = "",
+        icon = "",
+        group = 0,
+    )
+}

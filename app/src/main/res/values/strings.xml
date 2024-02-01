@@ -129,4 +129,5 @@
   <string name="for_whom">For whom</string>
   <string name="expense_title_required">You must enter a title for this expense.</string>
   <string name="expense_title_maximum_length">The title for the expense must be between 1 and 20 characters.</string>
+  <string name="expense_description_maximum_length">Expense description must nor exceed 250 characters.</string>
 </resources>

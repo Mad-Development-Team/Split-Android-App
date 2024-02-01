@@ -101,7 +101,6 @@ private fun DSTextField(
                 color = SplitTheme.colors.neutral.textMedium
             )
         },
-        singleLine = true,
         shape = RoundedCornerShape(20.dp),
         supportingText = {
             AnimatedVisibility(

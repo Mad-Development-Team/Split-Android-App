@@ -79,6 +79,11 @@ fun CreateExpenseScreen(
                         CreateExpenseUIEvent.OnTitleChanged(title)
                     )
                 },
+                onExpenseDescriptionChanged = { description ->
+                    viewModel.onEvent(
+                        CreateExpenseUIEvent.OnDescriptionChanged(description)
+                    )
+                },
                 popUpBack = {
                     navController.navigateWithPopUpTo(
                         route = Screens.GroupExpensesScreen.route,
@@ -95,6 +100,7 @@ fun CreateExpenseScreen(
 fun CreateExpenseContent(
     state: CreateExpenseUIState,
     onExpenseTitleChanged: (String) -> Unit,
+    onExpenseDescriptionChanged: (String) -> Unit,
     popUpBack: () -> Unit,
 ) {
     Column(
@@ -161,12 +167,21 @@ fun CreateExpenseContent(
                 .padding(horizontal = 24.dp),
         ) {
             DSBasicTextField(
-                value = "",
-                onValueChange = {},
+                value = state.newExpense.description ?: "",
+                onValueChange = {
+                    onExpenseDescriptionChanged(it)
+                },
+                isError = state.isDescriptionError,
+                supportingText = if (state.isDescriptionError) {
+                    R.string.expense_description_maximum_length
+                } else {
+                    null
+                },
                 placeholder = R.string.expense_description,
-                maxLines = 3
+                maxLines = 5
             )
         }
+        Spacer(modifier = Modifier.size(8.dp))
         Row(
             modifier = Modifier
                 .fillMaxWidth()

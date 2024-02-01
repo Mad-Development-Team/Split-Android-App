@@ -5,4 +5,5 @@ import com.madteam.split.domain.model.Expense
 data class CreateExpenseUIState(
     val newExpense: Expense = Expense(),
     val isTitleError: Boolean = true,
+    val isDescriptionError: Boolean = false,
 )
