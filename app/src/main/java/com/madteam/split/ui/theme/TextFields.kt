@@ -1,6 +1,9 @@
 package com.madteam.split.ui.theme
 
 import androidx.annotation.StringRes
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -101,11 +104,19 @@ private fun DSTextField(
         singleLine = true,
         shape = RoundedCornerShape(20.dp),
         supportingText = {
-            if (supportingText != null) {
-                Text(
-                    text = stringResource(id = supportingText),
-                    style = SplitTheme.typography.body.s
-                )
+            AnimatedVisibility(
+                visible = supportingText != null,
+                enter = slideInVertically(
+                    initialOffsetY = { fullHeight -> -fullHeight },
+                    animationSpec = tween(durationMillis = 300)
+                ),
+            ) {
+                if (supportingText != null) {
+                    Text(
+                        text = stringResource(id = supportingText),
+                        style = SplitTheme.typography.body.s
+                    )
+                }
             }
         }
     )

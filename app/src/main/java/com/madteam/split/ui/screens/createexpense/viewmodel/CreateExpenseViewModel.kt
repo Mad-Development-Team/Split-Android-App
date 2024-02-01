@@ -3,6 +3,7 @@ package com.madteam.split.ui.screens.createexpense.viewmodel
 import androidx.lifecycle.ViewModel
 import com.madteam.split.ui.screens.createexpense.state.CreateExpenseUIEvent
 import com.madteam.split.ui.screens.createexpense.state.CreateExpenseUIState
+import com.madteam.split.ui.utils.validateExpenseTitle
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,9 +20,18 @@ class CreateExpenseViewModel @Inject constructor(
 
     fun onEvent(event: CreateExpenseUIEvent) {
         when (event) {
-            else -> {
-                // Do nothing
+            is CreateExpenseUIEvent.OnTitleChanged -> {
+                onExpenseTitleChanged(event.title)
             }
         }
+    }
+
+    private fun onExpenseTitleChanged(title: String) {
+        _state.value = _state.value.copy(
+            newExpense = _state.value.newExpense.copy(
+                title = title
+            ),
+            isTitleError = !validateExpenseTitle(title)
+        )
     }
 }

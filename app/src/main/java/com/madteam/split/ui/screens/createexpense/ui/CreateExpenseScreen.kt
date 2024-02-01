@@ -33,6 +33,8 @@ import androidx.navigation.compose.rememberNavController
 import com.madteam.split.R
 import com.madteam.split.domain.model.Member
 import com.madteam.split.ui.navigation.Screens
+import com.madteam.split.ui.screens.createexpense.state.CreateExpenseUIEvent
+import com.madteam.split.ui.screens.createexpense.state.CreateExpenseUIState
 import com.madteam.split.ui.screens.createexpense.viewmodel.CreateExpenseViewModel
 import com.madteam.split.ui.theme.BigIconButton
 import com.madteam.split.ui.theme.DSBasicTextField
@@ -71,6 +73,12 @@ fun CreateExpenseScreen(
                 .padding(it)
         ) {
             CreateExpenseContent(
+                state = state,
+                onExpenseTitleChanged = { title ->
+                    viewModel.onEvent(
+                        CreateExpenseUIEvent.OnTitleChanged(title)
+                    )
+                },
                 popUpBack = {
                     navController.navigateWithPopUpTo(
                         route = Screens.GroupExpensesScreen.route,
@@ -85,6 +93,8 @@ fun CreateExpenseScreen(
 
 @Composable
 fun CreateExpenseContent(
+    state: CreateExpenseUIState,
+    onExpenseTitleChanged: (String) -> Unit,
     popUpBack: () -> Unit,
 ) {
     Column(
@@ -124,8 +134,18 @@ fun CreateExpenseContent(
         ) {
             DSBasicTextField(
                 modifier = Modifier.weight(1f),
-                value = "",
-                onValueChange = {},
+                isError = state.isTitleError && state.newExpense.title.isNotEmpty(),
+                supportingText = if (state.isTitleError && state.newExpense.title.isNotEmpty()) {
+                    R.string.expense_title_maximum_length
+                } else if (state.newExpense.title.isEmpty()) {
+                    R.string.expense_title_required
+                } else {
+                    null
+                },
+                value = state.newExpense.title,
+                onValueChange = {
+                    onExpenseTitleChanged(it)
+                },
                 placeholder = R.string.expense_title
             )
             Spacer(modifier = Modifier.size(8.dp))
@@ -134,6 +154,7 @@ fun CreateExpenseContent(
                 image = R.drawable.emoji_hamburguer
             )
         }
+        Spacer(modifier = Modifier.size(8.dp))
         Row(
             modifier = Modifier
                 .fillMaxWidth()
