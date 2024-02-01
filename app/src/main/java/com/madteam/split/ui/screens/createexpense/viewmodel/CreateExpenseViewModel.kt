@@ -3,6 +3,7 @@ package com.madteam.split.ui.screens.createexpense.viewmodel
 import androidx.lifecycle.ViewModel
 import com.madteam.split.ui.screens.createexpense.state.CreateExpenseUIEvent
 import com.madteam.split.ui.screens.createexpense.state.CreateExpenseUIState
+import com.madteam.split.ui.utils.getCurrentDate
 import com.madteam.split.ui.utils.validateExpenseDescription
 import com.madteam.split.ui.utils.validateExpenseTitle
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,6 +20,10 @@ class CreateExpenseViewModel @Inject constructor(
         MutableStateFlow(CreateExpenseUIState())
     val state: StateFlow<CreateExpenseUIState> = _state
 
+    init {
+        getCurrentDateIntoExpense()
+    }
+
     fun onEvent(event: CreateExpenseUIEvent) {
         when (event) {
             is CreateExpenseUIEvent.OnTitleChanged -> {
@@ -33,6 +38,14 @@ class CreateExpenseViewModel @Inject constructor(
                 onExpenseAmountChanged(event.amount)
             }
         }
+    }
+
+    private fun getCurrentDateIntoExpense() {
+        _state.value = _state.value.copy(
+            newExpense = _state.value.newExpense.copy(
+                date = getCurrentDate()
+            )
+        )
     }
 
     private fun onExpenseAmountChanged(amount: Double) {

@@ -9,7 +9,7 @@ data class Expense(
     val paidBy: List<Member>,
     val images: List<String>?,
     val paymentMethod: String?,
-    val date: String?,
+    val date: String,
     val group: Int,
 ) {
     constructor() : this(

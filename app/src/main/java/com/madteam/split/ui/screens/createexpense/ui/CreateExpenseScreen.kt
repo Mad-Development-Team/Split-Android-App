@@ -39,7 +39,7 @@ import com.madteam.split.ui.screens.createexpense.viewmodel.CreateExpenseViewMod
 import com.madteam.split.ui.theme.BigIconButton
 import com.madteam.split.ui.theme.DSBasicTextField
 import com.madteam.split.ui.theme.DSCurrencyTextField
-import com.madteam.split.ui.theme.DSDateTextField
+import com.madteam.split.ui.theme.DSDatePickerTextField
 import com.madteam.split.ui.theme.DefaultFloatingButton
 import com.madteam.split.ui.theme.MembersHorizontalList
 import com.madteam.split.ui.theme.SmallEmojiButton
@@ -219,10 +219,13 @@ fun CreateExpenseContent(
                 .fillMaxWidth()
                 .padding(horizontal = 24.dp),
         ) {
-            DSDateTextField(
-                value = "",
+            DSDatePickerTextField(
+                value = state.newExpense.date,
                 onValueChange = {},
-                placeholder = R.string.expense_date
+                placeholder = R.string.expense_date,
+                onCalendarClick = {
+
+                }
             )
         }
         Spacer(modifier = Modifier.size(8.dp))

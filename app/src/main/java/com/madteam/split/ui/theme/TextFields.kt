@@ -13,8 +13,8 @@ import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.ExpandMore
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -25,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -44,10 +45,14 @@ private fun DSTextField(
     visualTransformation: VisualTransformation,
     maxLines: Int,
     isError: Boolean,
+    onIconsClick: () -> Unit = {},
+    customTrailingIcon: ImageVector? = null,
     isSuccess: Boolean,
+    readOnly: Boolean = false,
     onValueChange: (String) -> Unit,
     @StringRes placeholder: Int,
     @StringRes supportingText: Int? = null,
+    leadingIcon: @Composable (() -> Unit)? = null,
 ) {
     val focusManager = LocalFocusManager.current
     TextField(
@@ -63,6 +68,7 @@ private fun DSTextField(
         ),
         maxLines = maxLines,
         visualTransformation = visualTransformation,
+        leadingIcon = leadingIcon,
         onValueChange = { onValueChange(it) },
         colors = TextFieldDefaults.colors(
             unfocusedContainerColor = SplitTheme.colors.secondary.backgroundMedium,
@@ -78,19 +84,33 @@ private fun DSTextField(
             disabledSupportingTextColor = SplitTheme.colors.neutral.textDisabled,
             disabledLabelColor = SplitTheme.colors.neutral.textDisabled,
         ),
+        readOnly = readOnly,
         isError = isError,
         trailingIcon = {
-            if (isError) {
-                Icon(
-                    imageVector = Icons.Filled.Error,
-                    contentDescription = stringResource(id = R.string.error_icon_description)
-                )
-            } else if (isSuccess) {
-                Icon(
-                    imageVector = Icons.Filled.CheckCircle,
-                    tint = SplitTheme.colors.success.iconDefault,
-                    contentDescription = stringResource(id = R.string.success_icon_description)
-                )
+            when {
+                customTrailingIcon != null -> {
+                    IconButton(onClick = { onIconsClick() }) {
+                        Icon(
+                            imageVector = customTrailingIcon,
+                            contentDescription = null
+                        )
+                    }
+                }
+
+                isError -> {
+                    Icon(
+                        imageVector = Icons.Filled.Error,
+                        contentDescription = stringResource(id = R.string.error_icon_description)
+                    )
+                }
+
+                isSuccess -> {
+                    Icon(
+                        imageVector = Icons.Filled.CheckCircle,
+                        tint = SplitTheme.colors.success.iconDefault,
+                        contentDescription = stringResource(id = R.string.success_icon_description)
+                    )
+                }
             }
         },
         textStyle = SplitTheme.typography.body.l,
@@ -121,112 +141,6 @@ private fun DSTextField(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun DSDatePicker(
-    modifier: Modifier = Modifier,
-    value: String,
-    enabled: Boolean,
-    keyboardOptions: KeyboardOptions,
-    visualTransformation: VisualTransformation,
-    maxLines: Int,
-    isError: Boolean,
-    onValueChange: (String) -> Unit,
-    @StringRes placeholder: Int,
-    @StringRes supportingText: Int? = null,
-) {
-    val focusManager = LocalFocusManager.current
-    TextField(
-        modifier = modifier
-            .fillMaxWidth(),
-        value = value,
-        enabled = enabled,
-        keyboardOptions = keyboardOptions,
-        keyboardActions = KeyboardActions(
-            onDone = {
-                focusManager.clearFocus()
-            }
-        ),
-        maxLines = maxLines,
-        visualTransformation = visualTransformation,
-        onValueChange = { onValueChange(it) },
-        colors = TextFieldDefaults.colors(
-            unfocusedContainerColor = SplitTheme.colors.secondary.backgroundMedium,
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent,
-            cursorColor = SplitTheme.colors.primary.backgroundMedium,
-            errorCursorColor = SplitTheme.colors.error.iconDefault,
-            errorIndicatorColor = Color.Transparent,
-            disabledIndicatorColor = Color.Transparent,
-            errorSupportingTextColor = SplitTheme.colors.error.textDefault,
-            errorTrailingIconColor = SplitTheme.colors.error.iconDefault,
-            focusedSupportingTextColor = SplitTheme.colors.neutral.textStrong,
-            disabledSupportingTextColor = SplitTheme.colors.neutral.textDisabled,
-            disabledLabelColor = SplitTheme.colors.neutral.textDisabled,
-        ),
-        isError = isError,
-        trailingIcon = {
-            Icon(
-                imageVector = Icons.Default.ExpandMore,
-                contentDescription = null,
-                tint = SplitTheme.colors.neutral.iconHeavy
-            )
-        },
-        leadingIcon = {
-            Icon(
-                imageVector = Icons.Filled.CalendarMonth,
-                tint = if (isError) {
-                    SplitTheme.colors.error.iconDefault
-                } else {
-                    SplitTheme.colors.neutral.iconHeavy
-                },
-                contentDescription = null
-            )
-
-        },
-        textStyle = SplitTheme.typography.body.l,
-        placeholder = {
-            Text(
-                text = stringResource(id = placeholder),
-                style = SplitTheme.typography.body.l,
-                color = SplitTheme.colors.neutral.textMedium
-            )
-        },
-        singleLine = true,
-        shape = RoundedCornerShape(20.dp),
-        supportingText = {
-            if (supportingText != null) {
-                Text(
-                    text = stringResource(id = supportingText),
-                    style = SplitTheme.typography.body.s
-                )
-            }
-        }
-    )
-}
-
-@Preview
-@Composable
-fun DSDatePickerPreview() {
-    var text by remember { mutableStateOf("") }
-    var isError by remember { mutableStateOf(false) }
-    isError = text.length > 5
-    DSDatePicker(
-        value = text,
-        onValueChange = { text = it },
-        placeholder = R.string.expense_date,
-        isError = isError,
-        supportingText = null,
-        enabled = true,
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Number,
-            imeAction = ImeAction.Next
-        ),
-        maxLines = 1,
-        visualTransformation = VisualTransformation.None
-    )
-}
-
 @Composable
 fun DSEmailTextField(
     modifier: Modifier = Modifier,
@@ -254,82 +168,6 @@ fun DSEmailTextField(
         isError = isError,
         isSuccess = isSuccess,
         visualTransformation = VisualTransformation.None
-    )
-}
-
-@Composable
-fun DSNumericTextField(
-    modifier: Modifier = Modifier,
-    value: String,
-    onValueChange: (String) -> Unit,
-    enabled: Boolean = true,
-    isError: Boolean = false,
-    isSuccess: Boolean = false,
-    imeAction: ImeAction = ImeAction.Next,
-    @StringRes placeholder: Int,
-    @StringRes supportingText: Int? = null,
-) {
-    DSTextField(
-        modifier = modifier,
-        value = value,
-        onValueChange = { onValueChange(it) },
-        placeholder = placeholder,
-        supportingText = supportingText,
-        enabled = enabled,
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Number,
-            imeAction = imeAction
-        ),
-        maxLines = 1,
-        isError = isError,
-        isSuccess = isSuccess,
-        visualTransformation = VisualTransformation.None
-    )
-}
-
-@Composable
-fun DSDateTextField(
-    modifier: Modifier = Modifier,
-    value: String,
-    onValueChange: (String) -> Unit,
-    enabled: Boolean = true,
-    isError: Boolean = false,
-    isSuccess: Boolean = false,
-    imeAction: ImeAction = ImeAction.Next,
-    @StringRes placeholder: Int,
-    @StringRes supportingText: Int? = null,
-) {
-    DSTextField(
-        modifier = modifier,
-        value = value,
-        onValueChange = { onValueChange(it) },
-        placeholder = placeholder,
-        supportingText = supportingText,
-        enabled = enabled,
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Number,
-            imeAction = imeAction
-        ),
-        maxLines = 1,
-        isError = isError,
-        isSuccess = isSuccess,
-        visualTransformation = VisualTransformation.None
-    )
-}
-
-@Preview
-@Composable
-fun DSDateTextFieldPreview() {
-    var text by remember { mutableStateOf("") }
-    var isError by remember { mutableStateOf(false) }
-    isError = text.length > 5
-    DSDateTextField(
-        value = text,
-        onValueChange = { text = it },
-        placeholder = R.string.expense_date,
-        isError = isError,
-        supportingText = R.string.enter_your_email,
-        isSuccess = !isError
     )
 }
 
@@ -391,6 +229,48 @@ fun DSPasswordTextField(
         isError = isError,
         isSuccess = isSuccess,
         visualTransformation = PasswordVisualTransformation()
+    )
+}
+
+@Composable
+fun DSDatePickerTextField(
+    modifier: Modifier = Modifier,
+    value: String,
+    onValueChange: (String) -> Unit,
+    onCalendarClick: () -> Unit,
+    enabled: Boolean = true,
+    isError: Boolean = false,
+    isSuccess: Boolean = false,
+    imeAction: ImeAction = ImeAction.Next,
+    @StringRes placeholder: Int,
+    @StringRes supportingText: Int? = null,
+) {
+    DSTextField(
+        modifier = modifier,
+        value = value,
+        onValueChange = { onValueChange(it) },
+        leadingIcon = {
+            IconButton(onClick = { onCalendarClick() }) {
+                Icon(
+                    imageVector = Icons.Filled.CalendarMonth,
+                    contentDescription = stringResource(id = R.string.calendar_icon_description)
+                )
+            }
+        },
+        customTrailingIcon = Icons.Filled.ExpandMore,
+        onIconsClick = { onCalendarClick() },
+        placeholder = placeholder,
+        supportingText = supportingText,
+        enabled = enabled,
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Password,
+            imeAction = imeAction
+        ),
+        maxLines = 1,
+        readOnly = true,
+        isError = isError,
+        isSuccess = isSuccess,
+        visualTransformation = VisualTransformation.None
     )
 }
 
