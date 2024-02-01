@@ -1,8 +1,10 @@
 package com.madteam.split.ui.utils
 
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
+
 fun getCurrentDate(): String {
     val current = java.time.LocalDate.now()
-    val formatter =
-        java.time.format.DateTimeFormatter.ofLocalizedDate(java.time.format.FormatStyle.SHORT)
+    val formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)
     return current.format(formatter)
 }

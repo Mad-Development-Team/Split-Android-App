@@ -15,10 +15,18 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Done
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDefaults
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -46,6 +54,10 @@ import com.madteam.split.ui.theme.SmallEmojiButton
 import com.madteam.split.ui.theme.SplitTheme
 import com.madteam.split.utils.ui.BackPressHandler
 import com.madteam.split.utils.ui.navigateWithPopUpTo
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
+import java.util.Date
 
 @Composable
 fun CreateExpenseScreen(
@@ -89,6 +101,16 @@ fun CreateExpenseScreen(
                         CreateExpenseUIEvent.OnAmountChanged(amount)
                     )
                 },
+                onDatePickerDialogShowChanged = { show ->
+                    viewModel.onEvent(
+                        CreateExpenseUIEvent.OnDatePickerDialogShowChanged(show)
+                    )
+                },
+                onDatePickerDateSelected = { date ->
+                    viewModel.onEvent(
+                        CreateExpenseUIEvent.OnDatePickerDateSelected(date)
+                    )
+                },
                 popUpBack = {
                     navController.navigateWithPopUpTo(
                         route = Screens.GroupExpensesScreen.route,
@@ -101,12 +123,15 @@ fun CreateExpenseScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateExpenseContent(
     state: CreateExpenseUIState,
     onExpenseTitleChanged: (String) -> Unit,
     onExpenseDescriptionChanged: (String) -> Unit,
     onExpenseAmountChanged: (Double) -> Unit,
+    onDatePickerDialogShowChanged: (Boolean) -> Unit,
+    onDatePickerDateSelected: (String) -> Unit,
     popUpBack: () -> Unit,
 ) {
     Column(
@@ -224,7 +249,7 @@ fun CreateExpenseContent(
                 onValueChange = {},
                 placeholder = R.string.expense_date,
                 onCalendarClick = {
-
+                    onDatePickerDialogShowChanged(true)
                 }
             )
         }
@@ -339,6 +364,92 @@ fun CreateExpenseContent(
             )
         )
         Spacer(modifier = Modifier.size(16.dp))
+    }
+
+    if (state.showDatePickerDialog) {
+        val datePickerState = rememberDatePickerState(selectableDates = object : SelectableDates {
+            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                return utcTimeMillis <= System.currentTimeMillis()
+            }
+        })
+
+        val selectedDate = datePickerState.selectedDateMillis?.let { millis ->
+            val date = Date(millis).toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+            val formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)
+            formatter.format(date)
+        }
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            DatePickerDialog(
+                onDismissRequest = { onDatePickerDialogShowChanged(false) },
+                confirmButton = {
+                    Button(
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = SplitTheme.colors.primary.backgroundMedium,
+                            contentColor = SplitTheme.colors.neutral.textExtraWeak
+                        ),
+                        onClick = {
+                            if (selectedDate != null) {
+                                onDatePickerDateSelected(selectedDate)
+                            }
+                            onDatePickerDialogShowChanged(false)
+                        }
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.select),
+                            style = SplitTheme.typography.body.l,
+                        )
+                    }
+                },
+                dismissButton = {
+                    Button(
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = SplitTheme.colors.neutral.backgroundDark,
+                            contentColor = SplitTheme.colors.neutral.textExtraWeak
+                        ),
+                        onClick = {
+                            onDatePickerDialogShowChanged(false)
+                        }
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.dismiss),
+                            style = SplitTheme.typography.body.l,
+                        )
+                    }
+                },
+            ) {
+                DatePicker(
+                    state = datePickerState,
+                    title = {
+                        Text(
+                            modifier = Modifier
+                                .padding(horizontal = 24.dp, vertical = 16.dp),
+                            text = stringResource(id = R.string.expense_date),
+                            style = SplitTheme.typography.heading.l,
+                        )
+                    },
+                    headline = {
+                        Text(
+                            modifier = Modifier
+                                .padding(horizontal = 24.dp),
+                            text = stringResource(id = R.string.select_a_date),
+                            style = SplitTheme.typography.heading.s,
+                        )
+                    },
+                    colors = DatePickerDefaults.colors(
+                        titleContentColor = SplitTheme.colors.neutral.textTitle,
+                        headlineContentColor = SplitTheme.colors.neutral.textStrong,
+                        selectedDayContentColor = SplitTheme.colors.primary.backgroundStrong,
+                        selectedDayContainerColor = SplitTheme.colors.primary.backgroundWeak,
+                    )
+                )
+            }
+        }
     }
 }
 

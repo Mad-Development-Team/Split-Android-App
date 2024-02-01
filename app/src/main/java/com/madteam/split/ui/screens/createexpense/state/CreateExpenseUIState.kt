@@ -7,4 +7,5 @@ data class CreateExpenseUIState(
     val isTitleError: Boolean = true,
     val isDescriptionError: Boolean = false,
     val isAmountError: Boolean = true,
+    val showDatePickerDialog: Boolean = false,
 )

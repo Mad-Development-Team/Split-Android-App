@@ -37,7 +37,29 @@ class CreateExpenseViewModel @Inject constructor(
             is CreateExpenseUIEvent.OnAmountChanged -> {
                 onExpenseAmountChanged(event.amount)
             }
+
+            is CreateExpenseUIEvent.OnDatePickerDialogShowChanged -> {
+                onDatePickerDialogShowChanged(event.show)
+            }
+
+            is CreateExpenseUIEvent.OnDatePickerDateSelected -> {
+                onDatePickerDateSelected(event.date)
+            }
         }
+    }
+
+    private fun onDatePickerDateSelected(date: String) {
+        _state.value = _state.value.copy(
+            newExpense = _state.value.newExpense.copy(
+                date = date
+            )
+        )
+    }
+
+    private fun onDatePickerDialogShowChanged(show: Boolean) {
+        _state.value = _state.value.copy(
+            showDatePickerDialog = show
+        )
     }
 
     private fun getCurrentDateIntoExpense() {
