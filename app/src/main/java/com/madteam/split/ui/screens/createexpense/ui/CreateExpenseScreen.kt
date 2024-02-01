@@ -193,8 +193,13 @@ fun CreateExpenseContent(
                 .padding(horizontal = 24.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-
-        Spacer(modifier = Modifier.size(8.dp))
+            DSBasicTextField(
+                modifier = Modifier.weight(1f),
+                value = "",
+                onValueChange = {},
+                placeholder = R.string.expense_amount
+            )
+            Spacer(modifier = Modifier.size(8.dp))
             SmallEmojiButton(
                 onClick = {},
                 image = R.drawable.emoji_euro_bill
