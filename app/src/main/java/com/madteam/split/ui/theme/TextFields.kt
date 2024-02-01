@@ -394,6 +394,55 @@ fun DSPasswordTextField(
     )
 }
 
+@Composable
+fun DSCurrencyTextField(
+    modifier: Modifier = Modifier,
+    value: String,
+    onValueChange: (String) -> Unit,
+    enabled: Boolean = true,
+    isError: Boolean = false,
+    isSuccess: Boolean = false,
+    imeAction: ImeAction = ImeAction.Next,
+    @StringRes placeholder: Int,
+    @StringRes supportingText: Int? = null,
+) {
+    DSTextField(
+        modifier = modifier,
+        value = value,
+        onValueChange = { newValue ->
+            val isValid = when {
+                newValue.isEmpty() -> true
+                newValue.length == 1 && newValue.all { it.isDigit() } -> true
+                newValue.count { it == ',' || it == '.' } <= 1 -> {
+                    val parts =
+                        if (newValue.contains(',')) newValue.split(',') else newValue.split('.')
+                    when {
+                        parts.size > 2 -> false
+                        parts[0].length <= 5 && (parts.getOrNull(1)?.length ?: 0) <= 2 -> true
+                        else -> false
+                    }
+                }
+
+                else -> false
+            }
+            if (isValid) {
+                onValueChange(newValue)
+            }
+        },
+        placeholder = placeholder,
+        supportingText = supportingText,
+        enabled = enabled,
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Number,
+            imeAction = imeAction
+        ),
+        maxLines = 1,
+        isError = isError,
+        isSuccess = isSuccess,
+        visualTransformation = VisualTransformation.None
+    )
+}
+
 @Preview
 @Composable
 fun DSTextFieldPreview() {

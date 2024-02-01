@@ -38,6 +38,7 @@ import com.madteam.split.ui.screens.createexpense.state.CreateExpenseUIState
 import com.madteam.split.ui.screens.createexpense.viewmodel.CreateExpenseViewModel
 import com.madteam.split.ui.theme.BigIconButton
 import com.madteam.split.ui.theme.DSBasicTextField
+import com.madteam.split.ui.theme.DSCurrencyTextField
 import com.madteam.split.ui.theme.DSDateTextField
 import com.madteam.split.ui.theme.DefaultFloatingButton
 import com.madteam.split.ui.theme.MembersHorizontalList
@@ -105,7 +106,7 @@ fun CreateExpenseContent(
     state: CreateExpenseUIState,
     onExpenseTitleChanged: (String) -> Unit,
     onExpenseDescriptionChanged: (String) -> Unit,
-    onExpenseAmountChanged: (String) -> Unit,
+    onExpenseAmountChanged: (Double) -> Unit,
     popUpBack: () -> Unit,
 ) {
     Column(
@@ -193,11 +194,18 @@ fun CreateExpenseContent(
                 .padding(horizontal = 24.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            DSBasicTextField(
+            DSCurrencyTextField(
                 modifier = Modifier.weight(1f),
-                value = "",
-                onValueChange = {},
-                placeholder = R.string.expense_amount
+                value = state.newExpense.totalAmount.toString(),
+                onValueChange = {
+                    onExpenseAmountChanged(it.toDouble())
+                },
+                placeholder = R.string.expense_amount,
+                supportingText = if (state.isAmountError) {
+                    R.string.expense_amount_required
+                } else {
+                    null
+                },
             )
             Spacer(modifier = Modifier.size(8.dp))
             SmallEmojiButton(
@@ -205,6 +213,7 @@ fun CreateExpenseContent(
                 image = R.drawable.emoji_euro_bill
             )
         }
+        Spacer(modifier = Modifier.size(8.dp))
         Row(
             modifier = Modifier
                 .fillMaxWidth()

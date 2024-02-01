@@ -35,13 +35,12 @@ class CreateExpenseViewModel @Inject constructor(
         }
     }
 
-    private fun onExpenseAmountChanged(amount: String) {
-        val amountAsDouble = amount.toDoubleOrNull() ?: 0.0
+    private fun onExpenseAmountChanged(amount: Double) {
         _state.value = _state.value.copy(
             newExpense = _state.value.newExpense.copy(
-                totalAmount = amountAsDouble
+                totalAmount = amount
             ),
-            isAmountError = amountAsDouble <= 0
+            isAmountError = amount == 0.0
         )
     }
 
