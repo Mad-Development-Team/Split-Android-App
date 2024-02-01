@@ -28,7 +28,21 @@ class CreateExpenseViewModel @Inject constructor(
             is CreateExpenseUIEvent.OnDescriptionChanged -> {
                 onExpenseDescriptionChanged(event.description)
             }
+
+            is CreateExpenseUIEvent.OnAmountChanged -> {
+                onExpenseAmountChanged(event.amount)
+            }
         }
+    }
+
+    private fun onExpenseAmountChanged(amount: String) {
+        val amountAsDouble = amount.toDoubleOrNull() ?: 0.0
+        _state.value = _state.value.copy(
+            newExpense = _state.value.newExpense.copy(
+                totalAmount = amountAsDouble
+            ),
+            isAmountError = amountAsDouble <= 0
+        )
     }
 
     private fun onExpenseDescriptionChanged(description: String) {

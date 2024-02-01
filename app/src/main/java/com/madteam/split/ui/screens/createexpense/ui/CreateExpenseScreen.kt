@@ -39,7 +39,6 @@ import com.madteam.split.ui.screens.createexpense.viewmodel.CreateExpenseViewMod
 import com.madteam.split.ui.theme.BigIconButton
 import com.madteam.split.ui.theme.DSBasicTextField
 import com.madteam.split.ui.theme.DSDateTextField
-import com.madteam.split.ui.theme.DSNumericTextField
 import com.madteam.split.ui.theme.DefaultFloatingButton
 import com.madteam.split.ui.theme.MembersHorizontalList
 import com.madteam.split.ui.theme.SmallEmojiButton
@@ -84,6 +83,11 @@ fun CreateExpenseScreen(
                         CreateExpenseUIEvent.OnDescriptionChanged(description)
                     )
                 },
+                onExpenseAmountChanged = { amount ->
+                    viewModel.onEvent(
+                        CreateExpenseUIEvent.OnAmountChanged(amount)
+                    )
+                },
                 popUpBack = {
                     navController.navigateWithPopUpTo(
                         route = Screens.GroupExpensesScreen.route,
@@ -101,6 +105,7 @@ fun CreateExpenseContent(
     state: CreateExpenseUIState,
     onExpenseTitleChanged: (String) -> Unit,
     onExpenseDescriptionChanged: (String) -> Unit,
+    onExpenseAmountChanged: (String) -> Unit,
     popUpBack: () -> Unit,
 ) {
     Column(
@@ -188,13 +193,8 @@ fun CreateExpenseContent(
                 .padding(horizontal = 24.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            DSNumericTextField(
-                modifier = Modifier.weight(1f),
-                value = "",
-                onValueChange = {},
-                placeholder = R.string.expense_amount,
-            )
-            Spacer(modifier = Modifier.size(8.dp))
+
+        Spacer(modifier = Modifier.size(8.dp))
             SmallEmojiButton(
                 onClick = {},
                 image = R.drawable.emoji_euro_bill
