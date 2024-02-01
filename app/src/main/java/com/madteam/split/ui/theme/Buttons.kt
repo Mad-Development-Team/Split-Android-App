@@ -236,7 +236,7 @@ fun SmallSecondaryButton(
 }
 
 @Composable
-fun SmallIconButton(
+fun SmallEmojiButton(
     modifier: Modifier = Modifier,
     @DrawableRes image: Int,
     onClick: () -> Unit,
@@ -259,10 +259,43 @@ fun SmallIconButton(
     }
 }
 
+@Composable
+fun BigIconButton(
+    modifier: Modifier = Modifier,
+    icon: ImageVector,
+    enabled: Boolean = true,
+    onClick: () -> Unit,
+) {
+    ElevatedButton(
+        modifier = modifier
+            .size(100.dp),
+        shape = RoundedCornerShape(20.dp),
+        elevation = ButtonDefaults.elevatedButtonElevation(
+            defaultElevation = 4.dp,
+            pressedElevation = 2.dp,
+            disabledElevation = 0.dp
+        ),
+        colors = ButtonDefaults.elevatedButtonColors(
+            containerColor = SplitTheme.colors.secondary.backgroundMedium,
+            disabledContainerColor = SplitTheme.colors.neutral.backgroundMedium,
+            contentColor = SplitTheme.colors.neutral.textHeavy,
+            disabledContentColor = SplitTheme.colors.neutral.textDisabled
+        ),
+        enabled = enabled,
+        onClick = { onClick() }
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            tint = SplitTheme.colors.neutral.iconHeavy
+        )
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun SmallIconButtonPreview() {
-    SmallIconButton(
+    SmallEmojiButton(
         modifier = Modifier,
         image = R.drawable.emoji_euro_bill,
         onClick = {}

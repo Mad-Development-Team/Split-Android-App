@@ -123,4 +123,8 @@
   <string name="expense_title">Expense title</string>
   <string name="expense_description">Expense description</string>
   <string name="expense_amount">Expense amount</string>
+  <string name="expense_date">Expense date</string>
+  <string name="add_images">Add images</string>
+  <string name="paid_by">Paid by</string>
+  <string name="for_whom">For whom</string>
 </resources>
