@@ -111,6 +111,11 @@ fun CreateExpenseScreen(
                         CreateExpenseUIEvent.OnDatePickerDateSelected(date)
                     )
                 },
+                onPaidByMemberSelected = { memberId ->
+                    viewModel.onEvent(
+                        CreateExpenseUIEvent.OnPaidByMemberSelected(memberId)
+                    )
+                },
                 popUpBack = {
                     navController.navigateWithPopUpTo(
                         route = Screens.GroupExpensesScreen.route,
@@ -132,6 +137,7 @@ fun CreateExpenseContent(
     onExpenseAmountChanged: (Double) -> Unit,
     onDatePickerDialogShowChanged: (Boolean) -> Unit,
     onDatePickerDateSelected: (String) -> Unit,
+    onPaidByMemberSelected: (Int) -> Unit,
     popUpBack: () -> Unit,
 ) {
     Column(
@@ -275,45 +281,12 @@ fun CreateExpenseContent(
             style = SplitTheme.typography.heading.m,
         )
         Spacer(modifier = Modifier.size(16.dp))
-        MembersHorizontalList(
-            membersList = listOf(
-                Member(
-                    id = 0,
-                    name = "David",
-                    profileImage = "",
-                    color = null,
-                    groupId = 0,
-                    joinedDate = "",
-                    user = 0
-                ),
-                Member(
-                    id = 0,
-                    name = "Oscar",
-                    profileImage = "",
-                    color = null,
-                    groupId = 0,
-                    joinedDate = "",
-                    user = 0
-                ),
-                Member(
-                    id = 0,
-                    name = "Bernat",
-                    profileImage = "",
-                    color = null,
-                    groupId = 0,
-                    joinedDate = "",
-                    user = 0
-                ),
-                Member(
-                    id = 0,
-                    name = "Adri",
-                    profileImage = "",
-                    color = null,
-                    groupId = 0,
-                    joinedDate = "",
-                    user = 0
-                ),
-            )
+        PaidByMembersList(
+            membersList = state.groupInfo.members,
+            expense = state.newExpense,
+            onMemberClick = { member ->
+                onPaidByMemberSelected(member.id)
+            }
         )
         Spacer(modifier = Modifier.size(16.dp))
         Text(

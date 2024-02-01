@@ -1,19 +1,24 @@
 package com.madteam.split.ui.screens.createexpense.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.madteam.split.data.repository.group.GroupRepository
+import com.madteam.split.domain.model.PaidByExpense
 import com.madteam.split.ui.screens.createexpense.state.CreateExpenseUIEvent
 import com.madteam.split.ui.screens.createexpense.state.CreateExpenseUIState
 import com.madteam.split.ui.utils.getCurrentDate
 import com.madteam.split.ui.utils.validateExpenseDescription
 import com.madteam.split.ui.utils.validateExpenseTitle
+import com.madteam.split.utils.network.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class CreateExpenseViewModel @Inject constructor(
-
+    private val groupRepository: GroupRepository,
 ) : ViewModel() {
 
     private val _state: MutableStateFlow<CreateExpenseUIState> =
@@ -21,6 +26,7 @@ class CreateExpenseViewModel @Inject constructor(
     val state: StateFlow<CreateExpenseUIState> = _state
 
     init {
+        getGroupInfo()
         getCurrentDateIntoExpense()
     }
 
@@ -44,6 +50,35 @@ class CreateExpenseViewModel @Inject constructor(
 
             is CreateExpenseUIEvent.OnDatePickerDateSelected -> {
                 onDatePickerDateSelected(event.date)
+            }
+
+            is CreateExpenseUIEvent.OnPaidByMemberSelected -> {
+                onPaidByMemberSelected(event.memberId)
+            }
+        }
+    }
+
+    private fun onPaidByMemberSelected(memberId: Int) {
+        _state.value = _state.value.copy(
+            newExpense = _state.value.newExpense.copy(
+                paidBy = listOf(
+                    PaidByExpense(
+                        memberId = memberId,
+                        paidAmount = _state.value.newExpense.totalAmount
+                    )
+                )
+            )
+        )
+    }
+
+    private fun getGroupInfo() {
+        val currentGroup = groupRepository.getCurrentGroup()
+        viewModelScope.launch {
+            val response = groupRepository.getUserGroups()
+            if (response is Resource.Success) {
+                _state.value = _state.value.copy(
+                    groupInfo = response.data.first { it.id == currentGroup }
+                )
             }
         }
     }

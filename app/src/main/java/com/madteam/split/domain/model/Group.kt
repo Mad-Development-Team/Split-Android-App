@@ -9,6 +9,17 @@ data class Group(
     val bannerImage: String,
     val createdDate: String,
     val members: List<Member>,
-)
+) {
+    constructor() : this(
+        id = 0,
+        name = "",
+        description = "",
+        inviteCode = "",
+        image = "",
+        bannerImage = "",
+        createdDate = "",
+        members = emptyList(),
+    )
+}
 
 

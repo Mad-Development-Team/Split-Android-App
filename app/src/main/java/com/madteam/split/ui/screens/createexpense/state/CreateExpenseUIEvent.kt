@@ -6,4 +6,5 @@ sealed class CreateExpenseUIEvent {
     data class OnAmountChanged(val amount: Double) : CreateExpenseUIEvent()
     data class OnDatePickerDialogShowChanged(val show: Boolean) : CreateExpenseUIEvent()
     data class OnDatePickerDateSelected(val date: String) : CreateExpenseUIEvent()
+    data class OnPaidByMemberSelected(val memberId: Int) : CreateExpenseUIEvent()
 }
