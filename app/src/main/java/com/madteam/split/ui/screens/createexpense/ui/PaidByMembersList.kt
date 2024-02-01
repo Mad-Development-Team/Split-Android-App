@@ -38,6 +38,7 @@ import com.madteam.split.domain.model.ExpenseType
 import com.madteam.split.domain.model.Member
 import com.madteam.split.domain.model.PaidByExpense
 import com.madteam.split.ui.theme.SplitTheme
+import com.madteam.split.ui.utils.round
 import kotlin.math.absoluteValue
 
 @OptIn(ExperimentalGlideComposeApi::class)
@@ -58,7 +59,7 @@ fun PaidByMembersList(
             val color = Color(hexColor)
             val memberIsHighlighted = expense.paidBy.any { it.memberId == member.id }
             val amountMemberPaid =
-                expense.paidBy.firstOrNull { it.memberId == member.id }?.paidAmount ?: 0.0
+                expense.paidBy.firstOrNull { it.memberId == member.id }?.paidAmount?.round(2) ?: 0.0
             val decimalPart = amountMemberPaid.toString().split(".")[1]
             ConstraintLayout(
                 modifier = Modifier

@@ -60,13 +60,25 @@ class CreateExpenseViewModel @Inject constructor(
 
     private fun onPaidByMemberSelected(memberId: Int) {
         _state.value = _state.value.copy(
+            selectedMembers = _state.value.selectedMembers.toMutableList().apply {
+                if (contains(memberId)) {
+                    remove(memberId)
+                } else {
+                    add(memberId)
+                }
+            }
+        )
+        val amountPerMember =
+            _state.value.newExpense.totalAmount / _state.value.selectedMembers.size
+        val paidByList = _state.value.selectedMembers.map { memberId ->
+            PaidByExpense(
+                memberId = memberId,
+                paidAmount = amountPerMember
+            )
+        }
+        _state.value = _state.value.copy(
             newExpense = _state.value.newExpense.copy(
-                paidBy = listOf(
-                    PaidByExpense(
-                        memberId = memberId,
-                        paidAmount = _state.value.newExpense.totalAmount
-                    )
-                )
+                paidBy = paidByList
             )
         )
     }
