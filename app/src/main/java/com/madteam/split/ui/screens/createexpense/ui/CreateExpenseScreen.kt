@@ -20,16 +20,20 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.madteam.split.R
 import com.madteam.split.domain.model.Member
 import com.madteam.split.ui.navigation.Screens
+import com.madteam.split.ui.screens.createexpense.viewmodel.CreateExpenseViewModel
 import com.madteam.split.ui.theme.BigIconButton
 import com.madteam.split.ui.theme.DSBasicTextField
 import com.madteam.split.ui.theme.DSDateTextField
@@ -43,11 +47,14 @@ import com.madteam.split.utils.ui.navigateWithPopUpTo
 
 @Composable
 fun CreateExpenseScreen(
+    viewModel: CreateExpenseViewModel = hiltViewModel(),
     navController: NavController,
 ) {
     BackPressHandler {
         //Do nothing on back press
     }
+
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     Scaffold(
         containerColor = SplitTheme.colors.neutral.backgroundExtraWeak,
