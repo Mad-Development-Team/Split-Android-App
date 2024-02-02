@@ -19,4 +19,6 @@ data class GroupDTO(
     val bannerImage: String?,
     @SerializedName("members")
     val members: List<MemberDTO>,
+    @SerializedName("currency")
+    val currency: String,
 )

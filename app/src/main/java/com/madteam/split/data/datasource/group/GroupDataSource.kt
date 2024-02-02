@@ -27,7 +27,8 @@ class GroupDataSource @Inject constructor(
                 CreateGroupDTO(
                     groupName = name,
                     groupDescription = description,
-                    membersList = members.toDtoList()
+                    membersList = members.toDtoList(),
+                    currency = "EUR" //TODO: Hardcoded
                 )
             )
             return Resource.Success(response.toDomainModel())

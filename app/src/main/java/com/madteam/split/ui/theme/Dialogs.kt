@@ -7,16 +7,24 @@ import android.os.Vibrator
 import android.os.VibratorManager
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -24,18 +32,28 @@ import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.madteam.split.R
+import com.madteam.split.domain.model.Currency
+import com.madteam.split.utils.ui.getFlagByCurrency
 import kotlin.random.Random
 import kotlin.random.nextInt
 
@@ -376,6 +394,161 @@ fun ChooseAvatarDialog(
             }
         }
     }
+}
+
+@Composable
+fun CurrenciesDialog(
+    currencies: List<Currency>,
+    selectedCurrency: Currency? = null,
+    onCurrencySelected: (Currency) -> Unit,
+    onConfirmCurrency: () -> Unit,
+    onDismiss: () -> Unit,
+) {
+    val sortedCurrencies = currencies.sortedByDescending { it.enabled }
+    Dialog(
+        onDismissRequest = { onDismiss() }
+    ) {
+        ElevatedCard(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(330.dp)
+                .padding(horizontal = 24.dp),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.elevatedCardColors(
+                containerColor = SplitTheme.colors.neutral.backgroundExtraWeak
+            )
+        ) {
+            Text(
+                modifier = Modifier
+                    .padding(start = 24.dp, end = 24.dp, top = 16.dp, bottom = 4.dp)
+                    .align(Alignment.CenterHorizontally),
+                text = selectedCurrency?.name ?: stringResource(id = R.string.select_a_currency),
+                style = SplitTheme.typography.heading.l,
+                textAlign = TextAlign.Center,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                color = SplitTheme.colors.neutral.textTitle
+            )
+            Text(
+                modifier = Modifier
+                    .padding(start = 24.dp, end = 24.dp, bottom = 16.dp)
+                    .align(Alignment.CenterHorizontally),
+                text = selectedCurrency?.name ?: stringResource(
+                    id = R.string.more_currencies_coming_soon
+                ),
+                style = SplitTheme.typography.body.s,
+                textAlign = TextAlign.Center,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                color = SplitTheme.colors.neutral.textMedium
+            )
+            LazyHorizontalGrid(
+                modifier = Modifier
+                    .height(150.dp),
+                rows = GridCells.Fixed(3),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                contentPadding = PaddingValues(start = 16.dp),
+                content = {
+                    items(sortedCurrencies.size) { index ->
+                        val currency = sortedCurrencies[index]
+                        val flag = getFlagByCurrency(currency)
+                        val backgroundColor = if (currency == selectedCurrency) {
+                            SplitTheme.colors.primary.backgroundMedium
+                        } else if (!currency.enabled) {
+                            SplitTheme.colors.neutral.backgroundMedium
+                        } else {
+                            SplitTheme.colors.secondary.backgroundMedium
+                        }
+                        Box(
+                            modifier = Modifier
+                                .size(48.dp)
+                                .shadow(
+                                    elevation = 4.dp,
+                                    shape = CircleShape
+                                )
+                                .clickable {
+                                    if (currency.enabled) {
+                                        onCurrencySelected(currency)
+                                    }
+                                }
+                                .clip(CircleShape)
+                                .background(
+                                    color = backgroundColor,
+                                    shape = CircleShape
+                                )
+
+                        ) {
+                            Image(
+                                modifier = Modifier
+                                    .padding(4.dp)
+                                    .align(Alignment.Center),
+                                painter = painterResource(id = flag),
+                                contentDescription = null
+                            )
+                            if (!currency.enabled) {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .background(
+                                            color = SplitTheme.colors.neutral.backgroundMedium.copy(
+                                                alpha = 0.8f
+                                            )
+                                        )
+                                )
+                            }
+                        }
+                    }
+                }
+            )
+            PrimaryLargeButton(
+                modifier = Modifier
+                    .padding(24.dp)
+                    .align(Alignment.CenterHorizontally)
+                    .fillMaxWidth(),
+                onClick = { onConfirmCurrency() },
+                text = R.string.select,
+                enabled = selectedCurrency?.enabled ?: false
+            )
+        }
+
+    }
+}
+
+@Preview
+@Composable
+fun CurrenciesDialogPreview() {
+    var selectedCurrency: Currency? by remember {
+        mutableStateOf(null)
+    }
+    CurrenciesDialog(
+        currencies = listOf(
+            Currency("USD", "United States Dollar", "$"),
+            Currency("EUR", "Euro", "€"),
+            Currency("GBP", "British Pound", "£"),
+            Currency("CHF", "Swiss", "¥"),
+            Currency("SEK", "Swedish Krona", "kr"),
+            Currency("NOK", "Norwegian Krone", "kr"),
+            Currency("DKK", "Danish Krone", "kr"),
+            Currency("PLN", "Polish Zloty", "zł"),
+            Currency("CAD", "Canadian Dollar", "$"),
+            Currency("MXN", "Mexican Peso", "$"),
+            Currency("BRL", "Brazilian Real", "R$"),
+            Currency("ARS", "Argentine Peso", "$"),
+            Currency("COP", "Colombian Peso", "$"),
+            Currency("PEN", "Peruvian Sol", "S/")
+        ),
+        selectedCurrency = selectedCurrency,
+        onCurrencySelected = {
+            if (it == selectedCurrency) {
+                selectedCurrency = null
+            } else {
+                selectedCurrency = it
+            }
+        },
+        onConfirmCurrency = {},
+        onDismiss = {}
+    )
 }
 
 @Preview

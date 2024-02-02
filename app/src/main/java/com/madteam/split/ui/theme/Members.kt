@@ -285,7 +285,7 @@ fun MemberWithAmount(
             ) {
                 AmountTextView(
                     amount = amount,
-                    currency = Currency("EUR", "€")
+                    currency = Currency("EUR", "Euro", "#")
                 )
             }
         }

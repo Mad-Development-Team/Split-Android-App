@@ -14,7 +14,8 @@ fun GroupDTO.toDomainModel(): Group {
         image = this.image ?: "",
         bannerImage = this.bannerImage ?: "",
         createdDate = this.createdDate,
-        members = this.members.toDomainModel()
+        members = this.members.toDomainModel(),
+        currency = this.currency
     )
 }
 
@@ -27,7 +28,8 @@ fun GroupEntity.toDomainModel(): Group {
         image = this.image ?: "",
         bannerImage = this.bannerImage ?: "",
         createdDate = this.createdDate,
-        members = this.members
+        members = this.members,
+        currency = this.currency
     )
 }
 
@@ -40,7 +42,8 @@ fun GroupDTO.toEntity(): GroupEntity {
         image = this.image ?: "",
         bannerImage = this.bannerImage ?: "",
         createdDate = this.createdDate,
-        members = this.members.toDomainModel()
+        members = this.members.toDomainModel(),
+        currency = this.currency
     )
 }
 
@@ -48,11 +51,12 @@ fun Group.toEntity(): GroupEntity {
     return GroupEntity(
         id = this.id,
         name = this.name,
-        description = this.description ?: "",
+        description = this.description,
         inviteCode = this.inviteCode,
-        image = this.image ?: "",
-        bannerImage = this.bannerImage ?: "",
+        image = this.image,
+        bannerImage = this.bannerImage,
         createdDate = this.createdDate,
-        members = this.members
+        members = this.members,
+        currency = this.currency
     )
 }

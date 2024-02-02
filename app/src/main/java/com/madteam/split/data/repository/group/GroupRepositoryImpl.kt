@@ -24,7 +24,8 @@ class GroupRepositoryImpl @Inject constructor(
             image = "",
             bannerImage = "",
             createdDate = "",
-            members = listOf()
+            members = listOf(),
+            currency = ""
         )
     }
 

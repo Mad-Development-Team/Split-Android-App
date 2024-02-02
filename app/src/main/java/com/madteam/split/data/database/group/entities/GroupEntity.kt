@@ -20,4 +20,5 @@ data class GroupEntity(
     @ColumnInfo(name = "members") var members: List<Member>,
     @ColumnInfo(name = "image") var image: String?,
     @ColumnInfo(name = "banner_image") var bannerImage: String?,
+    @ColumnInfo(name = "currency") var currency: String,
 )

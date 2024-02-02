@@ -1,6 +1,8 @@
 package com.madteam.split.domain.model
 
 data class Currency(
-    val currencyCode: String,
-    val currencySymbol: String,
+    val currency: String,
+    val name: String,
+    val symbol: String,
+    val enabled: Boolean = currency == "EUR",
 )

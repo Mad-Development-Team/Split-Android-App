@@ -9,6 +9,7 @@ data class Group(
     val bannerImage: String,
     val createdDate: String,
     val members: List<Member>,
+    val currency: String,
 ) {
     constructor() : this(
         id = 0,
@@ -19,6 +20,7 @@ data class Group(
         bannerImage = "",
         createdDate = "",
         members = emptyList(),
+        currency = ""
     )
 }
 

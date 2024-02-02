@@ -65,7 +65,7 @@ fun AmountTextView(
         Text(
             modifier = Modifier
                 .padding(top = 4.dp),
-            text = currency.currencySymbol,
+            text = currency.symbol,
             color = SplitTheme.colors.neutral.textExtraWeak,
             style = SplitTheme.typography.heading.s
         )
