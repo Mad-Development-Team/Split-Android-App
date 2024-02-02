@@ -17,17 +17,16 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.madteam.split.R
 import com.madteam.split.ui.navigation.Screens
 import com.madteam.split.ui.screens.creategroup.info.state.CreateGroupInfoUIEvent
@@ -35,7 +34,9 @@ import com.madteam.split.ui.screens.creategroup.info.state.CreateGroupInfoUIStat
 import com.madteam.split.ui.screens.creategroup.info.viewmodel.CreateGroupInfoViewModel
 import com.madteam.split.ui.theme.DSBasicTextField
 import com.madteam.split.ui.theme.PrimaryLargeButton
+import com.madteam.split.ui.theme.SmallEmojiButton
 import com.madteam.split.ui.theme.SplitTheme
+import com.madteam.split.utils.ui.getFlagByCurrency
 
 @Composable
 fun CreateGroupInfoScreen(
@@ -147,6 +148,33 @@ fun CreateGroupInfoScreenContent(
                 maxLines = 5,
                 imeAction = ImeAction.Done
             )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.select_a_currency),
+                        style = SplitTheme.typography.heading.xs,
+                        color = SplitTheme.colors.neutral.textTitle,
+                        textAlign = TextAlign.Start
+                    )
+                    Text(
+                        text = stringResource(id = R.string.select_a_currency_description),
+                        style = SplitTheme.typography.body.m,
+                        color = SplitTheme.colors.neutral.textBody,
+                        textAlign = TextAlign.Start,
+                    )
+                }
+                Spacer(modifier = Modifier.size(24.dp))
+                SmallEmojiButton(
+                    modifier = Modifier,
+                    image = getFlagByCurrency(state.currencySelected),
+                    onClick = { /*TODO*/ },
+                )
+            }
             Spacer(modifier = Modifier.size(24.dp))
             PrimaryLargeButton(
                 onClick = {
@@ -158,12 +186,4 @@ fun CreateGroupInfoScreenContent(
             )
         }
     }
-}
-
-@Preview
-@Composable
-fun CreateGroupInfoScreenPreview() {
-    CreateGroupInfoScreen(
-        rememberNavController()
-    )
 }
