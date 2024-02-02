@@ -21,6 +21,7 @@ class GroupDataSource @Inject constructor(
         name: String,
         description: String,
         members: List<Member>,
+        currency: String,
     ): Resource<Group> {
         try {
             val response = api.createGroup(
@@ -28,7 +29,7 @@ class GroupDataSource @Inject constructor(
                     groupName = name,
                     groupDescription = description,
                     membersList = members.toDtoList(),
-                    currency = "EUR" //TODO: Hardcoded
+                    currency = currency
                 )
             )
             return Resource.Success(response.toDomainModel())

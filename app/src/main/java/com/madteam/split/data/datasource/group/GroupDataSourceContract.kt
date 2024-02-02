@@ -11,6 +11,7 @@ interface GroupDataSourceContract {
             name: String,
             description: String,
             members: List<Member>,
+            currency: String,
         ): Resource<Group>
     }
 

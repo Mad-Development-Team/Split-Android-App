@@ -9,4 +9,7 @@ data class CreateGroupInfoUIState(
     val isGroupDescriptionValid: Boolean = true,
     val currencySelected: Currency? = null,
     val currencies: List<Currency> = emptyList(),
+    val isError: Boolean = false,
+    val isLoading: Boolean = false,
+    val showCurrencyDialog: Boolean = false,
 )

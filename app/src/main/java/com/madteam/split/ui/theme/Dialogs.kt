@@ -433,7 +433,7 @@ fun CurrenciesDialog(
                 modifier = Modifier
                     .padding(start = 24.dp, end = 24.dp, bottom = 16.dp)
                     .align(Alignment.CenterHorizontally),
-                text = selectedCurrency?.name ?: stringResource(
+                text = stringResource(
                     id = R.string.more_currencies_coming_soon
                 ),
                 style = SplitTheme.typography.body.s,

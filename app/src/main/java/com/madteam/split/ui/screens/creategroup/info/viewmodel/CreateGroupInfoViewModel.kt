@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.madteam.split.data.repository.currency.CurrencyRepository
 import com.madteam.split.data.repository.group.GroupRepository
+import com.madteam.split.domain.model.Currency
 import com.madteam.split.ui.screens.creategroup.info.state.CreateGroupInfoUIEvent
 import com.madteam.split.ui.screens.creategroup.info.state.CreateGroupInfoUIState
 import com.madteam.split.ui.utils.validateGroupName
@@ -30,18 +31,6 @@ class CreateGroupInfoViewModel @Inject constructor(
         getCurrencies()
     }
 
-    private fun getCurrencies() {
-        viewModelScope.launch {
-            val currencies = currencyRepository.getCurrencies()
-            if (currencies is Resource.Success) {
-                _state.value = _state.value.copy(
-                    currencies = currencies.data,
-                    currencySelected = currencies.data.firstOrNull { it.enabled }
-                )
-            }
-        }
-    }
-
     fun onEvent(event: CreateGroupInfoUIEvent) {
         when (event) {
             is CreateGroupInfoUIEvent.OnGroupNameChange -> {
@@ -55,7 +44,53 @@ class CreateGroupInfoViewModel @Inject constructor(
             is CreateGroupInfoUIEvent.OnNextClick -> {
                 saveGroupNameAndDescription()
             }
+
+            is CreateGroupInfoUIEvent.OnShowError -> {
+                setShowError(event.showError)
+            }
+
+            is CreateGroupInfoUIEvent.OnShowCurrencyDialog -> {
+                onShowCurrencyDialog(event.showCurrencyDialog)
+            }
+
+            is CreateGroupInfoUIEvent.OnCurrencySelected -> {
+                onCurrencySelected(event.currency)
+            }
         }
+    }
+
+    private fun onCurrencySelected(currency: Currency) {
+        _state.value = _state.value.copy(
+            currencySelected = currency
+        )
+    }
+
+    private fun onShowCurrencyDialog(showCurrencyDialog: Boolean) {
+        _state.value = _state.value.copy(showCurrencyDialog = showCurrencyDialog)
+    }
+
+    private fun getCurrencies() {
+        showLoading(true)
+        viewModelScope.launch {
+            val currencies = currencyRepository.getCurrencies()
+            if (currencies is Resource.Success) {
+                _state.value = _state.value.copy(
+                    currencies = currencies.data,
+                    currencySelected = currencies.data.firstOrNull { it.enabled }
+                )
+            } else {
+                setShowError(true)
+            }
+        }
+        showLoading(false)
+    }
+
+    private fun setShowError(showError: Boolean) {
+        _state.value = _state.value.copy(isError = showError)
+    }
+
+    private fun showLoading(state: Boolean) {
+        _state.value = _state.value.copy(isLoading = state)
     }
 
     private fun changeGroupDescription(groupDescription: String) {
@@ -73,9 +108,10 @@ class CreateGroupInfoViewModel @Inject constructor(
     }
 
     private fun saveGroupNameAndDescription() {
-        createGroupRepository.setNameAndDescription(
+        createGroupRepository.setNameDescriptionAndCurrency(
             state.value.groupName,
-            state.value.groupDescription
+            state.value.groupDescription,
+            state.value.currencySelected
         )
     }
 }
