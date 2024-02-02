@@ -297,7 +297,7 @@ fun MemberWithAmount(
                     bottom.linkTo(image.bottom, 30.dp)
                 },
             text = member.name,
-            color = Color.White,
+            color = SplitTheme.colors.neutral.textExtraWeak,
             textAlign = TextAlign.Center,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,

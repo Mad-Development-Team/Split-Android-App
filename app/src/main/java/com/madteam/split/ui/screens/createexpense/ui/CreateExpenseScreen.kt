@@ -39,7 +39,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.madteam.split.R
-import com.madteam.split.domain.model.Member
 import com.madteam.split.ui.navigation.Screens
 import com.madteam.split.ui.screens.createexpense.state.CreateExpenseUIEvent
 import com.madteam.split.ui.screens.createexpense.state.CreateExpenseUIState
@@ -49,7 +48,6 @@ import com.madteam.split.ui.theme.DSBasicTextField
 import com.madteam.split.ui.theme.DSCurrencyTextField
 import com.madteam.split.ui.theme.DSDatePickerTextField
 import com.madteam.split.ui.theme.DefaultFloatingButton
-import com.madteam.split.ui.theme.MembersHorizontalList
 import com.madteam.split.ui.theme.SmallEmojiButton
 import com.madteam.split.ui.theme.SplitTheme
 import com.madteam.split.utils.ui.BackPressHandler
@@ -116,6 +114,16 @@ fun CreateExpenseScreen(
                         CreateExpenseUIEvent.OnPaidByMemberSelected(memberId)
                     )
                 },
+                onMemberNeedsToPaySelected = { memberId ->
+                    viewModel.onEvent(
+                        CreateExpenseUIEvent.OnNeedsToPayMemberSelected(memberId)
+                    )
+                },
+                onAllMembersNeedsToPaySelected = {
+                    viewModel.onEvent(
+                        CreateExpenseUIEvent.OnAllMembersNeedsToPaySelected
+                    )
+                },
                 popUpBack = {
                     navController.navigateWithPopUpTo(
                         route = Screens.GroupExpensesScreen.route,
@@ -138,6 +146,8 @@ fun CreateExpenseContent(
     onDatePickerDialogShowChanged: (Boolean) -> Unit,
     onDatePickerDateSelected: (String) -> Unit,
     onPaidByMemberSelected: (Int) -> Unit,
+    onMemberNeedsToPaySelected: (Int) -> Unit,
+    onAllMembersNeedsToPaySelected: () -> Unit,
     popUpBack: () -> Unit,
 ) {
     Column(
@@ -296,45 +306,15 @@ fun CreateExpenseContent(
             style = SplitTheme.typography.heading.m,
         )
         Spacer(modifier = Modifier.size(16.dp))
-        MembersHorizontalList(
-            membersList = listOf(
-                Member(
-                    id = 0,
-                    name = "David",
-                    profileImage = "",
-                    color = null,
-                    groupId = 0,
-                    joinedDate = "",
-                    user = 0
-                ),
-                Member(
-                    id = 0,
-                    name = "Oscar",
-                    profileImage = "",
-                    color = null,
-                    groupId = 0,
-                    joinedDate = "",
-                    user = 0
-                ),
-                Member(
-                    id = 0,
-                    name = "Bernat",
-                    profileImage = "",
-                    color = null,
-                    groupId = 0,
-                    joinedDate = "",
-                    user = 0
-                ),
-                Member(
-                    id = 0,
-                    name = "Adri",
-                    profileImage = "",
-                    color = null,
-                    groupId = 0,
-                    joinedDate = "",
-                    user = 0
-                ),
-            )
+        ForWhomMembersList(
+            membersList = state.groupInfo.members,
+            expense = state.newExpense,
+            onMemberClick = { member ->
+                onMemberNeedsToPaySelected(member.id)
+            },
+            onForAllClick = {
+                onAllMembersNeedsToPaySelected()
+            }
         )
         Spacer(modifier = Modifier.size(16.dp))
     }

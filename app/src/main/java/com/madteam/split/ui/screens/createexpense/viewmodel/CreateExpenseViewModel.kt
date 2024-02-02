@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.madteam.split.data.repository.group.GroupRepository
 import com.madteam.split.data.repository.user.UserRepository
+import com.madteam.split.domain.model.MemberExpense
 import com.madteam.split.domain.model.PaidByExpense
 import com.madteam.split.ui.screens.createexpense.state.CreateExpenseUIEvent
 import com.madteam.split.ui.screens.createexpense.state.CreateExpenseUIState
@@ -58,6 +59,14 @@ class CreateExpenseViewModel @Inject constructor(
             is CreateExpenseUIEvent.OnPaidByMemberSelected -> {
                 onPaidByMemberSelected(event.memberId)
             }
+
+            is CreateExpenseUIEvent.OnNeedsToPayMemberSelected -> {
+                onMemberNeedsToPaySelected(event.memberId)
+            }
+
+            is CreateExpenseUIEvent.OnAllMembersNeedsToPaySelected -> {
+                onAllMembersSelected()
+            }
         }
     }
 
@@ -78,7 +87,7 @@ class CreateExpenseViewModel @Inject constructor(
     private fun onPaidByMemberSelected(memberId: Int) {
         if (memberId == 0) return
         _state.value = _state.value.copy(
-            selectedMembers = _state.value.selectedMembers.toMutableList().apply {
+            paidBySelectedMembers = _state.value.paidBySelectedMembers.toMutableList().apply {
                 if (contains(memberId)) {
                     remove(memberId)
                 } else {
@@ -86,13 +95,51 @@ class CreateExpenseViewModel @Inject constructor(
                 }
             }
         )
-        recalculateAmountPerMember()
+        recalculatePaidByAmountPerMember()
     }
 
-    private fun recalculateAmountPerMember() {
+    private fun onMemberNeedsToPaySelected(memberId: Int) {
+        if (memberId == 0) return
+        _state.value = _state.value.copy(
+            needsToPaySelectedMember = _state.value.needsToPaySelectedMember.toMutableList().apply {
+                if (contains(memberId)) {
+                    remove(memberId)
+                } else {
+                    add(memberId)
+                }
+            }
+        )
+        recalculateAmountToPayPerMember()
+    }
+
+    private fun onAllMembersSelected() {
+        _state.value = _state.value.copy(
+            needsToPaySelectedMember = _state.value.groupInfo.members.map { it.id }.toMutableList()
+        )
+        recalculateAmountToPayPerMember()
+    }
+
+    private fun recalculateAmountToPayPerMember() {
+        if (_state.value.needsToPaySelectedMember.isEmpty()) return
         val amountPerMember =
-            _state.value.newExpense.totalAmount / _state.value.selectedMembers.size
-        val paidByList = _state.value.selectedMembers.map { memberId ->
+            _state.value.newExpense.totalAmount / _state.value.needsToPaySelectedMember.size
+        val needsToPayList = _state.value.needsToPaySelectedMember.map { memberId ->
+            MemberExpense(
+                memberId = memberId,
+                amount = amountPerMember
+            )
+        }
+        _state.value = _state.value.copy(
+            newExpense = _state.value.newExpense.copy(
+                forWhom = needsToPayList
+            )
+        )
+    }
+
+    private fun recalculatePaidByAmountPerMember() {
+        val amountPerMember =
+            _state.value.newExpense.totalAmount / _state.value.paidBySelectedMembers.size
+        val paidByList = _state.value.paidBySelectedMembers.map { memberId ->
             PaidByExpense(
                 memberId = memberId,
                 paidAmount = amountPerMember
@@ -146,7 +193,8 @@ class CreateExpenseViewModel @Inject constructor(
             ),
             isAmountError = amount == 0.0
         )
-        recalculateAmountPerMember()
+        recalculatePaidByAmountPerMember()
+        recalculateAmountToPayPerMember()
     }
 
     private fun onExpenseDescriptionChanged(description: String) {

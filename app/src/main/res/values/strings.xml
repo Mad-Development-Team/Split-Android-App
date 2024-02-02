@@ -135,4 +135,5 @@
   <string name="select_a_date">Select a date</string>
   <string name="select">Select</string>
   <string name="dismiss">Dismiss</string>
+  <string name="for_all">For all</string>
 </resources>
