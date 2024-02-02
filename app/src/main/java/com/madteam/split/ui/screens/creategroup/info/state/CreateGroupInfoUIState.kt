@@ -7,5 +7,6 @@ data class CreateGroupInfoUIState(
     val groupDescription: String = "",
     val isGroupNameValid: Boolean = false,
     val isGroupDescriptionValid: Boolean = true,
-    val currencySelected: Currency = Currency("EUR", "Euro", "€"),
+    val currencySelected: Currency? = null,
+    val currencies: List<Currency> = emptyList(),
 )

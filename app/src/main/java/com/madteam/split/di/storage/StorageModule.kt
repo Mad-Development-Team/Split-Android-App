@@ -8,6 +8,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.room.Room
+import com.madteam.split.data.database.currency.CurrencyDatabase
 import com.madteam.split.data.database.group.GroupDatabase
 import com.madteam.split.data.database.user.UserDatabase
 import com.madteam.split.data.repository.datastore.DatastoreManager
@@ -66,6 +67,15 @@ object StorageModule {
         return Room.databaseBuilder(
             context,
             GroupDatabase::class.java, "group_database"
+        ).build()
+    }
+
+    @Provides
+    @Named("CurrencyDatabase")
+    fun provideCurrencyDatabase(@ApplicationContext context: Context): CurrencyDatabase {
+        return Room.databaseBuilder(
+            context,
+            CurrencyDatabase::class.java, "currency_database"
         ).build()
     }
 }
