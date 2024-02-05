@@ -7,7 +7,13 @@ data class Currency(
     val name: String,
     val symbol: String,
     val enabled: Boolean = currency == "EUR",
-)
+) {
+    constructor() : this(
+        currency = "",
+        name = "",
+        symbol = ""
+    )
+}
 
 fun Currency.toEntity() = CurrencyEntity(
     currency = currency,

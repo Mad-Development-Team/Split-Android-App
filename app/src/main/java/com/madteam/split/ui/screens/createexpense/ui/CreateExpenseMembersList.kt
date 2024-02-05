@@ -25,6 +25,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.madteam.split.R
+import com.madteam.split.domain.model.Currency
 import com.madteam.split.domain.model.Expense
 import com.madteam.split.domain.model.Member
 import com.madteam.split.ui.theme.MemberWithAmount
@@ -35,6 +36,7 @@ fun PaidByMembersList(
     modifier: Modifier = Modifier,
     membersList: List<Member>,
     expense: Expense,
+    currency: Currency,
     onMemberClick: (Member) -> Unit,
 ) {
     LazyRow(
@@ -47,6 +49,7 @@ fun PaidByMembersList(
                 member = member,
                 isMemberHighLighted = expense.paidBy.any { it.memberId == member.id },
                 amount = expense.paidBy.firstOrNull { it.memberId == member.id }?.paidAmount,
+                currency = currency,
                 onMemberClick = { onMemberClick(it) }
             )
         }
@@ -58,6 +61,7 @@ fun ForWhomMembersList(
     modifier: Modifier = Modifier,
     membersList: List<Member>,
     expense: Expense,
+    currency: Currency,
     onMemberClick: (Member) -> Unit,
     onForAllClick: () -> Unit,
 ) {
@@ -111,6 +115,7 @@ fun ForWhomMembersList(
                 member = member,
                 isMemberHighLighted = expense.forWhom.any { it.memberId == member.id },
                 amount = expense.forWhom.firstOrNull { it.memberId == member.id }?.amount,
+                currency = currency,
                 onMemberClick = { onMemberClick(it) }
             )
         }

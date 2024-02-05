@@ -3,6 +3,7 @@ package com.madteam.split.data.mapper.group
 import com.madteam.split.data.database.group.entities.GroupEntity
 import com.madteam.split.data.mapper.member.toDomainModel
 import com.madteam.split.data.model.response.GroupDTO
+import com.madteam.split.data.model.response.toModel
 import com.madteam.split.domain.model.Group
 
 fun GroupDTO.toDomainModel(): Group {
@@ -15,7 +16,7 @@ fun GroupDTO.toDomainModel(): Group {
         bannerImage = this.bannerImage ?: "",
         createdDate = this.createdDate,
         members = this.members.toDomainModel(),
-        currency = this.currency
+        currency = this.currency.toModel()
     )
 }
 
@@ -43,7 +44,7 @@ fun GroupDTO.toEntity(): GroupEntity {
         bannerImage = this.bannerImage ?: "",
         createdDate = this.createdDate,
         members = this.members.toDomainModel(),
-        currency = this.currency
+        currency = this.currency.toModel()
     )
 }
 

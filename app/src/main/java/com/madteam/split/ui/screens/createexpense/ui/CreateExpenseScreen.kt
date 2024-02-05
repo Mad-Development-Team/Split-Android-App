@@ -294,6 +294,7 @@ fun CreateExpenseContent(
         PaidByMembersList(
             membersList = state.groupInfo.members,
             expense = state.newExpense,
+            currency = state.groupInfo.currency,
             onMemberClick = { member ->
                 onPaidByMemberSelected(member.id)
             }
@@ -312,6 +313,7 @@ fun CreateExpenseContent(
             onMemberClick = { member ->
                 onMemberNeedsToPaySelected(member.id)
             },
+            currency = state.groupInfo.currency,
             onForAllClick = {
                 onAllMembersNeedsToPaySelected()
             }

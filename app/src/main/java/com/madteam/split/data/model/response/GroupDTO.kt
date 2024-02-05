@@ -20,5 +20,5 @@ data class GroupDTO(
     @SerializedName("members")
     val members: List<MemberDTO>,
     @SerializedName("currency")
-    val currency: String,
+    val currency: CurrencyDTO,
 )

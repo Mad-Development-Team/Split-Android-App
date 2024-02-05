@@ -26,7 +26,7 @@ class GroupRepositoryImpl @Inject constructor(
             bannerImage = "",
             createdDate = "",
             members = listOf(),
-            currency = ""
+            currency = Currency()
         )
     }
 
@@ -40,7 +40,7 @@ class GroupRepositoryImpl @Inject constructor(
         newGroup = newGroup.copy(
             name = name,
             description = description,
-            currency = currency?.currency ?: "EUR"
+            currency = currency ?: Currency("EUR", "€", "Euro")
         )
     }
 
@@ -56,7 +56,7 @@ class GroupRepositoryImpl @Inject constructor(
                 name = newGroup.name,
                 description = newGroup.description,
                 members = newGroup.members,
-                currency = newGroup.currency
+                currency = newGroup.currency.currency
             )
             if (response is Resource.Success) {
                 newGroup = response.data

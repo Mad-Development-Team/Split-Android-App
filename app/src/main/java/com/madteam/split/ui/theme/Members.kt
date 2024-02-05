@@ -210,6 +210,7 @@ fun MemberWithAmount(
     member: Member,
     isMemberHighLighted: Boolean,
     amount: Double? = null,
+    currency: Currency,
     onMemberClick: (Member) -> Unit,
 ) {
     val hexColor = member.color?.removePrefix("0x")?.toLong(16) ?: 0xFF000000
@@ -288,7 +289,7 @@ fun MemberWithAmount(
             ) {
                 AmountTextView(
                     amount = amount,
-                    currency = Currency("EUR", "Euro", "#")
+                    currency = currency
                 )
             }
         }
