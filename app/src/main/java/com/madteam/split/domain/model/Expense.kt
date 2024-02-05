@@ -12,6 +12,7 @@ data class Expense(
     val paymentMethod: String?,
     val date: String,
     val group: Int,
+    val currency: Currency,
 ) {
     constructor() : this(
         id = 0,
@@ -25,5 +26,6 @@ data class Expense(
         paymentMethod = "",
         date = "",
         group = 0,
+        currency = Currency()
     )
 }

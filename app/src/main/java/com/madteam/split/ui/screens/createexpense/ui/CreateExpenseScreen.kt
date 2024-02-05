@@ -39,11 +39,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.madteam.split.R
+import com.madteam.split.domain.model.Currency
 import com.madteam.split.ui.navigation.Screens
 import com.madteam.split.ui.screens.createexpense.state.CreateExpenseUIEvent
 import com.madteam.split.ui.screens.createexpense.state.CreateExpenseUIState
 import com.madteam.split.ui.screens.createexpense.viewmodel.CreateExpenseViewModel
 import com.madteam.split.ui.theme.BigIconButton
+import com.madteam.split.ui.theme.CurrenciesDialog
 import com.madteam.split.ui.theme.DSBasicTextField
 import com.madteam.split.ui.theme.DSCurrencyTextField
 import com.madteam.split.ui.theme.DSDatePickerTextField
@@ -51,6 +53,7 @@ import com.madteam.split.ui.theme.DefaultFloatingButton
 import com.madteam.split.ui.theme.SmallEmojiButton
 import com.madteam.split.ui.theme.SplitTheme
 import com.madteam.split.utils.ui.BackPressHandler
+import com.madteam.split.utils.ui.getFlagByCurrency
 import com.madteam.split.utils.ui.navigateWithPopUpTo
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -124,6 +127,16 @@ fun CreateExpenseScreen(
                         CreateExpenseUIEvent.OnAllMembersNeedsToPaySelected
                     )
                 },
+                onCurrencySelected = { currency ->
+                    viewModel.onEvent(
+                        CreateExpenseUIEvent.OnCurrencySelected(currency)
+                    )
+                },
+                onShowCurrenciesDialog = { show ->
+                    viewModel.onEvent(
+                        CreateExpenseUIEvent.OnCurrencyDialogShowChanged(show)
+                    )
+                },
                 popUpBack = {
                     navController.navigateWithPopUpTo(
                         route = Screens.GroupExpensesScreen.route,
@@ -148,6 +161,8 @@ fun CreateExpenseContent(
     onPaidByMemberSelected: (Int) -> Unit,
     onMemberNeedsToPaySelected: (Int) -> Unit,
     onAllMembersNeedsToPaySelected: () -> Unit,
+    onCurrencySelected: (Currency) -> Unit,
+    onShowCurrenciesDialog: (Boolean) -> Unit,
     popUpBack: () -> Unit,
 ) {
     Column(
@@ -250,8 +265,10 @@ fun CreateExpenseContent(
             )
             Spacer(modifier = Modifier.size(8.dp))
             SmallEmojiButton(
-                onClick = {},
-                image = R.drawable.emoji_euro_bill
+                onClick = {
+                    onShowCurrenciesDialog(true)
+                },
+                image = getFlagByCurrency(state.currencySelected)
             )
         }
         Spacer(modifier = Modifier.size(8.dp))
@@ -405,6 +422,20 @@ fun CreateExpenseContent(
                 )
             }
         }
+    }
+
+    if (state.showCurrencyDialog) {
+        CurrenciesDialog(
+            currencies = state.currencies,
+            onCurrencySelected = {
+                onCurrencySelected(it)
+            },
+            onConfirmCurrency = {
+                onShowCurrenciesDialog(false)
+            },
+            selectedCurrency = state.currencySelected,
+            onDismiss = { onShowCurrenciesDialog(false) }
+        )
     }
 }
 

@@ -2,8 +2,10 @@ package com.madteam.split.ui.screens.createexpense.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.madteam.split.data.repository.currency.CurrencyRepository
 import com.madteam.split.data.repository.group.GroupRepository
 import com.madteam.split.data.repository.user.UserRepository
+import com.madteam.split.domain.model.Currency
 import com.madteam.split.domain.model.MemberExpense
 import com.madteam.split.domain.model.PaidByExpense
 import com.madteam.split.ui.screens.createexpense.state.CreateExpenseUIEvent
@@ -22,6 +24,7 @@ import javax.inject.Inject
 class CreateExpenseViewModel @Inject constructor(
     private val groupRepository: GroupRepository,
     private val userRepository: UserRepository,
+    private val currencyRepository: CurrencyRepository,
 ) : ViewModel() {
 
     private val _state: MutableStateFlow<CreateExpenseUIState> =
@@ -30,6 +33,7 @@ class CreateExpenseViewModel @Inject constructor(
 
     init {
         getGroupInfo()
+        getCurrencies()
         getCurrentDateIntoExpense()
         getMyMemberId()
     }
@@ -67,6 +71,14 @@ class CreateExpenseViewModel @Inject constructor(
             is CreateExpenseUIEvent.OnAllMembersNeedsToPaySelected -> {
                 onAllMembersSelected()
             }
+
+            is CreateExpenseUIEvent.OnCurrencyDialogShowChanged -> {
+                onCurrencyDialogShowChanged(event.show)
+            }
+
+            is CreateExpenseUIEvent.OnCurrencySelected -> {
+                onCurrencySelected(event.currency)
+            }
         }
     }
 
@@ -82,6 +94,29 @@ class CreateExpenseViewModel @Inject constructor(
                 onPaidByMemberSelected(_state.value.myMemberId ?: 0)
             }
         }
+    }
+
+    private fun onCurrencySelected(currency: Currency) {
+        _state.value = _state.value.copy(
+            currencySelected = currency
+        )
+    }
+
+    private fun getCurrencies() {
+        viewModelScope.launch {
+            val response = currencyRepository.getCurrencies()
+            if (response is Resource.Success) {
+                _state.value = _state.value.copy(
+                    currencies = response.data
+                )
+            }
+        }
+    }
+
+    private fun onCurrencyDialogShowChanged(show: Boolean) {
+        _state.value = _state.value.copy(
+            showCurrencyDialog = show
+        )
     }
 
     private fun onPaidByMemberSelected(memberId: Int) {
