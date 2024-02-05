@@ -5,13 +5,13 @@ data class ExpenseType(
     val title: String,
     val description: String?,
     val icon: String,
-    val group: Int,
+    val group: Int? = null,
 ) {
     constructor() : this(
         id = 0,
         title = "",
         description = "",
         icon = "",
-        group = 0,
+        group = null,
     )
 }

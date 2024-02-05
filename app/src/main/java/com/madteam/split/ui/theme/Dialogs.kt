@@ -20,8 +20,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
@@ -53,6 +55,7 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.madteam.split.R
 import com.madteam.split.domain.model.Currency
+import com.madteam.split.domain.model.ExpenseType
 import com.madteam.split.utils.ui.getFlagByCurrency
 import kotlin.random.Random
 import kotlin.random.nextInt
@@ -513,6 +516,84 @@ fun CurrenciesDialog(
         }
 
     }
+}
+
+@Composable
+fun ExpenseTypeDialog(
+    expensesList: List<ExpenseType>,
+) {
+    Dialog(
+        onDismissRequest = { /*TODO*/ }
+    ) {
+        ElevatedCard(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(24.dp),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.elevatedCardColors(
+                containerColor = SplitTheme.colors.neutral.backgroundExtraWeak
+            )
+        ) {
+            Text(
+                modifier = Modifier
+                    .padding(start = 24.dp, end = 24.dp, top = 16.dp, bottom = 4.dp)
+                    .align(Alignment.CenterHorizontally),
+                text = stringResource(id = R.string.select_a_category),
+                style = SplitTheme.typography.heading.l,
+                textAlign = TextAlign.Center,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                color = SplitTheme.colors.neutral.textTitle
+            )
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                item {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(
+                                color = SplitTheme.colors.neutral.backgroundMedium,
+                                shape = RoundedCornerShape(16.dp)
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            modifier = Modifier
+                                .padding(8.dp),
+                            text = stringResource(id = R.string.default_categories),
+                            style = SplitTheme.typography.heading.xxs,
+                            color = SplitTheme.colors.neutral.textTitle
+                        )
+                    }
+                }
+                itemsIndexed(expensesList.filter { it.group == null }) { _, expenseType ->
+
+                }
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+fun ExpenseTypeDialogPreview() {
+    ExpenseTypeDialog(
+        expensesList = listOf(
+            ExpenseType(1, "Food", "Food", "ic_food"),
+            ExpenseType(2, "Transport", "Transport", "ic_transport"),
+            ExpenseType(3, "Entertainment", "Entertainment", "ic_entertainment"),
+            ExpenseType(4, "Groceries", "Groceries", "ic_groceries"),
+            ExpenseType(5, "Health", "Health", "ic_health"),
+            ExpenseType(6, "Home", "Home", "ic_home"),
+            ExpenseType(7, "Shopping", "Shopping", "ic_shopping"),
+            ExpenseType(8, "Travel", "Travel", "ic_travel"),
+            ExpenseType(9, "Other", "Other", "ic_other"),
+        )
+    )
 }
 
 @Preview
