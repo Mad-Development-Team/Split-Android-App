@@ -12,5 +12,6 @@ sealed class CreateExpenseUIEvent {
     data class OnNeedsToPayMemberSelected(val memberId: Int) : CreateExpenseUIEvent()
     data class OnCurrencyDialogShowChanged(val show: Boolean) : CreateExpenseUIEvent()
     data class OnCurrencySelected(val currency: Currency) : CreateExpenseUIEvent()
+    data class OnExpenseTypeDialogShowChanged(val show: Boolean) : CreateExpenseUIEvent()
     data object OnAllMembersNeedsToPaySelected : CreateExpenseUIEvent()
 }

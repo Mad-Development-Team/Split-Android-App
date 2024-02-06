@@ -5,7 +5,7 @@ data class Expense(
     val title: String,
     val description: String?,
     val totalAmount: Double,
-    val type: ExpenseType?,
+    val type: ExpenseType,
     val paidBy: List<PaidByExpense>,
     val forWhom: List<MemberExpense>,
     val images: List<String>?,
@@ -19,7 +19,12 @@ data class Expense(
         title = "",
         description = "",
         totalAmount = 0.0,
-        type = ExpenseType(),
+        type = ExpenseType(
+            id = 1,
+            title = "Others",
+            icon = "emoji_symbols_questionmark",
+            group = 0
+        ),
         paidBy = emptyList(),
         forWhom = emptyList(),
         images = emptyList(),

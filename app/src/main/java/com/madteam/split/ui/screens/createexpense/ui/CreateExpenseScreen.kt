@@ -50,9 +50,11 @@ import com.madteam.split.ui.theme.DSBasicTextField
 import com.madteam.split.ui.theme.DSCurrencyTextField
 import com.madteam.split.ui.theme.DSDatePickerTextField
 import com.madteam.split.ui.theme.DefaultFloatingButton
+import com.madteam.split.ui.theme.ExpenseTypeDialog
 import com.madteam.split.ui.theme.SmallEmojiButton
 import com.madteam.split.ui.theme.SplitTheme
 import com.madteam.split.utils.ui.BackPressHandler
+import com.madteam.split.utils.ui.getEmojiByName
 import com.madteam.split.utils.ui.getFlagByCurrency
 import com.madteam.split.utils.ui.navigateWithPopUpTo
 import java.time.ZoneId
@@ -137,6 +139,11 @@ fun CreateExpenseScreen(
                         CreateExpenseUIEvent.OnCurrencyDialogShowChanged(show)
                     )
                 },
+                onShowExpenseTypeDialog = { show ->
+                    viewModel.onEvent(
+                        CreateExpenseUIEvent.OnExpenseTypeDialogShowChanged(show)
+                    )
+                },
                 popUpBack = {
                     navController.navigateWithPopUpTo(
                         route = Screens.GroupExpensesScreen.route,
@@ -163,6 +170,7 @@ fun CreateExpenseContent(
     onAllMembersNeedsToPaySelected: () -> Unit,
     onCurrencySelected: (Currency) -> Unit,
     onShowCurrenciesDialog: (Boolean) -> Unit,
+    onShowExpenseTypeDialog: (Boolean) -> Unit,
     popUpBack: () -> Unit,
 ) {
     Column(
@@ -218,8 +226,10 @@ fun CreateExpenseContent(
             )
             Spacer(modifier = Modifier.size(8.dp))
             SmallEmojiButton(
-                onClick = {},
-                image = R.drawable.emoji_animals_nature_ant
+                onClick = {
+                    onShowExpenseTypeDialog(true)
+                },
+                image = getEmojiByName(state.newExpense.type.icon)
             )
         }
         Spacer(modifier = Modifier.size(8.dp))
@@ -435,6 +445,16 @@ fun CreateExpenseContent(
             },
             selectedCurrency = state.currencySelected,
             onDismiss = { onShowCurrenciesDialog(false) }
+        )
+    }
+
+    if (state.showExpenseTypeDialog) {
+        ExpenseTypeDialog(
+            expensesList = listOf(),
+            onDismiss = { /*TODO*/ },
+            onExpenseTypeSelected = {},
+            onExpenseTypeCreated = {},
+            groupId = state.groupInfo.id
         )
     }
 }

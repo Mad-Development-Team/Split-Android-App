@@ -149,4 +149,20 @@
   <string name="emojis_objects">Objects</string>
   <string name="emojis_symbols">Symbols</string>
   <string name="emojis_flags">Flags</string>
+  <string name="food">Food</string>
+  <string name="accommodation">Accommodation</string>
+  <string name="transport">Transport</string>
+  <string name="entertainment">Entertainment</string>
+  <string name="groceries">Groceries</string>
+  <string name="health">Health</string>
+  <string name="restaurants">Restaurants</string>
+  <string name="shopping">Shopping</string>
+  <string name="travel">Travel</string>
+  <string name="fuel">Fuel</string>
+  <string name="bars">Bars</string>
+  <string name="other">Other</string>
+  <string name="custom_group_categories">Custom group categories</string>
+  <string name="category_name">Category name</string>
+  <string name="create_group_category">Create category</string>
+  <string name="go_back_categories">Go back to categories</string>
 </resources>

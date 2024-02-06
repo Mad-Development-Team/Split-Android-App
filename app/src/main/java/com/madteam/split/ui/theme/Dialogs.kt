@@ -57,6 +57,7 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.madteam.split.R
 import com.madteam.split.domain.model.Currency
 import com.madteam.split.domain.model.ExpenseType
+import com.madteam.split.utils.ui.getEmojiByName
 import com.madteam.split.utils.ui.getFlagByCurrency
 import kotlin.random.Random
 import kotlin.random.nextInt
@@ -522,58 +523,204 @@ fun CurrenciesDialog(
 @Composable
 fun ExpenseTypeDialog(
     expensesList: List<ExpenseType>,
+    onDismiss: () -> Unit,
+    onExpenseTypeSelected: (ExpenseType) -> Unit,
+    onExpenseTypeCreated: (ExpenseType) -> Unit,
+    groupId: Int,
 ) {
-    Dialog(
-        onDismissRequest = { /*TODO*/ }
-    ) {
-        ElevatedCard(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(24.dp),
-            shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.elevatedCardColors(
-                containerColor = SplitTheme.colors.neutral.backgroundExtraWeak
-            )
+    var isOnCreateTypeMode by remember {
+        mutableStateOf(false)
+    }
+    if (isOnCreateTypeMode) {
+        CreateExpenseTypeDialog(
+            onDismiss = { isOnCreateTypeMode = false },
+            onExpenseTypeCreated = {
+                onExpenseTypeCreated(it)
+                isOnCreateTypeMode = false
+            },
+            groupId = groupId
+        )
+    } else {
+        Dialog(
+            onDismissRequest = {
+                onDismiss()
+            }
         ) {
-            Text(
+            ElevatedCard(
                 modifier = Modifier
-                    .padding(start = 24.dp, end = 24.dp, top = 16.dp, bottom = 4.dp)
-                    .align(Alignment.CenterHorizontally),
-                text = stringResource(id = R.string.select_a_category),
-                style = SplitTheme.typography.heading.l,
-                textAlign = TextAlign.Center,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                color = SplitTheme.colors.neutral.textTitle
-            )
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
+                    .fillMaxSize()
+                    .padding(24.dp),
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.elevatedCardColors(
+                    containerColor = SplitTheme.colors.neutral.backgroundExtraWeak
+                )
             ) {
-                item {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(
-                                color = SplitTheme.colors.neutral.backgroundMedium,
-                                shape = RoundedCornerShape(16.dp)
-                            ),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
+                Text(
+                    modifier = Modifier
+                        .padding(start = 24.dp, end = 24.dp, top = 16.dp, bottom = 4.dp)
+                        .align(Alignment.CenterHorizontally),
+                    text = stringResource(id = R.string.select_a_category),
+                    style = SplitTheme.typography.heading.l,
+                    textAlign = TextAlign.Center,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    color = SplitTheme.colors.neutral.textTitle
+                )
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    item {
+                        Box(
                             modifier = Modifier
-                                .padding(8.dp),
-                            text = stringResource(id = R.string.default_categories),
-                            style = SplitTheme.typography.heading.xxs,
-                            color = SplitTheme.colors.neutral.textTitle
-                        )
+                                .fillMaxWidth()
+                                .background(
+                                    color = SplitTheme.colors.neutral.backgroundMedium,
+                                    shape = RoundedCornerShape(16.dp)
+                                ),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                modifier = Modifier
+                                    .padding(8.dp),
+                                text = stringResource(id = R.string.default_categories),
+                                style = SplitTheme.typography.body.m,
+                                color = SplitTheme.colors.neutral.textTitle
+                            )
+                        }
                     }
-                }
-                itemsIndexed(expensesList.filter { it.group == null }) { _, expenseType ->
-                    Row {
-                        Text(text = "🤖")
+                    itemsIndexed(expensesList.filter { it.group == null }) { _, expenseType ->
+                        val translatableTextForDefaultCategories = when (expenseType.title) {
+                            "Food" -> R.string.food
+                            "Accommodation" -> R.string.accommodation
+                            "Transport" -> R.string.transport
+                            "Entertainment" -> R.string.entertainment
+                            "Groceries" -> R.string.groceries
+                            "Health" -> R.string.health
+                            "Restaurants" -> R.string.restaurants
+                            "Shopping" -> R.string.shopping
+                            "Travel" -> R.string.travel
+                            "Fuel" -> R.string.fuel
+                            "Bars" -> R.string.bars
+                            "Other" -> R.string.other
+                            else -> R.string.default_categories
+                        }
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(4.dp)
+                                .clip(
+                                    RoundedCornerShape(8.dp)
+                                )
+                                .clickable {
+                                    onExpenseTypeSelected(expenseType)
+                                },
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .size(48.dp)
+                                    .background(
+                                        color = SplitTheme.colors.primary.backgroundWeak,
+                                        shape = CircleShape
+                                    ),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Image(
+                                    modifier = Modifier.size(24.dp),
+                                    painter = painterResource(
+                                        id = getEmojiByName(expenseType.icon)
+                                    ),
+                                    contentDescription = null
+                                )
+                            }
+                            Spacer(modifier = Modifier.size(8.dp))
+                            Text(
+                                modifier = Modifier
+                                    .padding(8.dp),
+                                text = stringResource(id = translatableTextForDefaultCategories),
+                                style = SplitTheme.typography.heading.s,
+                                color = SplitTheme.colors.neutral.textTitle
+                            )
+                        }
+                    }
+                    item {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(
+                                    color = SplitTheme.colors.neutral.backgroundMedium,
+                                    shape = RoundedCornerShape(16.dp)
+                                ),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                modifier = Modifier
+                                    .padding(8.dp),
+                                text = stringResource(id = R.string.custom_group_categories),
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                style = SplitTheme.typography.body.m,
+                                color = SplitTheme.colors.neutral.textTitle
+                            )
+                        }
+                    }
+                    itemsIndexed(expensesList.filter { it.group == groupId }) { _, expenseType ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(4.dp)
+                                .clip(
+                                    RoundedCornerShape(8.dp)
+                                )
+                                .clickable {
+                                    onExpenseTypeSelected(expenseType)
+                                },
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .size(48.dp)
+                                    .background(
+                                        color = SplitTheme.colors.primary.backgroundWeak,
+                                        shape = CircleShape
+                                    ),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Image(
+                                    modifier = Modifier.size(24.dp),
+                                    painter = painterResource(
+                                        id = getEmojiByName(expenseType.icon)
+                                    ),
+                                    contentDescription = null
+                                )
+                            }
+                            Spacer(modifier = Modifier.size(8.dp))
+                            Text(
+                                modifier = Modifier
+                                    .padding(8.dp),
+                                text = expenseType.title,
+                                style = SplitTheme.typography.heading.s,
+                                color = SplitTheme.colors.neutral.textTitle
+                            )
+                        }
+                    }
+                    item {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            SecondaryLargeButton(
+                                onClick = {
+                                    isOnCreateTypeMode = true
+                                },
+                                text = R.string.create_group_category
+                            )
+                        }
                     }
                 }
             }
@@ -581,21 +728,140 @@ fun ExpenseTypeDialog(
     }
 }
 
+@Composable
+fun CreateExpenseTypeDialog(
+    onDismiss: () -> Unit,
+    onExpenseTypeCreated: (ExpenseType) -> Unit,
+    groupId: Int,
+) {
+    var emojiSelected by remember {
+        mutableStateOf(getEmojiByName("questionmark"))
+    }
+    var showEmojiPicker by remember {
+        mutableStateOf(false)
+    }
+    var expenseTypeName by remember {
+        mutableStateOf("")
+    }
+
+    Dialog(
+        onDismissRequest = {
+            onDismiss()
+        }
+    ) {
+        ElevatedCard(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(24.dp),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.elevatedCardColors(
+                containerColor = SplitTheme.colors.neutral.backgroundExtraWeak
+            )
+        ) {
+            Spacer(modifier = Modifier.size(8.dp))
+            Text(
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally),
+                text = stringResource(id = R.string.create_group_category),
+                style = SplitTheme.typography.heading.l,
+                textAlign = TextAlign.Center,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                color = SplitTheme.colors.neutral.textTitle
+            )
+            Spacer(modifier = Modifier.size(8.dp))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                SmallEmojiButton(
+                    image = emojiSelected,
+                    onClick = {
+                        showEmojiPicker = true
+                    }
+                )
+                Spacer(modifier = Modifier.size(8.dp))
+                DSBasicTextField(
+                    modifier = Modifier
+                        .weight(1f),
+                    value = expenseTypeName,
+                    onValueChange = { expenseTypeName = it },
+                    placeholder = R.string.category_name,
+                )
+            }
+            Spacer(modifier = Modifier.size(8.dp))
+            PrimaryLargeButton(
+                modifier = Modifier
+                    .padding(horizontal = 8.dp),
+                onClick = {
+                    onExpenseTypeCreated(
+                        ExpenseType(
+                            id = 0,
+                            title = expenseTypeName,
+                            icon = emojiSelected.toString(),
+                            group = groupId
+                        )
+                    )
+                },
+                text = R.string.create_group_category
+            )
+            Spacer(modifier = Modifier.size(8.dp))
+            SecondaryLargeButton(
+                modifier = Modifier
+                    .padding(horizontal = 8.dp),
+                onClick = { onDismiss() },
+                text = R.string.go_back_categories
+            )
+            Spacer(modifier = Modifier.size(8.dp))
+        }
+    }
+    if (showEmojiPicker) {
+        EmojiPickerDialog(
+            onEmojiSelected = {
+                emojiSelected = getEmojiByName(it)
+                showEmojiPicker = false
+            },
+            onDismissRequest = {
+                showEmojiPicker = false
+            }
+        )
+    }
+}
+
+@Preview
+@Composable
+fun CreateExpenseTypeDialogPreview() {
+    CreateExpenseTypeDialog(
+        onDismiss = {},
+        onExpenseTypeCreated = {},
+        groupId = 1
+    )
+}
+
 @Preview
 @Composable
 fun ExpenseTypeDialogPreview() {
     ExpenseTypeDialog(
         expensesList = listOf(
-            ExpenseType(1, "Food", "Food", "ic_food"),
-            ExpenseType(2, "Transport", "Transport", "ic_transport"),
-            ExpenseType(3, "Entertainment", "Entertainment", "ic_entertainment"),
-            ExpenseType(4, "Groceries", "Groceries", "ic_groceries"),
-            ExpenseType(5, "Health", "Health", "ic_health"),
-            ExpenseType(6, "Home", "Home", "ic_home"),
-            ExpenseType(7, "Shopping", "Shopping", "ic_shopping"),
-            ExpenseType(8, "Travel", "Travel", "ic_travel"),
-            ExpenseType(9, "Other", "Other", "ic_other"),
-        )
+            ExpenseType(1, "Food", "hamburger"),
+            ExpenseType(1, "Accommodation", "housewithgarden"),
+            ExpenseType(2, "Transport", "trolleybus"),
+            ExpenseType(3, "Entertainment", "joystick"),
+            ExpenseType(4, "Groceries", "shoppingcart"),
+            ExpenseType(5, "Health", "rescueworkershelmet"),
+            ExpenseType(6, "Restaurants", "forkandknifewithplate"),
+            ExpenseType(7, "Shopping", "shoppingbags"),
+            ExpenseType(8, "Travel", "airplane"),
+            ExpenseType(9, "Fuel", "fuelpump"),
+            ExpenseType(10, "Bars", "clinkingbeermugs"),
+            ExpenseType(9, "Other", "questionmark"),
+        ),
+        onDismiss = {},
+        onExpenseTypeSelected = {},
+        groupId = 1,
+        onExpenseTypeCreated = {}
     )
 }
 
@@ -624,10 +890,10 @@ fun CurrenciesDialogPreview() {
         ),
         selectedCurrency = selectedCurrency,
         onCurrencySelected = {
-            if (it == selectedCurrency) {
-                selectedCurrency = null
+            selectedCurrency = if (it == selectedCurrency) {
+                null
             } else {
-                selectedCurrency = it
+                it
             }
         },
         onConfirmCurrency = {},

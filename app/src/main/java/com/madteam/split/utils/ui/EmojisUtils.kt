@@ -42,14 +42,17 @@ fun getEmojisByType(type: String): List<Int> {
     }
 }
 
-fun getEmojiByName(name: String): Int? {
+fun getEmojiByName(name: String): Int {
     val fieldList = R.drawable::class.java.fields
-    return fieldList.firstOrNull { it.name.startsWith("emoji_") && it.name.contains(name) }
-        ?.let { field ->
-            try {
-                field.getInt(null)
-            } catch (e: Exception) {
-                R.drawable.emoji_symbols_questionmark
-            }
+    val field = fieldList.firstOrNull { it.name.startsWith("emoji_") && it.name.contains(name) }
+
+    return if (field != null) {
+        try {
+            field.getInt(null)
+        } catch (e: Exception) {
+            R.drawable.emoji_symbols_questionmark
         }
+    } else {
+        R.drawable.emoji_symbols_questionmark
+    }
 }

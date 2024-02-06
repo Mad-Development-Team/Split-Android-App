@@ -115,7 +115,6 @@ fun EmojiPickerDialog(
                                 modifier = Modifier.size(16.dp),
                                 painter = painterResource(
                                     id = getEmojiByName(emojiType.emoji)
-                                        ?: R.drawable.emoji_animals_nature_badger
                                 ),
                                 contentDescription = null
                             )

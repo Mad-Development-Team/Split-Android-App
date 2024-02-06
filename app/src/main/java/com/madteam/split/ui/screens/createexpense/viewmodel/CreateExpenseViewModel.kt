@@ -79,7 +79,17 @@ class CreateExpenseViewModel @Inject constructor(
             is CreateExpenseUIEvent.OnCurrencySelected -> {
                 onCurrencySelected(event.currency)
             }
+
+            is CreateExpenseUIEvent.OnExpenseTypeDialogShowChanged -> {
+                onExpenseTypeDialogShowChanged(event.show)
+            }
         }
+    }
+
+    private fun onExpenseTypeDialogShowChanged(show: Boolean) {
+        _state.value = _state.value.copy(
+            showExpenseTypeDialog = show
+        )
     }
 
     private fun getMyMemberId() {
