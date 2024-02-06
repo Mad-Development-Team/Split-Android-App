@@ -219,7 +219,7 @@ fun CreateExpenseContent(
             Spacer(modifier = Modifier.size(8.dp))
             SmallEmojiButton(
                 onClick = {},
-                image = R.drawable.emoji_hamburguer
+                image = R.drawable.emoji_animals_nature_ant
             )
         }
         Spacer(modifier = Modifier.size(8.dp))

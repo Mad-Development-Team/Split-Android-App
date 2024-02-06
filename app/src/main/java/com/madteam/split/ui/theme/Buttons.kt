@@ -297,7 +297,7 @@ fun BigIconButton(
 fun SmallIconButtonPreview() {
     SmallEmojiButton(
         modifier = Modifier,
-        image = R.drawable.emoji_euro_bill,
+        image = R.drawable.emoji_animals_nature_ant, //TODO: Change to emoji euro bill
         onClick = {}
     )
 }

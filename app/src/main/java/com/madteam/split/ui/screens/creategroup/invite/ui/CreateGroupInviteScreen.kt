@@ -102,7 +102,9 @@ fun CreateGroupInviteContent(
                     modifier = Modifier
                         .size(32.dp),
                     tint = Color.Unspecified,
-                    painter = painterResource(id = R.drawable.emoji_partying_face),
+                    painter = painterResource(
+                        id = R.drawable.emoji_animals_nature_ant
+                    ), //TODO: Change to partying face
                     contentDescription = stringResource(
                         id = R.string.emoji_partying_face_description
                     )

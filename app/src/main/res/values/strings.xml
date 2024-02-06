@@ -142,4 +142,11 @@
   <string name="select_a_currency_description">This currency will be used to balance the Split, for each expense you will be able to select different currencies.</string>
   <string name="select_a_category">Select a category</string>
   <string name="default_categories">Default categories</string>
+  <string name="emojis_animals_and_nature">Animals and nature</string>
+  <string name="emojis_food_and_drink">Food and drink</string>
+  <string name="emojis_activities">Activities</string>
+  <string name="emojis_travel_and_places">Travel and places</string>
+  <string name="emojis_objects">Objects</string>
+  <string name="emojis_symbols">Symbols</string>
+  <string name="emojis_flags">Flags</string>
 </resources>
