@@ -43,6 +43,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -526,6 +527,7 @@ fun ExpenseTypeDialog(
     onDismiss: () -> Unit,
     onExpenseTypeSelected: (ExpenseType) -> Unit,
     onExpenseTypeCreated: (ExpenseType) -> Unit,
+    selectedExpenseType: ExpenseType,
     groupId: Int,
 ) {
     var isOnCreateTypeMode by remember {
@@ -607,10 +609,19 @@ fun ExpenseTypeDialog(
                             "Other" -> R.string.other
                             else -> R.string.default_categories
                         }
+                        val isSelected = selectedExpenseType == expenseType
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(4.dp)
+                                .background(
+                                    color = if (isSelected) {
+                                        SplitTheme.colors.primary.backgroundWeak
+                                    } else {
+                                        Color.Transparent
+                                    },
+                                    shape = RoundedCornerShape(8.dp)
+                                )
                                 .clip(
                                     RoundedCornerShape(8.dp)
                                 )
@@ -668,10 +679,19 @@ fun ExpenseTypeDialog(
                         }
                     }
                     itemsIndexed(expensesList.filter { it.group == groupId }) { _, expenseType ->
+                        val isSelected = selectedExpenseType == expenseType
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(4.dp)
+                                .background(
+                                    color = if (isSelected) {
+                                        SplitTheme.colors.primary.backgroundWeak
+                                    } else {
+                                        Color.Transparent
+                                    },
+                                    shape = RoundedCornerShape(8.dp)
+                                )
                                 .clip(
                                     RoundedCornerShape(8.dp)
                                 )
@@ -861,7 +881,8 @@ fun ExpenseTypeDialogPreview() {
         onDismiss = {},
         onExpenseTypeSelected = {},
         groupId = 1,
-        onExpenseTypeCreated = {}
+        onExpenseTypeCreated = {},
+        selectedExpenseType = ExpenseType(1, "Food", "hamburger")
     )
 }
 

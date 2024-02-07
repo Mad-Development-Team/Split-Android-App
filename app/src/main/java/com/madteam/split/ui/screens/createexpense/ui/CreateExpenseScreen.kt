@@ -40,6 +40,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.madteam.split.R
 import com.madteam.split.domain.model.Currency
+import com.madteam.split.domain.model.ExpenseType
 import com.madteam.split.ui.navigation.Screens
 import com.madteam.split.ui.screens.createexpense.state.CreateExpenseUIEvent
 import com.madteam.split.ui.screens.createexpense.state.CreateExpenseUIState
@@ -144,6 +145,11 @@ fun CreateExpenseScreen(
                         CreateExpenseUIEvent.OnExpenseTypeDialogShowChanged(show)
                     )
                 },
+                onExpenseTypeSelected = { expenseType ->
+                    viewModel.onEvent(
+                        CreateExpenseUIEvent.OnExpenseTypeSelected(expenseType)
+                    )
+                },
                 popUpBack = {
                     navController.navigateWithPopUpTo(
                         route = Screens.GroupExpensesScreen.route,
@@ -171,6 +177,7 @@ fun CreateExpenseContent(
     onCurrencySelected: (Currency) -> Unit,
     onShowCurrenciesDialog: (Boolean) -> Unit,
     onShowExpenseTypeDialog: (Boolean) -> Unit,
+    onExpenseTypeSelected: (ExpenseType) -> Unit,
     popUpBack: () -> Unit,
 ) {
     Column(
@@ -454,9 +461,13 @@ fun CreateExpenseContent(
             onDismiss = {
                 onShowExpenseTypeDialog(false)
             },
-            onExpenseTypeSelected = {},
+            onExpenseTypeSelected = {
+                onExpenseTypeSelected(it)
+                onShowExpenseTypeDialog(false)
+            },
             onExpenseTypeCreated = {},
-            groupId = state.groupInfo.id
+            groupId = state.groupInfo.id,
+            selectedExpenseType = state.newExpense.type
         )
     }
 }

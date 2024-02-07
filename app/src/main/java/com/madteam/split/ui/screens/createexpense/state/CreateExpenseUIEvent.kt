@@ -1,6 +1,7 @@
 package com.madteam.split.ui.screens.createexpense.state
 
 import com.madteam.split.domain.model.Currency
+import com.madteam.split.domain.model.ExpenseType
 
 sealed class CreateExpenseUIEvent {
     data class OnTitleChanged(val title: String) : CreateExpenseUIEvent()
@@ -13,5 +14,6 @@ sealed class CreateExpenseUIEvent {
     data class OnCurrencyDialogShowChanged(val show: Boolean) : CreateExpenseUIEvent()
     data class OnCurrencySelected(val currency: Currency) : CreateExpenseUIEvent()
     data class OnExpenseTypeDialogShowChanged(val show: Boolean) : CreateExpenseUIEvent()
+    data class OnExpenseTypeSelected(val expenseType: ExpenseType) : CreateExpenseUIEvent()
     data object OnAllMembersNeedsToPaySelected : CreateExpenseUIEvent()
 }

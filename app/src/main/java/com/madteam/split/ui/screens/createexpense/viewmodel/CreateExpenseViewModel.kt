@@ -6,6 +6,7 @@ import com.madteam.split.data.repository.currency.CurrencyRepository
 import com.madteam.split.data.repository.group.GroupRepository
 import com.madteam.split.data.repository.user.UserRepository
 import com.madteam.split.domain.model.Currency
+import com.madteam.split.domain.model.ExpenseType
 import com.madteam.split.domain.model.MemberExpense
 import com.madteam.split.domain.model.PaidByExpense
 import com.madteam.split.ui.screens.createexpense.state.CreateExpenseUIEvent
@@ -82,6 +83,10 @@ class CreateExpenseViewModel @Inject constructor(
 
             is CreateExpenseUIEvent.OnExpenseTypeDialogShowChanged -> {
                 onExpenseTypeDialogShowChanged(event.show)
+            }
+
+            is CreateExpenseUIEvent.OnExpenseTypeSelected -> {
+                onExpenseTypeSelected(event.expenseType)
             }
         }
     }
@@ -211,10 +216,22 @@ class CreateExpenseViewModel @Inject constructor(
             )
             if (expenseTypesResponse is Resource.Success) {
                 _state.value = _state.value.copy(
-                    groupExpenseTypes = expenseTypesResponse.data
+                    groupExpenseTypes = expenseTypesResponse.data,
+                    newExpense = _state.value.newExpense.copy(
+                        type = expenseTypesResponse.data.find { it.title == "Other" }
+                            ?: ExpenseType()
+                    )
                 )
             }
         }
+    }
+
+    private fun onExpenseTypeSelected(expenseType: ExpenseType) {
+        _state.value = _state.value.copy(
+            newExpense = _state.value.newExpense.copy(
+                type = expenseType
+            )
+        )
     }
 
     private fun onDatePickerDateSelected(date: String) {
