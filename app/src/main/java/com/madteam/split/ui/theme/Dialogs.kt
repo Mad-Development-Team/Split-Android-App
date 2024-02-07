@@ -540,7 +540,8 @@ fun ExpenseTypeDialog(
                 onExpenseTypeCreated(it)
                 isOnCreateTypeMode = false
             },
-            groupId = groupId
+            groupId = groupId,
+            expensesList = expensesList
         )
     } else {
         Dialog(
@@ -751,6 +752,7 @@ fun ExpenseTypeDialog(
 @Composable
 fun CreateExpenseTypeDialog(
     onDismiss: () -> Unit,
+    expensesList: List<ExpenseType>,
     onExpenseTypeCreated: (ExpenseType) -> Unit,
     groupId: Int,
 ) {
@@ -771,8 +773,7 @@ fun CreateExpenseTypeDialog(
     ) {
         ElevatedCard(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(24.dp),
+                .fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
             colors = CardDefaults.elevatedCardColors(
                 containerColor = SplitTheme.colors.neutral.backgroundExtraWeak
@@ -793,8 +794,7 @@ fun CreateExpenseTypeDialog(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(8.dp),
-                verticalAlignment = Alignment.CenterVertically
+                    .padding(horizontal = 8.dp),
             ) {
                 SmallEmojiButton(
                     image = emojiSelected,
@@ -809,6 +809,7 @@ fun CreateExpenseTypeDialog(
                     value = expenseTypeName,
                     onValueChange = { expenseTypeName = it },
                     placeholder = R.string.category_name,
+                    isError = expensesList.any { it.title == expenseTypeName } || expenseTypeName.length > 20,
                 )
             }
             Spacer(modifier = Modifier.size(8.dp))
@@ -825,7 +826,8 @@ fun CreateExpenseTypeDialog(
                         )
                     )
                 },
-                text = R.string.create_group_category
+                text = R.string.create_group_category,
+                enabled = !(expensesList.any { it.title == expenseTypeName } || expenseTypeName.length > 20) && expenseTypeName.isNotEmpty(),
             )
             Spacer(modifier = Modifier.size(8.dp))
             SecondaryLargeButton(
@@ -856,7 +858,21 @@ fun CreateExpenseTypeDialogPreview() {
     CreateExpenseTypeDialog(
         onDismiss = {},
         onExpenseTypeCreated = {},
-        groupId = 1
+        groupId = 1,
+        expensesList = listOf(
+            ExpenseType(1, "Food", "hamburger"),
+            ExpenseType(1, "Accommodation", "housewithgarden"),
+            ExpenseType(2, "Transport", "trolleybus"),
+            ExpenseType(3, "Entertainment", "joystick"),
+            ExpenseType(4, "Groceries", "shoppingcart"),
+            ExpenseType(5, "Health", "rescueworkershelmet"),
+            ExpenseType(6, "Restaurants", "forkandknifewithplate"),
+            ExpenseType(7, "Shopping", "shoppingbags"),
+            ExpenseType(8, "Travel", "airplane"),
+            ExpenseType(9, "Fuel", "fuelpump"),
+            ExpenseType(10, "Bars", "clinkingbeermugs"),
+            ExpenseType(9, "Other", "questionmark"),
+        )
     )
 }
 

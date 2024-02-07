@@ -27,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -60,6 +61,7 @@ fun EmojiPickerDialog(
             onDismissRequest()
         }
     ) {
+        val resources = LocalContext.current.resources
         var sectionSelected by remember { mutableStateOf(0) }
         val animalsAndNatureEmojis = getEmojisByType("animals_nature")
         val foodAndDrinkEmojis = getEmojisByType("food_drink")
@@ -148,7 +150,9 @@ fun EmojiPickerDialog(
                                 .size(24.dp)
                                 .clip(shape = CircleShape)
                                 .clickable {
-                                    onEmojiSelected(emojiListSelected[index].toString())
+                                    onEmojiSelected(
+                                        resources.getResourceEntryName(emojiListSelected[index])
+                                    )
                                     onDismissRequest()
                                 },
                             painter = painterResource(
