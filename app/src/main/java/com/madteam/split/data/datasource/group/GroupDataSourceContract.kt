@@ -1,5 +1,6 @@
 package com.madteam.split.data.datasource.group
 
+import com.madteam.split.domain.model.ExpenseType
 import com.madteam.split.domain.model.Group
 import com.madteam.split.domain.model.Member
 import com.madteam.split.utils.network.Resource
@@ -25,5 +26,8 @@ interface GroupDataSourceContract {
         suspend fun getUserGroupById(groupId: Int): Resource<Group>
         suspend fun deleteUserGroupById(groupId: Int)
         suspend fun updateUserGroup(group: Group)
+        suspend fun getGroupExpenseTypes(groupId: Int): Resource<List<ExpenseType>>
+        suspend fun insertExpenseTypes(expenseTypes: List<ExpenseType>)
+        suspend fun deleteExpenseTypes()
     }
 }

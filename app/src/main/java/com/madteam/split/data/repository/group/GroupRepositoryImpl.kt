@@ -2,6 +2,7 @@ package com.madteam.split.data.repository.group
 
 import com.madteam.split.data.datasource.group.GroupDataSourceContract
 import com.madteam.split.domain.model.Currency
+import com.madteam.split.domain.model.ExpenseType
 import com.madteam.split.domain.model.Group
 import com.madteam.split.domain.model.Member
 import com.madteam.split.utils.network.Resource
@@ -101,4 +102,8 @@ class GroupRepositoryImpl @Inject constructor(
     }
 
     override fun getCurrentGroup(): Int? = currentGroupId
+
+    override suspend fun getUserExpenseTypes(): Resource<List<ExpenseType>> {
+        return createGroupDataSource.getGroupExpenseTypes(currentGroupId ?: 0)
+    }
 }

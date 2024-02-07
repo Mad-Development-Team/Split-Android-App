@@ -1,6 +1,7 @@
 package com.madteam.split.data.repository.group
 
 import com.madteam.split.domain.model.Currency
+import com.madteam.split.domain.model.ExpenseType
 import com.madteam.split.domain.model.Group
 import com.madteam.split.domain.model.Member
 import com.madteam.split.utils.network.Resource
@@ -16,4 +17,5 @@ interface GroupRepository {
 
     fun setCurrentGroup(groupId: Int)
     fun getCurrentGroup(): Int?
+    suspend fun getUserExpenseTypes(): Resource<List<ExpenseType>>
 }
