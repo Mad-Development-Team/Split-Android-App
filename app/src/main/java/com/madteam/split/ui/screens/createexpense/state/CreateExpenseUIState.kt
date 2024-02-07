@@ -2,6 +2,7 @@ package com.madteam.split.ui.screens.createexpense.state
 
 import com.madteam.split.domain.model.Currency
 import com.madteam.split.domain.model.Expense
+import com.madteam.split.domain.model.ExpenseType
 import com.madteam.split.domain.model.Group
 
 data class CreateExpenseUIState(
@@ -18,4 +19,5 @@ data class CreateExpenseUIState(
     val currencies: List<Currency> = emptyList(),
     val currencySelected: Currency = Currency("EUR", "Euro", "€"),
     val showExpenseTypeDialog: Boolean = false,
+    val groupExpenseTypes: List<ExpenseType> = emptyList(),
 )

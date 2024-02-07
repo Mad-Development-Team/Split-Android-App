@@ -103,7 +103,7 @@ class GroupRepositoryImpl @Inject constructor(
 
     override fun getCurrentGroup(): Int? = currentGroupId
 
-    override suspend fun getUserExpenseTypes(): Resource<List<ExpenseType>> {
+    override suspend fun getGroupExpenseTypes(): Resource<List<ExpenseType>> {
         return createGroupDataSource.getGroupExpenseTypes(currentGroupId ?: 0)
     }
 }

@@ -17,5 +17,5 @@ interface GroupRepository {
 
     fun setCurrentGroup(groupId: Int)
     fun getCurrentGroup(): Int?
-    suspend fun getUserExpenseTypes(): Resource<List<ExpenseType>>
+    suspend fun getGroupExpenseTypes(): Resource<List<ExpenseType>>
 }
