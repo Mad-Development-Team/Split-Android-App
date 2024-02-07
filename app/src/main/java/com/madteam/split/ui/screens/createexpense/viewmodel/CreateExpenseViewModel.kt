@@ -206,7 +206,9 @@ class CreateExpenseViewModel @Inject constructor(
                     groupInfo = response.data.first { it.id == currentGroup }
                 )
             }
-            val expenseTypesResponse = groupRepository.getGroupExpenseTypes()
+            val expenseTypesResponse = groupRepository.getGroupExpenseTypes(
+                update = true
+            )
             if (expenseTypesResponse is Resource.Success) {
                 _state.value = _state.value.copy(
                     groupExpenseTypes = expenseTypesResponse.data

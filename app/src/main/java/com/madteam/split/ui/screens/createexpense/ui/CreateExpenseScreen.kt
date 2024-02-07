@@ -450,8 +450,10 @@ fun CreateExpenseContent(
 
     if (state.showExpenseTypeDialog) {
         ExpenseTypeDialog(
-            expensesList = listOf(),
-            onDismiss = { /*TODO*/ },
+            expensesList = state.groupExpenseTypes,
+            onDismiss = {
+                onShowExpenseTypeDialog(false)
+            },
             onExpenseTypeSelected = {},
             onExpenseTypeCreated = {},
             groupId = state.groupInfo.id

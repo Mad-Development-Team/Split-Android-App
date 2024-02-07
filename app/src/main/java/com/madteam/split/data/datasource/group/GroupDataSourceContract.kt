@@ -26,7 +26,11 @@ interface GroupDataSourceContract {
         suspend fun getUserGroupById(groupId: Int): Resource<Group>
         suspend fun deleteUserGroupById(groupId: Int)
         suspend fun updateUserGroup(group: Group)
-        suspend fun getGroupExpenseTypes(groupId: Int): Resource<List<ExpenseType>>
+        suspend fun getGroupExpenseTypes(
+            groupId: Int,
+            update: Boolean,
+        ): Resource<List<ExpenseType>>
+
         suspend fun insertExpenseTypes(expenseTypes: List<ExpenseType>)
         suspend fun deleteExpenseTypes()
     }

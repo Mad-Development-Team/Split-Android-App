@@ -166,7 +166,13 @@ class GroupDataSource @Inject constructor(
         }
     }
 
-    override suspend fun getGroupExpenseTypes(groupId: Int): Resource<List<ExpenseType>> {
+    override suspend fun getGroupExpenseTypes(
+        groupId: Int,
+        update: Boolean,
+    ): Resource<List<ExpenseType>> {
+        if (update) {
+            fetchExpenseTypesFromApi(groupId)
+        }
         val localExpenseTypes = fetchExpenseTypesFromLocal()
         return if (localExpenseTypes is Resource.Success && localExpenseTypes.data.isNotEmpty()) {
             localExpenseTypes
