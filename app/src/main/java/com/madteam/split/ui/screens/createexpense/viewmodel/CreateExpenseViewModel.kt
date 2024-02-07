@@ -88,7 +88,20 @@ class CreateExpenseViewModel @Inject constructor(
             is CreateExpenseUIEvent.OnExpenseTypeSelected -> {
                 onExpenseTypeSelected(event.expenseType)
             }
+
+            is CreateExpenseUIEvent.OnExpenseTypeCreated -> {
+                onExpenseTypeCreated(event.expenseType)
+            }
         }
+    }
+
+    private fun onExpenseTypeCreated(expenseType: ExpenseType) {
+        val newExpenseList = _state.value.groupExpenseTypes.toMutableList().apply {
+            add(expenseType)
+        }
+        _state.value = _state.value.copy(
+            groupExpenseTypes = newExpenseList
+        )
     }
 
     private fun onExpenseTypeDialogShowChanged(show: Boolean) {

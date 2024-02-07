@@ -150,6 +150,11 @@ fun CreateExpenseScreen(
                         CreateExpenseUIEvent.OnExpenseTypeSelected(expenseType)
                     )
                 },
+                onExpenseTypeCreated = { expenseType ->
+                    viewModel.onEvent(
+                        CreateExpenseUIEvent.OnExpenseTypeCreated(expenseType)
+                    )
+                },
                 popUpBack = {
                     navController.navigateWithPopUpTo(
                         route = Screens.GroupExpensesScreen.route,
@@ -178,6 +183,7 @@ fun CreateExpenseContent(
     onShowCurrenciesDialog: (Boolean) -> Unit,
     onShowExpenseTypeDialog: (Boolean) -> Unit,
     onExpenseTypeSelected: (ExpenseType) -> Unit,
+    onExpenseTypeCreated: (ExpenseType) -> Unit,
     popUpBack: () -> Unit,
 ) {
     Column(
@@ -465,7 +471,11 @@ fun CreateExpenseContent(
                 onExpenseTypeSelected(it)
                 onShowExpenseTypeDialog(false)
             },
-            onExpenseTypeCreated = {},
+            onExpenseTypeCreated = {
+                onExpenseTypeCreated(it)
+                onExpenseTypeSelected(it)
+                onShowExpenseTypeDialog(false)
+            },
             groupId = state.groupInfo.id,
             selectedExpenseType = state.newExpense.type
         )

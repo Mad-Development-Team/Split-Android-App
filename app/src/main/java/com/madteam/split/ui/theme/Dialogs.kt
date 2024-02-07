@@ -6,6 +6,7 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -29,9 +30,14 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ExpandLess
+import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -533,6 +539,12 @@ fun ExpenseTypeDialog(
     var isOnCreateTypeMode by remember {
         mutableStateOf(false)
     }
+    var isDefaultCategoriesCollapsed by remember {
+        mutableStateOf(false)
+    }
+    var isCustomCategoriesCollapsed by remember {
+        mutableStateOf(false)
+    }
     if (isOnCreateTypeMode) {
         CreateExpenseTypeDialog(
             onDismiss = { isOnCreateTypeMode = false },
@@ -551,8 +563,7 @@ fun ExpenseTypeDialog(
         ) {
             ElevatedCard(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(24.dp),
+                    .fillMaxSize(),
                 shape = RoundedCornerShape(16.dp),
                 colors = CardDefaults.elevatedCardColors(
                     containerColor = SplitTheme.colors.neutral.backgroundExtraWeak
@@ -585,13 +596,35 @@ fun ExpenseTypeDialog(
                                 ),
                             contentAlignment = Alignment.Center
                         ) {
-                            Text(
+                            Row(
                                 modifier = Modifier
-                                    .padding(8.dp),
-                                text = stringResource(id = R.string.default_categories),
-                                style = SplitTheme.typography.body.m,
-                                color = SplitTheme.colors.neutral.textTitle
-                            )
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 8.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Start
+                            ) {
+                                IconButton(
+                                    modifier = Modifier,
+                                    onClick = {
+                                        isDefaultCategoriesCollapsed = !isDefaultCategoriesCollapsed
+                                    }) {
+                                    Icon(
+                                        imageVector = if (isDefaultCategoriesCollapsed) {
+                                            Icons.Default.ExpandLess
+                                        } else {
+                                            Icons.Default.ExpandMore
+                                        },
+                                        contentDescription = null
+                                    )
+                                }
+                                Text(
+                                    modifier = Modifier
+                                        .padding(8.dp),
+                                    text = stringResource(id = R.string.default_categories),
+                                    style = SplitTheme.typography.body.m,
+                                    color = SplitTheme.colors.neutral.textTitle
+                                )
+                            }
                         }
                     }
                     itemsIndexed(expensesList.filter { it.group == null }) { _, expenseType ->
@@ -611,51 +644,57 @@ fun ExpenseTypeDialog(
                             else -> R.string.default_categories
                         }
                         val isSelected = selectedExpenseType == expenseType
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(4.dp)
-                                .background(
-                                    color = if (isSelected) {
-                                        SplitTheme.colors.primary.backgroundWeak
-                                    } else {
-                                        Color.Transparent
-                                    },
-                                    shape = RoundedCornerShape(8.dp)
-                                )
-                                .clip(
-                                    RoundedCornerShape(8.dp)
-                                )
-                                .clickable {
-                                    onExpenseTypeSelected(expenseType)
-                                },
-                            verticalAlignment = Alignment.CenterVertically
+                        AnimatedVisibility(
+                            visible = !isDefaultCategoriesCollapsed
                         ) {
-                            Box(
+                            Row(
                                 modifier = Modifier
-                                    .size(48.dp)
+                                    .fillMaxWidth()
+                                    .padding(4.dp)
                                     .background(
-                                        color = SplitTheme.colors.primary.backgroundWeak,
-                                        shape = CircleShape
-                                    ),
-                                contentAlignment = Alignment.Center
+                                        color = if (isSelected) {
+                                            SplitTheme.colors.primary.backgroundWeak
+                                        } else {
+                                            Color.Transparent
+                                        },
+                                        shape = RoundedCornerShape(8.dp)
+                                    )
+                                    .clip(
+                                        RoundedCornerShape(8.dp)
+                                    )
+                                    .clickable {
+                                        onExpenseTypeSelected(expenseType)
+                                    },
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Image(
-                                    modifier = Modifier.size(24.dp),
-                                    painter = painterResource(
-                                        id = getEmojiByName(expenseType.icon)
+                                Box(
+                                    modifier = Modifier
+                                        .size(48.dp)
+                                        .background(
+                                            color = SplitTheme.colors.primary.backgroundWeak,
+                                            shape = CircleShape
+                                        ),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Image(
+                                        modifier = Modifier.size(24.dp),
+                                        painter = painterResource(
+                                            id = getEmojiByName(expenseType.icon)
+                                        ),
+                                        contentDescription = null
+                                    )
+                                }
+                                Spacer(modifier = Modifier.size(8.dp))
+                                Text(
+                                    modifier = Modifier
+                                        .padding(8.dp),
+                                    text = stringResource(
+                                        id = translatableTextForDefaultCategories
                                     ),
-                                    contentDescription = null
+                                    style = SplitTheme.typography.heading.s,
+                                    color = SplitTheme.colors.neutral.textTitle
                                 )
                             }
-                            Spacer(modifier = Modifier.size(8.dp))
-                            Text(
-                                modifier = Modifier
-                                    .padding(8.dp),
-                                text = stringResource(id = translatableTextForDefaultCategories),
-                                style = SplitTheme.typography.heading.s,
-                                color = SplitTheme.colors.neutral.textTitle
-                            )
                         }
                     }
                     item {
@@ -668,78 +707,122 @@ fun ExpenseTypeDialog(
                                 ),
                             contentAlignment = Alignment.Center
                         ) {
-                            Text(
+                            Row(
                                 modifier = Modifier
-                                    .padding(8.dp),
-                                text = stringResource(id = R.string.custom_group_categories),
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                                style = SplitTheme.typography.body.m,
-                                color = SplitTheme.colors.neutral.textTitle
-                            )
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 8.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Start
+                            ) {
+                                IconButton(
+                                    modifier = Modifier,
+                                    onClick = {
+                                        isCustomCategoriesCollapsed = !isCustomCategoriesCollapsed
+                                    }) {
+                                    Icon(
+                                        imageVector = if (isCustomCategoriesCollapsed) {
+                                            Icons.Default.ExpandLess
+                                        } else {
+                                            Icons.Default.ExpandMore
+                                        },
+                                        contentDescription = null
+                                    )
+                                }
+                                Text(
+                                    modifier = Modifier
+                                        .padding(8.dp),
+                                    text = stringResource(id = R.string.custom_group_categories),
+                                    style = SplitTheme.typography.body.m,
+                                    color = SplitTheme.colors.neutral.textTitle
+                                )
+                            }
                         }
                     }
                     itemsIndexed(expensesList.filter { it.group == groupId }) { _, expenseType ->
                         val isSelected = selectedExpenseType == expenseType
+                        AnimatedVisibility(
+                            visible = !isCustomCategoriesCollapsed
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(4.dp)
+                                    .background(
+                                        color = if (isSelected) {
+                                            SplitTheme.colors.primary.backgroundWeak
+                                        } else {
+                                            Color.Transparent
+                                        },
+                                        shape = RoundedCornerShape(8.dp)
+                                    )
+                                    .clip(
+                                        RoundedCornerShape(8.dp)
+                                    )
+                                    .clickable {
+                                        onExpenseTypeSelected(expenseType)
+                                    },
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(48.dp)
+                                        .background(
+                                            color = SplitTheme.colors.primary.backgroundWeak,
+                                            shape = CircleShape
+                                        ),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Image(
+                                        modifier = Modifier.size(24.dp),
+                                        painter = painterResource(
+                                            id = getEmojiByName(expenseType.icon)
+                                        ),
+                                        contentDescription = null
+                                    )
+                                }
+                                Spacer(modifier = Modifier.size(8.dp))
+                                Text(
+                                    modifier = Modifier
+                                        .padding(8.dp),
+                                    text = expenseType.title,
+                                    style = SplitTheme.typography.heading.s,
+                                    color = SplitTheme.colors.neutral.textTitle
+                                )
+                            }
+                        }
+                    }
+                    item {
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(4.dp)
                                 .background(
-                                    color = if (isSelected) {
-                                        SplitTheme.colors.primary.backgroundWeak
-                                    } else {
-                                        Color.Transparent
-                                    },
-                                    shape = RoundedCornerShape(8.dp)
+                                    color = SplitTheme.colors.neutral.backgroundMedium,
+                                    shape = RoundedCornerShape(16.dp)
                                 )
                                 .clip(
                                     RoundedCornerShape(8.dp)
                                 )
                                 .clickable {
-                                    onExpenseTypeSelected(expenseType)
+                                    isOnCreateTypeMode = true
                                 },
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(48.dp)
-                                    .background(
-                                        color = SplitTheme.colors.primary.backgroundWeak,
-                                        shape = CircleShape
-                                    ),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Image(
-                                    modifier = Modifier.size(24.dp),
-                                    painter = painterResource(
-                                        id = getEmojiByName(expenseType.icon)
-                                    ),
-                                    contentDescription = null
-                                )
-                            }
+                            Spacer(modifier = Modifier.size(16.dp))
+                            Image(
+                                modifier = Modifier.size(24.dp),
+                                painter = painterResource(
+                                    id = getEmojiByName("plus")
+                                ),
+                                contentDescription = null
+                            )
                             Spacer(modifier = Modifier.size(8.dp))
                             Text(
                                 modifier = Modifier
                                     .padding(8.dp),
-                                text = expenseType.title,
+                                text = stringResource(id = R.string.create_group_category),
                                 style = SplitTheme.typography.heading.s,
                                 color = SplitTheme.colors.neutral.textTitle
-                            )
-                        }
-                    }
-                    item {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(8.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            SecondaryLargeButton(
-                                onClick = {
-                                    isOnCreateTypeMode = true
-                                },
-                                text = R.string.create_group_category
                             )
                         }
                     }
@@ -771,6 +854,7 @@ fun CreateExpenseTypeDialog(
             onDismiss()
         }
     ) {
+        val resources = LocalContext.current.resources
         ElevatedCard(
             modifier = Modifier
                 .fillMaxWidth(),
@@ -821,7 +905,7 @@ fun CreateExpenseTypeDialog(
                         ExpenseType(
                             id = 0,
                             title = expenseTypeName,
-                            icon = emojiSelected.toString(),
+                            icon = resources.getResourceEntryName(emojiSelected),
                             group = groupId
                         )
                     )

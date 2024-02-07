@@ -62,6 +62,7 @@ fun EmojiPickerDialog(
         }
     ) {
         val resources = LocalContext.current.resources
+
         var sectionSelected by remember { mutableStateOf(0) }
         val animalsAndNatureEmojis = getEmojisByType("animals_nature")
         val foodAndDrinkEmojis = getEmojisByType("food_drink")
