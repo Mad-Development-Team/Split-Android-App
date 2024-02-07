@@ -1,6 +1,8 @@
 package com.madteam.split.data.repository.group
 
 import com.madteam.split.data.datasource.group.GroupDataSourceContract
+import com.madteam.split.domain.model.Currency
+import com.madteam.split.domain.model.ExpenseType
 import com.madteam.split.domain.model.Group
 import com.madteam.split.domain.model.Member
 import com.madteam.split.utils.network.Resource
@@ -24,16 +26,22 @@ class GroupRepositoryImpl @Inject constructor(
             image = "",
             bannerImage = "",
             createdDate = "",
-            members = listOf()
+            members = listOf(),
+            currency = Currency()
         )
     }
 
     override fun getNewGroup(): Group = newGroup
 
-    override fun setNameAndDescription(name: String, description: String) {
+    override fun setNameDescriptionAndCurrency(
+        name: String,
+        description: String,
+        currency: Currency?,
+    ) {
         newGroup = newGroup.copy(
             name = name,
-            description = description
+            description = description,
+            currency = currency ?: Currency("EUR", "€", "Euro")
         )
     }
 
@@ -48,7 +56,8 @@ class GroupRepositoryImpl @Inject constructor(
             val response = createGroupRemoteDataSource.createGroup(
                 name = newGroup.name,
                 description = newGroup.description,
-                members = newGroup.members
+                members = newGroup.members,
+                currency = newGroup.currency.currency
             )
             if (response is Resource.Success) {
                 newGroup = response.data
@@ -93,4 +102,10 @@ class GroupRepositoryImpl @Inject constructor(
     }
 
     override fun getCurrentGroup(): Int? = currentGroupId
+
+    override suspend fun getGroupExpenseTypes(
+        update: Boolean,
+    ): Resource<List<ExpenseType>> {
+        return createGroupDataSource.getGroupExpenseTypes(currentGroupId ?: 0, update)
+    }
 }

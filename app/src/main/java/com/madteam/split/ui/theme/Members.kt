@@ -5,6 +5,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
@@ -33,6 +35,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.madteam.split.R
+import com.madteam.split.domain.model.Currency
 import com.madteam.split.domain.model.Member
 
 @Composable
@@ -44,7 +47,9 @@ fun AddMembersHorizontalList(
     onMemberSelected: (Member) -> Unit = {},
 ) {
     LazyRow(
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        contentPadding = PaddingValues(start = 16.dp, end = 16.dp)
     ) {
         itemsIndexed(memberList) { _, member ->
             val memberIsSelected = memberSelected != null && memberSelected.name == member.name
@@ -196,6 +201,112 @@ fun MembersHorizontalList(
         item {
             Spacer(modifier = Modifier.size(8.dp))
         }
+    }
+}
+
+@OptIn(ExperimentalGlideComposeApi::class)
+@Composable
+fun MemberWithAmount(
+    member: Member,
+    isMemberHighLighted: Boolean,
+    amount: Double? = null,
+    currency: Currency,
+    onMemberClick: (Member) -> Unit,
+) {
+    val hexColor = member.color?.removePrefix("0x")?.toLong(16) ?: 0xFF000000
+    val gradientModifier = when (isMemberHighLighted) {
+        false -> Modifier
+            .size(120.dp)
+            .clip(CircleShape)
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        Color.Transparent,
+                        Color.Black
+                    )
+                )
+            )
+
+        true -> Modifier
+            .size(120.dp)
+            .clip(CircleShape)
+            .background(
+                color = SplitTheme.colors.primary.backgroundStrong.copy(
+                    alpha = 0.9f
+                )
+            )
+    }
+
+    ConstraintLayout(
+        modifier = Modifier
+            .shadow(
+                elevation = 8.dp,
+                shape = CircleShape
+            )
+    ) {
+        val (image, name, highlighted, amountPaid) = createRefs()
+        GlideImage(
+            model = member.profileImage,
+            contentDescription = stringResource(
+                id = R.string.user_profile_image_description
+            ),
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .constrainAs(image) {
+                    top.linkTo(parent.top)
+                    bottom.linkTo(parent.bottom)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                }
+                .size(120.dp)
+                .background(
+                    Color(hexColor),
+                    CircleShape
+                )
+                .clip(CircleShape)
+                .clickable {
+                    onMemberClick(member)
+                }
+        )
+        Box(
+            modifier = gradientModifier
+                .constrainAs(highlighted) {
+                    top.linkTo(image.top)
+                    start.linkTo(image.start)
+                    end.linkTo(image.end)
+                    bottom.linkTo(image.bottom)
+                }
+        )
+        if (amount != null) {
+            Row(
+                modifier = Modifier
+                    .constrainAs(amountPaid) {
+                        top.linkTo(parent.top, 16.dp)
+                        bottom.linkTo(name.top)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    }
+            ) {
+                AmountTextView(
+                    amount = amount,
+                    currency = currency
+                )
+            }
+        }
+        Text(
+            modifier = Modifier
+                .constrainAs(name) {
+                    start.linkTo(image.start)
+                    end.linkTo(image.end)
+                    bottom.linkTo(image.bottom, 30.dp)
+                },
+            text = member.name,
+            color = SplitTheme.colors.neutral.textExtraWeak,
+            textAlign = TextAlign.Center,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            style = SplitTheme.typography.heading.m
+        )
     }
 }
 

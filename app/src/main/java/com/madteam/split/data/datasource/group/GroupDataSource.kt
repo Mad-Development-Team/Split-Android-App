@@ -1,11 +1,16 @@
 package com.madteam.split.data.datasource.group
 
 import com.madteam.split.data.api.GroupApi
+import com.madteam.split.data.database.group.dao.ExpenseTypeDAO
 import com.madteam.split.data.database.group.dao.GroupDAO
+import com.madteam.split.data.database.group.entities.toDomainModel
 import com.madteam.split.data.mapper.group.toDomainModel
 import com.madteam.split.data.mapper.group.toEntity
 import com.madteam.split.data.mapper.member.toDtoList
 import com.madteam.split.data.model.request.CreateGroupDTO
+import com.madteam.split.data.model.response.toDomainModel
+import com.madteam.split.data.model.response.toEntity
+import com.madteam.split.domain.model.ExpenseType
 import com.madteam.split.domain.model.Group
 import com.madteam.split.domain.model.Member
 import com.madteam.split.utils.network.Resource
@@ -15,19 +20,22 @@ import javax.inject.Inject
 class GroupDataSource @Inject constructor(
     private val api: GroupApi,
     private val dao: GroupDAO,
+    private val expenseTypeDao: ExpenseTypeDAO,
 ) : GroupDataSourceContract.Remote, GroupDataSourceContract.Local {
 
     override suspend fun createGroup(
         name: String,
         description: String,
         members: List<Member>,
+        currency: String,
     ): Resource<Group> {
         try {
             val response = api.createGroup(
                 CreateGroupDTO(
                     groupName = name,
                     groupDescription = description,
-                    membersList = members.toDtoList()
+                    membersList = members.toDtoList(),
+                    currency = currency
                 )
             )
             return Resource.Success(response.toDomainModel())
@@ -119,5 +127,61 @@ class GroupDataSource @Inject constructor(
 
     override suspend fun updateUserGroup(group: Group) {
         dao.updateUserGroup(group.toEntity())
+    }
+
+    override suspend fun insertExpenseTypes(expenseTypes: List<ExpenseType>) {
+        expenseTypeDao.insertExpenseTypes(expenseTypes.map { it.toEntity() })
+    }
+
+    private suspend fun fetchExpenseTypesFromApi(groupId: Int): Resource<List<ExpenseType>> {
+        return try {
+            val response = api.getGroupExpenseTypes(groupId)
+            val expenseTypes = response.map { it.toDomainModel() }
+            expenseTypeDao.insertExpenseTypes(expenseTypes.map { it.toEntity() })
+            Resource.Success(expenseTypes)
+        } catch (e: HttpException) {
+            Resource.Error(
+                exception = Exception("Error"),
+                errorMessage = "Error trying to fetch expense types from API: ${e.message}"
+            )
+        }
+    }
+
+    private suspend fun fetchExpenseTypesFromLocal(): Resource<List<ExpenseType>> {
+        return try {
+            val expenseTypes = expenseTypeDao.getAllExpenseTypes()
+            if (expenseTypes.isEmpty()) {
+                Resource.Error(
+                    exception = Exception("Error"),
+                    errorMessage = "No expense types found in local database"
+                )
+            } else {
+                Resource.Success(expenseTypes.map { it.toDomainModel() })
+            }
+        } catch (e: Exception) {
+            Resource.Error(
+                exception = Exception("Error"),
+                errorMessage = "Error trying to fetch expense types from local database: ${e.message}"
+            )
+        }
+    }
+
+    override suspend fun getGroupExpenseTypes(
+        groupId: Int,
+        update: Boolean,
+    ): Resource<List<ExpenseType>> {
+        if (update) {
+            fetchExpenseTypesFromApi(groupId)
+        }
+        val localExpenseTypes = fetchExpenseTypesFromLocal()
+        return if (localExpenseTypes is Resource.Success && localExpenseTypes.data.isNotEmpty()) {
+            localExpenseTypes
+        } else {
+            fetchExpenseTypesFromApi(groupId)
+        }
+    }
+
+    override suspend fun deleteExpenseTypes() {
+        expenseTypeDao.deleteAllExpenseTypes()
     }
 }

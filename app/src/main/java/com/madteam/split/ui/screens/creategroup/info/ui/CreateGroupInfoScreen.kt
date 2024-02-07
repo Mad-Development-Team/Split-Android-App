@@ -1,5 +1,6 @@
 package com.madteam.split.ui.screens.creategroup.info.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,25 +18,30 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.madteam.split.R
+import com.madteam.split.domain.model.Currency
 import com.madteam.split.ui.navigation.Screens
 import com.madteam.split.ui.screens.creategroup.info.state.CreateGroupInfoUIEvent
 import com.madteam.split.ui.screens.creategroup.info.state.CreateGroupInfoUIState
 import com.madteam.split.ui.screens.creategroup.info.viewmodel.CreateGroupInfoViewModel
+import com.madteam.split.ui.theme.CurrenciesDialog
 import com.madteam.split.ui.theme.DSBasicTextField
+import com.madteam.split.ui.theme.ErrorDialog
+import com.madteam.split.ui.theme.LoadingDialog
 import com.madteam.split.ui.theme.PrimaryLargeButton
+import com.madteam.split.ui.theme.SmallEmojiButton
 import com.madteam.split.ui.theme.SplitTheme
+import com.madteam.split.utils.ui.getFlagByCurrency
 
 @Composable
 fun CreateGroupInfoScreen(
@@ -63,6 +69,17 @@ fun CreateGroupInfoScreen(
                 onNextClick = {
                     viewModel.onEvent(CreateGroupInfoUIEvent.OnNextClick)
                 },
+                onShowErrorDialogChanged = { showError ->
+                    viewModel.onEvent(CreateGroupInfoUIEvent.OnShowError(showError))
+                },
+                onShowCurrenciesDialog = { showCurrencyDialog ->
+                    viewModel.onEvent(
+                        CreateGroupInfoUIEvent.OnShowCurrencyDialog(showCurrencyDialog)
+                    )
+                },
+                onCurrencySelected = { currency ->
+                    viewModel.onEvent(CreateGroupInfoUIEvent.OnCurrencySelected(currency))
+                },
                 navigateTo = navController::navigate,
                 navigateBack = {
                     navController.popBackStack()
@@ -77,6 +94,9 @@ fun CreateGroupInfoScreenContent(
     state: CreateGroupInfoUIState,
     onGroupNameChanged: (String) -> Unit,
     onGroupDescriptionChanged: (String) -> Unit,
+    onShowCurrenciesDialog: (Boolean) -> Unit,
+    onShowErrorDialogChanged: (Boolean) -> Unit,
+    onCurrencySelected: (Currency) -> Unit,
     onNextClick: () -> Unit,
     navigateTo: (String) -> Unit,
     navigateBack: () -> Unit,
@@ -147,6 +167,35 @@ fun CreateGroupInfoScreenContent(
                 maxLines = 5,
                 imeAction = ImeAction.Done
             )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.select_a_currency),
+                        style = SplitTheme.typography.heading.xs,
+                        color = SplitTheme.colors.neutral.textTitle,
+                        textAlign = TextAlign.Start
+                    )
+                    Text(
+                        text = stringResource(id = R.string.select_a_currency_description),
+                        style = SplitTheme.typography.body.m,
+                        color = SplitTheme.colors.neutral.textBody,
+                        textAlign = TextAlign.Start,
+                    )
+                }
+                Spacer(modifier = Modifier.size(24.dp))
+                SmallEmojiButton(
+                    modifier = Modifier,
+                    image = getFlagByCurrency(state.currencySelected),
+                    onClick = {
+                        onShowCurrenciesDialog(true)
+                    },
+                )
+            }
             Spacer(modifier = Modifier.size(24.dp))
             PrimaryLargeButton(
                 onClick = {
@@ -158,12 +207,49 @@ fun CreateGroupInfoScreenContent(
             )
         }
     }
-}
 
-@Preview
-@Composable
-fun CreateGroupInfoScreenPreview() {
-    CreateGroupInfoScreen(
-        rememberNavController()
-    )
+    if (state.isLoading) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(SplitTheme.colors.neutral.backgroundHeavy.copy(alpha = 0.3f)),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            LoadingDialog()
+        }
+    }
+
+    if (state.isError) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(SplitTheme.colors.neutral.backgroundHeavy.copy(alpha = 0.3f)),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            ErrorDialog(
+                setShowDialog = {
+                    onShowErrorDialogChanged(it)
+                },
+                onContinueClick = {
+                    navigateBack()
+                }
+            )
+        }
+    }
+
+    if (state.showCurrencyDialog) {
+        CurrenciesDialog(
+            currencies = state.currencies,
+            onCurrencySelected = {
+                onCurrencySelected(it)
+            },
+            onConfirmCurrency = {
+                onShowCurrenciesDialog(false)
+            },
+            selectedCurrency = state.currencySelected,
+            onDismiss = { onShowCurrenciesDialog(false) }
+        )
+    }
 }

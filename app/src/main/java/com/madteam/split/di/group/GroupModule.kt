@@ -3,7 +3,9 @@ package com.madteam.split.di.group
 import android.content.SharedPreferences
 import com.madteam.split.data.api.GroupApi
 import com.madteam.split.data.config.LinksConstants
+import com.madteam.split.data.database.group.ExpenseTypeDatabase
 import com.madteam.split.data.database.group.GroupDatabase
+import com.madteam.split.data.database.group.dao.ExpenseTypeDAO
 import com.madteam.split.data.database.group.dao.GroupDAO
 import com.madteam.split.data.datasource.group.GroupDataSource
 import com.madteam.split.data.datasource.group.GroupDataSourceContract
@@ -58,5 +60,13 @@ object GroupModule {
         @Named("GroupDatabase") database: GroupDatabase,
     ): GroupDAO {
         return database.getGroupDao()
+    }
+
+    @Provides
+    @Singleton
+    fun providesExpenseTypeDao(
+        @Named("ExpenseTypeDatabase") database: ExpenseTypeDatabase,
+    ): ExpenseTypeDAO {
+        return database.getExpenseTypeDao()
     }
 }

@@ -65,6 +65,7 @@ class SplashViewModel @Inject constructor(
 
                 else -> {
                     deleteUserFromDatabase()
+                    onReadyToGo()
                 }
             }
         }

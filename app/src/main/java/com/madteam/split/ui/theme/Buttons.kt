@@ -2,16 +2,20 @@ package com.madteam.split.ui.theme
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.outlined.CalendarMonth
+import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
@@ -24,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -188,6 +193,124 @@ fun ElevatedIconButton(
             tint = SplitTheme.colors.neutral.iconHeavy
         )
     }
+}
+
+@Composable
+fun SmallSecondaryButton(
+    modifier: Modifier = Modifier,
+    icon: ImageVector? = null,
+    buttonText: Int,
+    enabled: Boolean = true,
+) {
+    ElevatedButton(
+        modifier = modifier,
+        elevation = ButtonDefaults.elevatedButtonElevation(
+            defaultElevation = 4.dp,
+            pressedElevation = 2.dp,
+            disabledElevation = 0.dp
+        ),
+        colors = ButtonDefaults.elevatedButtonColors(
+            containerColor = SplitTheme.colors.neutral.backgroundHeavy,
+            disabledContainerColor = SplitTheme.colors.neutral.backgroundMedium,
+            contentColor = SplitTheme.colors.neutral.textExtraWeak,
+            disabledContentColor = SplitTheme.colors.neutral.textExtraWeak
+        ),
+        onClick = {
+            //TODO: Add action
+        },
+        enabled = enabled
+    ) {
+        if (icon != null) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = SplitTheme.colors.neutral.iconExtraWeak
+            )
+            Spacer(modifier = Modifier.size(8.dp))
+        }
+        Text(
+            text = stringResource(id = buttonText),
+            style = SplitTheme.typography.body.l,
+        )
+    }
+}
+
+@Composable
+fun SmallEmojiButton(
+    modifier: Modifier = Modifier,
+    @DrawableRes image: Int,
+    onClick: () -> Unit,
+) {
+    Button(
+        modifier = modifier
+            .height(56.dp),
+        shape = RoundedCornerShape(20.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = SplitTheme.colors.secondary.backgroundMedium
+        ),
+        onClick = { onClick() }
+    ) {
+        Image(
+            modifier = Modifier.size(32.dp),
+            painter = painterResource(id = image),
+            contentScale = ContentScale.Crop,
+            contentDescription = null
+        )
+    }
+}
+
+@Composable
+fun BigIconButton(
+    modifier: Modifier = Modifier,
+    icon: ImageVector,
+    enabled: Boolean = true,
+    onClick: () -> Unit,
+) {
+    ElevatedButton(
+        modifier = modifier
+            .size(100.dp),
+        shape = RoundedCornerShape(20.dp),
+        elevation = ButtonDefaults.elevatedButtonElevation(
+            defaultElevation = 4.dp,
+            pressedElevation = 2.dp,
+            disabledElevation = 0.dp
+        ),
+        colors = ButtonDefaults.elevatedButtonColors(
+            containerColor = SplitTheme.colors.secondary.backgroundMedium,
+            disabledContainerColor = SplitTheme.colors.neutral.backgroundMedium,
+            contentColor = SplitTheme.colors.neutral.textHeavy,
+            disabledContentColor = SplitTheme.colors.neutral.textDisabled
+        ),
+        enabled = enabled,
+        onClick = { onClick() }
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            tint = SplitTheme.colors.neutral.iconHeavy
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SmallIconButtonPreview() {
+    SmallEmojiButton(
+        modifier = Modifier,
+        image = R.drawable.emoji_animals_nature_ant, //TODO: Change to emoji euro bill
+        onClick = {}
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SmallSecondaryButtonPreview() {
+    SmallSecondaryButton(
+        modifier = Modifier,
+        icon = Icons.Outlined.CalendarMonth,
+        buttonText = R.string.discard_changes,
+        enabled = true
+    )
 }
 
 @Preview

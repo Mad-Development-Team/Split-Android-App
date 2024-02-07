@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import com.madteam.split.data.database.converters.Converters
+import com.madteam.split.domain.model.Currency
 import com.madteam.split.domain.model.Member
 
 const val GROUP_TABLE_NAME = "group_table"
@@ -20,4 +21,5 @@ data class GroupEntity(
     @ColumnInfo(name = "members") var members: List<Member>,
     @ColumnInfo(name = "image") var image: String?,
     @ColumnInfo(name = "banner_image") var bannerImage: String?,
+    @ColumnInfo(name = "currency") var currency: Currency,
 )

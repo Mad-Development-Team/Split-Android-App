@@ -10,4 +10,6 @@ data class CreateGroupDTO(
     val groupDescription: String?,
     @SerializedName("membersList")
     val membersList: List<MemberDTO>,
+    @SerializedName("currency")
+    val currency: String,
 )

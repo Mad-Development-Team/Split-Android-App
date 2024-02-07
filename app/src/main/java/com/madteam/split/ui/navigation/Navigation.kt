@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.madteam.split.ui.screens.createexpense.ui.CreateExpenseScreen
 import com.madteam.split.ui.screens.creategroup.info.ui.CreateGroupInfoScreen
 import com.madteam.split.ui.screens.creategroup.invite.ui.CreateGroupInviteScreen
 import com.madteam.split.ui.screens.creategroup.members.ui.CreateGroupMembersScreen
@@ -375,10 +376,32 @@ fun Navigation() {
         composable(
             route = Screens.GroupExpensesScreen.route,
             enterTransition = {
-                EnterTransition.None
+                when (initialState.destination.route) {
+                    Screens.CreateExpenseScreen.route -> {
+                        slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Right,
+                            animationSpec = tween(DEFAULT_ANIMATION_DURATION_IN_MILLIS)
+                        )
+                    }
+
+                    else -> {
+                        EnterTransition.None
+                    }
+                }
             },
             exitTransition = {
-                ExitTransition.None
+                when (targetState.destination.route) {
+                    Screens.CreateExpenseScreen.route -> {
+                        slideOutOfContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Left,
+                            animationSpec = tween(DEFAULT_ANIMATION_DURATION_IN_MILLIS)
+                        )
+                    }
+
+                    else -> {
+                        ExitTransition.None
+                    }
+                }
             }
         ) {
             GroupExpensesScreen(navController = navController)
@@ -412,6 +435,24 @@ fun Navigation() {
             }
         ) {
             InviteCodeScreen(navController = navController)
+        }
+
+        composable(
+            route = Screens.CreateExpenseScreen.route,
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left,
+                    animationSpec = tween(DEFAULT_ANIMATION_DURATION_IN_MILLIS)
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Right,
+                    animationSpec = tween(DEFAULT_ANIMATION_DURATION_IN_MILLIS)
+                )
+            }
+        ) {
+            CreateExpenseScreen(navController = navController)
         }
     }
 }
