@@ -80,6 +80,10 @@ class GroupViewModel @Inject constructor(
         val localLastUpdated = datastore.getString(_state.value.currentGroupId.toString()) ?: "0"
         val needsUpdate = lastUpdated > localLastUpdated
         if (needsUpdate) {
+            //It works so when it needs update, it have to be updated
+            //the expenses of the group
+            //Then on GroupExpenses access to the common state to read the expenses
+            //and update the UI
             println("Needs update")
         }
     }
