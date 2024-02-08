@@ -39,7 +39,8 @@ object ExpenseModule {
         expenseDataSource: ExpenseDataSource,
     ): ExpenseRepository {
         return ExpenseRepositoryImpl(
-            remoteDataSource = expenseDataSource
+            remoteDataSource = expenseDataSource,
+            localDataSource = expenseDataSource
         )
     }
 }
