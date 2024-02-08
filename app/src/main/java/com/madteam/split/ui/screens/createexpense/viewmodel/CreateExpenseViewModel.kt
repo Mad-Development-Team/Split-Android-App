@@ -3,6 +3,7 @@ package com.madteam.split.ui.screens.createexpense.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.madteam.split.data.repository.currency.CurrencyRepository
+import com.madteam.split.data.repository.expense.ExpenseRepository
 import com.madteam.split.data.repository.group.GroupRepository
 import com.madteam.split.data.repository.user.UserRepository
 import com.madteam.split.domain.model.Currency
@@ -26,6 +27,7 @@ class CreateExpenseViewModel @Inject constructor(
     private val groupRepository: GroupRepository,
     private val userRepository: UserRepository,
     private val currencyRepository: CurrencyRepository,
+    private val expenseRepository: ExpenseRepository,
 ) : ViewModel() {
 
     private val _state: MutableStateFlow<CreateExpenseUIState> =
@@ -92,7 +94,50 @@ class CreateExpenseViewModel @Inject constructor(
             is CreateExpenseUIEvent.OnExpenseTypeCreated -> {
                 onExpenseTypeCreated(event.expenseType)
             }
+
+            is CreateExpenseUIEvent.OnCreateExpense -> {
+                onCreateExpense()
+            }
+
+            is CreateExpenseUIEvent.OnErrorDialogShowChanged -> {
+                showErrorDialog(event.show)
+            }
         }
+    }
+
+    private fun onCreateExpense() {
+        viewModelScope.launch {
+            showLoading(true)
+            val response = expenseRepository.createGroupExpense(
+                _state.value.newExpense
+            )
+            when (response) {
+                is Resource.Success -> {
+                    showLoading(false)
+                }
+
+                is Resource.Error -> {
+                    showLoading(false)
+                    showErrorDialog(true)
+                }
+
+                else -> {
+                    showLoading(false)
+                }
+            }
+        }
+    }
+
+    private fun showErrorDialog(state: Boolean) {
+        _state.value = _state.value.copy(
+            showErrorDialog = state
+        )
+    }
+
+    private fun showLoading(state: Boolean) {
+        _state.value = _state.value.copy(
+            isLoading = state
+        )
     }
 
     private fun onExpenseTypeCreated(expenseType: ExpenseType) {

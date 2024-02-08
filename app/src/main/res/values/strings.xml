@@ -165,4 +165,5 @@
   <string name="category_name">Category name</string>
   <string name="create_group_category">Create category</string>
   <string name="go_back_categories">Go back to categories</string>
+  <string name="missing_fields_create_expense">There are missing fields remaining. Make sure you\'ve introduced a title, an amount, paid by and for whom is the expense.</string>
 </resources>

@@ -20,4 +20,6 @@ data class CreateExpenseUIState(
     val currencySelected: Currency = Currency("EUR", "Euro", "€"),
     val showExpenseTypeDialog: Boolean = false,
     val groupExpenseTypes: List<ExpenseType> = emptyList(),
+    val isLoading: Boolean = false,
+    val showErrorDialog: Boolean = false,
 )

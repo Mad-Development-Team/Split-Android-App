@@ -1,5 +1,7 @@
 package com.madteam.split.ui.screens.createexpense.ui
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -51,7 +53,10 @@ import com.madteam.split.ui.theme.DSBasicTextField
 import com.madteam.split.ui.theme.DSCurrencyTextField
 import com.madteam.split.ui.theme.DSDatePickerTextField
 import com.madteam.split.ui.theme.DefaultFloatingButton
+import com.madteam.split.ui.theme.ErrorDialog
 import com.madteam.split.ui.theme.ExpenseTypeDialog
+import com.madteam.split.ui.theme.InfoMessage
+import com.madteam.split.ui.theme.LoadingDialog
 import com.madteam.split.ui.theme.SmallEmojiButton
 import com.madteam.split.ui.theme.SplitTheme
 import com.madteam.split.utils.ui.BackPressHandler
@@ -73,14 +78,22 @@ fun CreateExpenseScreen(
     }
 
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val isAbleToCreateExpense = !state.isLoading && !state.isTitleError && !state.isAmountError &&
+        state.newExpense.paidBy.isNotEmpty() && state.newExpense.forWhom.isNotEmpty()
 
     Scaffold(
         containerColor = SplitTheme.colors.neutral.backgroundExtraWeak,
         floatingActionButton = {
-            DefaultFloatingButton(
-                icon = Icons.Outlined.Done,
-                onClick = {}
-            )
+            if (isAbleToCreateExpense) {
+                DefaultFloatingButton(
+                    icon = Icons.Outlined.Done,
+                    onClick = {
+                        viewModel.onEvent(
+                            CreateExpenseUIEvent.OnCreateExpense
+                        )
+                    }
+                )
+            }
         },
     ) {
         Box(
@@ -90,6 +103,7 @@ fun CreateExpenseScreen(
         ) {
             CreateExpenseContent(
                 state = state,
+                isAbleToCreateExpense = isAbleToCreateExpense,
                 onExpenseTitleChanged = { title ->
                     viewModel.onEvent(
                         CreateExpenseUIEvent.OnTitleChanged(title)
@@ -155,6 +169,11 @@ fun CreateExpenseScreen(
                         CreateExpenseUIEvent.OnExpenseTypeCreated(expenseType)
                     )
                 },
+                onErrorDialogShowChanged = { show ->
+                    viewModel.onEvent(
+                        CreateExpenseUIEvent.OnErrorDialogShowChanged(show)
+                    )
+                },
                 popUpBack = {
                     navController.navigateWithPopUpTo(
                         route = Screens.GroupExpensesScreen.route,
@@ -171,6 +190,7 @@ fun CreateExpenseScreen(
 @Composable
 fun CreateExpenseContent(
     state: CreateExpenseUIState,
+    isAbleToCreateExpense: Boolean,
     onExpenseTitleChanged: (String) -> Unit,
     onExpenseDescriptionChanged: (String) -> Unit,
     onExpenseAmountChanged: (Double) -> Unit,
@@ -184,6 +204,7 @@ fun CreateExpenseContent(
     onShowExpenseTypeDialog: (Boolean) -> Unit,
     onExpenseTypeSelected: (ExpenseType) -> Unit,
     onExpenseTypeCreated: (ExpenseType) -> Unit,
+    onErrorDialogShowChanged: (Boolean) -> Unit,
     popUpBack: () -> Unit,
 ) {
     Column(
@@ -358,7 +379,15 @@ fun CreateExpenseContent(
                 onAllMembersNeedsToPaySelected()
             }
         )
-        Spacer(modifier = Modifier.size(16.dp))
+        Spacer(modifier = Modifier.size(24.dp))
+        AnimatedVisibility(visible = !isAbleToCreateExpense) {
+            InfoMessage(
+                modifier = Modifier
+                    .padding(horizontal = 24.dp),
+                messageText = R.string.missing_fields_create_expense
+            )
+        }
+        Spacer(modifier = Modifier.size(24.dp))
     }
 
     if (state.showDatePickerDialog) {
@@ -478,6 +507,29 @@ fun CreateExpenseContent(
             },
             groupId = state.groupInfo.id,
             selectedExpenseType = state.newExpense.type
+        )
+    }
+
+    if (state.isLoading) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(SplitTheme.colors.neutral.backgroundHeavy.copy(alpha = 0.3f)),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            LoadingDialog()
+        }
+    }
+
+    if (state.showErrorDialog) {
+        ErrorDialog(
+            setShowDialog = {
+                onErrorDialogShowChanged(it)
+            },
+            onContinueClick = {
+                onErrorDialogShowChanged(false)
+            }
         )
     }
 }

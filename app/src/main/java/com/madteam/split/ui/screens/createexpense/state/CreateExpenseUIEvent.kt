@@ -16,5 +16,7 @@ sealed class CreateExpenseUIEvent {
     data class OnExpenseTypeDialogShowChanged(val show: Boolean) : CreateExpenseUIEvent()
     data class OnExpenseTypeSelected(val expenseType: ExpenseType) : CreateExpenseUIEvent()
     data class OnExpenseTypeCreated(val expenseType: ExpenseType) : CreateExpenseUIEvent()
+    data class OnErrorDialogShowChanged(val show: Boolean) : CreateExpenseUIEvent()
     data object OnAllMembersNeedsToPaySelected : CreateExpenseUIEvent()
+    data object OnCreateExpense : CreateExpenseUIEvent()
 }
