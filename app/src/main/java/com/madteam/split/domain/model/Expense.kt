@@ -1,5 +1,8 @@
 package com.madteam.split.domain.model
 
+import com.madteam.split.data.database.expense.entity.ExpenseEntity
+import com.madteam.split.data.model.request.ExpenseDTO
+
 data class Expense(
     val id: Int,
     val title: String,
@@ -34,3 +37,33 @@ data class Expense(
         currency = Currency()
     )
 }
+
+fun Expense.toDto() = ExpenseDTO(
+    id = id,
+    title = title,
+    description = description,
+    totalAmount = totalAmount,
+    type = type.toDto(),
+    paidBy = paidBy.toDTO(),
+    forWhom = forWhom.toDTO(),
+    images = images,
+    paymentMethod = paymentMethod,
+    date = date,
+    group = group,
+    currency = currency.toDto()
+)
+
+fun Expense.toEntity() = ExpenseEntity(
+    id = id,
+    title = title,
+    description = description,
+    totalAmount = totalAmount,
+    type = type,
+    paidBy = paidBy,
+    forWhom = forWhom,
+    images = images,
+    paymentMethod = paymentMethod,
+    date = date,
+    group = group,
+    currency = currency
+)
