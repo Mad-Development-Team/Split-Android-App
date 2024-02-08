@@ -4,6 +4,7 @@ import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.madteam.split.domain.model.Currency
+import com.madteam.split.domain.model.ExpenseType
 import com.madteam.split.domain.model.Member
 import com.madteam.split.domain.model.MemberExpense
 import com.madteam.split.domain.model.PaidByExpense
@@ -76,6 +77,20 @@ class Converters {
     fun toStringList(value: String): List<String> {
         val gson = Gson()
         val type = object : TypeToken<List<String>>() {}.type
+        return gson.fromJson(value, type)
+    }
+
+    @TypeConverter
+    fun fromExpenseType(value: ExpenseType): String {
+        val gson = Gson()
+        val type = object : TypeToken<ExpenseType>() {}.type
+        return gson.toJson(value, type)
+    }
+
+    @TypeConverter
+    fun toExpenseType(value: String): ExpenseType {
+        val gson = Gson()
+        val type = object : TypeToken<ExpenseType>() {}.type
         return gson.fromJson(value, type)
     }
 }

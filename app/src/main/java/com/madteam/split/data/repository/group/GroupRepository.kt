@@ -1,8 +1,6 @@
 package com.madteam.split.data.repository.group
 
-import com.madteam.split.domain.model.Balance
 import com.madteam.split.domain.model.Currency
-import com.madteam.split.domain.model.Expense
 import com.madteam.split.domain.model.ExpenseType
 import com.madteam.split.domain.model.Group
 import com.madteam.split.domain.model.Member
@@ -23,7 +21,5 @@ interface GroupRepository {
         update: Boolean = false,
     ): Resource<List<ExpenseType>>
 
-    suspend fun createGroupExpense(
-        newExpense: Expense,
-    ): Resource<List<Balance>>
+    suspend fun deleteAllGroups()
 }

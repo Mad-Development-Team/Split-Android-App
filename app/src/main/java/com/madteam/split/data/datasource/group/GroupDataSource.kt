@@ -8,16 +8,11 @@ import com.madteam.split.data.mapper.group.toDomainModel
 import com.madteam.split.data.mapper.group.toEntity
 import com.madteam.split.data.mapper.member.toDtoList
 import com.madteam.split.data.model.request.CreateGroupDTO
-import com.madteam.split.data.model.response.toDomain
 import com.madteam.split.data.model.response.toDomainModel
 import com.madteam.split.data.model.response.toEntity
-import com.madteam.split.domain.model.Balance
-import com.madteam.split.domain.model.Expense
 import com.madteam.split.domain.model.ExpenseType
 import com.madteam.split.domain.model.Group
 import com.madteam.split.domain.model.Member
-import com.madteam.split.domain.model.toDto
-import com.madteam.split.domain.model.toEntity
 import com.madteam.split.utils.network.Resource
 import retrofit2.HttpException
 import javax.inject.Inject
@@ -53,23 +48,6 @@ class GroupDataSource @Inject constructor(
         return Resource.Error(
             exception = Exception("Error"),
             errorMessage = "Error trying to create new group"
-        )
-    }
-
-    override suspend fun createGroupExpense(newExpense: Expense): Resource<List<Balance>> {
-        try {
-            val response = api.createGroupExpense(newExpense.toDto())
-            dao.insertGroupExpense(newExpense.toEntity())
-            return Resource.Success(response.toDomain())
-        } catch (e: HttpException) {
-            Resource.Error(
-                exception = Exception("Error"),
-                errorMessage = "Error trying to create new expense: ${e.message}"
-            )
-        }
-        return Resource.Error(
-            exception = Exception("Error"),
-            errorMessage = "Error trying to create new expense"
         )
     }
 

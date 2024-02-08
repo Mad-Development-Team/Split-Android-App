@@ -64,6 +64,6 @@ fun Expense.toEntity() = ExpenseEntity(
     images = images,
     paymentMethod = paymentMethod,
     date = date,
-    group = group,
+    groupId = group,
     currency = currency
 )

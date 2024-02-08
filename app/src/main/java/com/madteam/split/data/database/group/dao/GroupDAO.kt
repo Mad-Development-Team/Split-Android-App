@@ -5,7 +5,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.madteam.split.data.database.expense.entity.ExpenseEntity
 import com.madteam.split.data.database.group.entities.GROUP_TABLE_NAME
 import com.madteam.split.data.database.group.entities.GroupEntity
 
@@ -34,21 +33,4 @@ interface GroupDAO {
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateUserGroup(group: GroupEntity)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertGroupExpense(expense: ExpenseEntity)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertGroupExpenses(expenses: List<ExpenseEntity>) {
-        expenses.forEach { insertGroupExpense(it) }
-    }
-
-    @Query("SELECT * FROM $GROUP_TABLE_NAME WHERE id = :groupId")
-    suspend fun getGroupExpenses(groupId: Int): List<ExpenseEntity>
-
-    @Query("DELETE FROM $GROUP_TABLE_NAME WHERE id = :groupId")
-    suspend fun deleteGroupExpenses(groupId: Int)
-
-    @Query("DELETE FROM $GROUP_TABLE_NAME")
-    suspend fun deleteAllGroupExpenses()
 }

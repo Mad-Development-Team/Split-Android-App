@@ -188,6 +188,7 @@ class CreateExpenseViewModel @Inject constructor(
             _state.value.newExpense.totalAmount / _state.value.needsToPaySelectedMember.size
         val needsToPayList = _state.value.needsToPaySelectedMember.map { memberId ->
             MemberExpense(
+                expenseId = 0,
                 memberId = memberId,
                 amount = amountPerMember
             )
@@ -204,6 +205,7 @@ class CreateExpenseViewModel @Inject constructor(
             _state.value.newExpense.totalAmount / _state.value.paidBySelectedMembers.size
         val paidByList = _state.value.paidBySelectedMembers.map { memberId ->
             PaidByExpense(
+                expenseId = 0,
                 memberId = memberId,
                 paidAmount = amountPerMember
             )

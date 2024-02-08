@@ -1,9 +1,7 @@
 package com.madteam.split.data.repository.group
 
 import com.madteam.split.data.datasource.group.GroupDataSourceContract
-import com.madteam.split.domain.model.Balance
 import com.madteam.split.domain.model.Currency
-import com.madteam.split.domain.model.Expense
 import com.madteam.split.domain.model.ExpenseType
 import com.madteam.split.domain.model.Group
 import com.madteam.split.domain.model.Member
@@ -111,22 +109,8 @@ class GroupRepositoryImpl @Inject constructor(
         return groupDataSource.getGroupExpenseTypes(currentGroupId ?: 0, update)
     }
 
-    override suspend fun createGroupExpense(newExpense: Expense): Resource<List<Balance>> {
-        return try {
-            val response = groupRemoteDataSource.createGroupExpense(newExpense)
-            return if (response is Resource.Success) {
-                Resource.Success(response.data)
-            } else {
-                Resource.Error(
-                    exception = Exception("Error"),
-                    errorMessage = "Error trying to create new expense"
-                )
-            }
-        } catch (e: Exception) {
-            Resource.Error(
-                exception = Exception("Error"),
-                errorMessage = "Error trying to create new expense: ${e.message}"
-            )
-        }
+    override suspend fun deleteAllGroups() {
+        groupDataSource.deleteAllUserGroups()
+        groupDataSource.deleteExpenseTypes()
     }
 }

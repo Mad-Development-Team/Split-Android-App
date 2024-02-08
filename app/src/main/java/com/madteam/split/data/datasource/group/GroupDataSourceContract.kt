@@ -1,7 +1,5 @@
 package com.madteam.split.data.datasource.group
 
-import com.madteam.split.domain.model.Balance
-import com.madteam.split.domain.model.Expense
 import com.madteam.split.domain.model.ExpenseType
 import com.madteam.split.domain.model.Group
 import com.madteam.split.domain.model.Member
@@ -16,10 +14,6 @@ interface GroupDataSourceContract {
             members: List<Member>,
             currency: String,
         ): Resource<Group>
-
-        suspend fun createGroupExpense(
-            newExpense: Expense,
-        ): Resource<List<Balance>>
     }
 
     interface Local {
