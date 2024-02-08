@@ -22,4 +22,5 @@ data class CreateExpenseUIState(
     val groupExpenseTypes: List<ExpenseType> = emptyList(),
     val isLoading: Boolean = false,
     val showErrorDialog: Boolean = false,
+    val expenseCreatedSuccessfully: Boolean = false,
 )

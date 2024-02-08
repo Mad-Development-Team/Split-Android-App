@@ -108,12 +108,19 @@ class CreateExpenseViewModel @Inject constructor(
     private fun onCreateExpense() {
         viewModelScope.launch {
             showLoading(true)
+            val expenseToCreate = _state.value.newExpense.copy(
+                currency = _state.value.currencySelected,
+                group = _state.value.groupInfo.id
+            )
             val response = expenseRepository.createGroupExpense(
-                _state.value.newExpense
+                expenseToCreate
             )
             when (response) {
                 is Resource.Success -> {
                     showLoading(false)
+                    _state.value = _state.value.copy(
+                        expenseCreatedSuccessfully = true
+                    )
                 }
 
                 is Resource.Error -> {
