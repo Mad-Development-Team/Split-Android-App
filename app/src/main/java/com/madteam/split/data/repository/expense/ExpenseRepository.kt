@@ -10,5 +10,9 @@ interface ExpenseRepository {
         newExpense: Expense,
     ): Resource<List<Balance>>
 
+    suspend fun getGroupExpenses(
+        groupId: Int,
+    ): Resource<List<Expense>>
+
     suspend fun deleteAllExpenses()
 }

@@ -97,6 +97,7 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.storage)
+    implementation(libs.firebase.database)
 
     testImplementation(libs.junit)
     testImplementation(libs.mockk)

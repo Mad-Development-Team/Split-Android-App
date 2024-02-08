@@ -127,9 +127,9 @@ fun GroupExpensesContent(
     ) {
         GroupExpensesSummarySection(
             values = mapOf(
-                R.string.last_day_expenses to 123.45,
-                R.string.total_expenses to 3461.33,
-                R.string.last_week_expenses to 456.0,
+                R.string.last_day_expenses to 0.0,
+                R.string.total_expenses to 0.0,
+                R.string.last_week_expenses to 0.0,
             ),
             currency = "€"
         )

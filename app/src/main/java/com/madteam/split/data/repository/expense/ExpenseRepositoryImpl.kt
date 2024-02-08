@@ -30,6 +30,10 @@ class ExpenseRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getGroupExpenses(groupId: Int): Resource<List<Expense>> {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun deleteAllExpenses() {
         localDataSource.deleteAllExpenses()
     }
