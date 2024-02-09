@@ -8,4 +8,5 @@ data class GroupUIState(
     val userGroups: List<Group> = listOf(),
     val isLoading: Boolean = false,
     val groupExpenses: List<Expense> = listOf(),
+    val errorRetrievingExpenses: Boolean = false,
 )

@@ -34,22 +34,28 @@ class GroupViewModel @Inject constructor(
     init {
         getUserGroups()
         getCurrentGroup()
-        getGroupExpenses()
+        getGroupExpenses(update = false)
         resetLastTimeGroupUpdatedFromLocalToZero()
         obtainLastTimeGroupUpdated()
     }
 
-    private fun getGroupExpenses() {
+    private fun getGroupExpenses(update: Boolean) {
         viewModelScope.launch {
             isLoadingState(true)
-            val groupExpenses = expenseRepository.getGroupExpenses(_state.value.currentGroupId!!)
+            val groupExpenses = expenseRepository.getGroupExpenses(
+                groupId = _state.value.currentGroupId!!,
+                update = update
+            )
             if (groupExpenses is Resource.Success) {
                 _state.value = _state.value.copy(
                     groupExpenses = groupExpenses.data
                 )
             } else {
-                //Some error ocurred, handle it
+                _state.value = _state.value.copy(
+                    errorRetrievingExpenses = true
+                )
             }
+            isLoadingState(false)
         }
     }
 
@@ -103,11 +109,16 @@ class GroupViewModel @Inject constructor(
         val localLastUpdated = datastore.getString(_state.value.currentGroupId.toString()) ?: "0"
         val needsUpdate = lastUpdated > localLastUpdated
         if (needsUpdate) {
-            //It works so when it needs update, it have to be updated
-            //the expenses of the group
-            //Then on GroupExpenses access to the common state to read the expenses
-            //and update the UI
-            println("Needs update")
+            getGroupExpenses(update = true)
+            updateDatastoreLastUpdatedIfNoError(lastUpdated)
+        }
+    }
+
+    private fun updateDatastoreLastUpdatedIfNoError(lastUpdated: String) {
+        viewModelScope.launch {
+            if (lastUpdated != "0" && !_state.value.errorRetrievingExpenses) {
+                datastore.saveString(_state.value.currentGroupId.toString(), lastUpdated)
+            }
         }
     }
 
