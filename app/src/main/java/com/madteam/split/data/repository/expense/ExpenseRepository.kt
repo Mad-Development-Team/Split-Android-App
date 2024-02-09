@@ -12,6 +12,7 @@ interface ExpenseRepository {
 
     suspend fun getGroupExpenses(
         groupId: Int,
+        update: Boolean = false,
     ): Resource<List<Expense>>
 
     suspend fun deleteAllExpenses()

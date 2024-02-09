@@ -30,8 +30,22 @@ class ExpenseRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getGroupExpenses(groupId: Int): Resource<List<Expense>> {
-        TODO("Not yet implemented")
+    override suspend fun getGroupExpenses(
+        groupId: Int,
+        update: Boolean,
+    ): Resource<List<Expense>> {
+        return if (update) {
+            try {
+                remoteDataSource.getGroupExpensesFromRemote(groupId)
+            } catch (e: Exception) {
+                Resource.Error(
+                    exception = Exception("Error"),
+                    errorMessage = "Error trying to get group expenses: ${e.message}"
+                )
+            }
+        } else {
+            return localDataSource.getGroupExpensesFromLocal(groupId)
+        }
     }
 
     override suspend fun deleteAllExpenses() {

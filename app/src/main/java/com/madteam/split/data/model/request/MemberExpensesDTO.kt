@@ -1,6 +1,7 @@
 package com.madteam.split.data.model.request
 
 import com.google.gson.annotations.SerializedName
+import com.madteam.split.domain.model.MemberExpense
 
 data class MemberExpensesDTO(
     @SerializedName("memberId")
@@ -10,3 +11,11 @@ data class MemberExpensesDTO(
     @SerializedName("amount")
     val amount: Double,
 )
+
+fun MemberExpensesDTO.toModel() = MemberExpense(
+    memberId = memberId,
+    expenseId = expenseId,
+    amount = amount
+)
+
+fun List<MemberExpensesDTO>.toModel() = map { it.toModel() }

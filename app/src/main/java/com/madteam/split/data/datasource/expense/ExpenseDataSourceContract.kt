@@ -11,9 +11,12 @@ interface ExpenseDataSourceContract {
         suspend fun createGroupExpense(
             newExpense: Expense,
         ): Resource<List<Balance>>
+
+        suspend fun getGroupExpensesFromRemote(groupId: Int): Resource<List<Expense>>
     }
 
     interface Local {
         suspend fun deleteAllExpenses()
+        suspend fun getGroupExpensesFromLocal(groupId: Int): Resource<List<Expense>>
     }
 }

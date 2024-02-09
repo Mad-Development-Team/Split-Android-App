@@ -2,6 +2,7 @@ package com.madteam.split.data.api
 
 import com.madteam.split.data.config.EndpointsConstants.CREATE_GROUP
 import com.madteam.split.data.config.EndpointsConstants.CREATE_GROUP_EXPENSE
+import com.madteam.split.data.config.EndpointsConstants.GET_GROUP_EXPENSES
 import com.madteam.split.data.config.EndpointsConstants.GET_GROUP_EXPENSE_TYPES
 import com.madteam.split.data.config.EndpointsConstants.GET_USER_GROUPS
 import com.madteam.split.data.model.request.CreateGroupDTO
@@ -33,4 +34,9 @@ interface GroupApi {
     suspend fun getGroupExpenseTypes(
         @Query("groupId") groupId: Int,
     ): List<ExpenseTypeDTO>
+
+    @GET(GET_GROUP_EXPENSES)
+    suspend fun getGroupExpenses(
+        @Query("groupId") groupId: Int,
+    ): List<ExpenseDTO>
 }

@@ -7,6 +7,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.madteam.split.data.repository.datastore.DatastoreManager
+import com.madteam.split.data.repository.expense.ExpenseRepository
 import com.madteam.split.data.repository.group.GroupRepository
 import com.madteam.split.ui.screens.group.state.GroupUIState
 import com.madteam.split.utils.network.Resource
@@ -21,6 +22,7 @@ class GroupViewModel @Inject constructor(
     private val groupRepository: GroupRepository,
     private val realtime: FirebaseDatabase,
     private val datastore: DatastoreManager,
+    private val expenseRepository: ExpenseRepository,
 ) : ViewModel() {
 
     private val _state: MutableStateFlow<GroupUIState> = MutableStateFlow(GroupUIState())
@@ -32,13 +34,34 @@ class GroupViewModel @Inject constructor(
     init {
         getUserGroups()
         getCurrentGroup()
+        getGroupExpenses()
         resetLastTimeGroupUpdatedFromLocalToZero()
         obtainLastTimeGroupUpdated()
+    }
+
+    private fun getGroupExpenses() {
+        viewModelScope.launch {
+            isLoadingState(true)
+            val groupExpenses = expenseRepository.getGroupExpenses(_state.value.currentGroupId!!)
+            if (groupExpenses is Resource.Success) {
+                _state.value = _state.value.copy(
+                    groupExpenses = groupExpenses.data
+                )
+            } else {
+                //Some error ocurred, handle it
+            }
+        }
     }
 
     private fun getCurrentGroup() {
         _state.value = _state.value.copy(
             currentGroupId = groupRepository.getCurrentGroup()
+        )
+    }
+
+    private fun isLoadingState(state: Boolean) {
+        _state.value = _state.value.copy(
+            isLoading = state
         )
     }
 
