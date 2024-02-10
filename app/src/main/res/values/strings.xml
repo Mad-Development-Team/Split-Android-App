@@ -167,4 +167,7 @@
   <string name="go_back_categories">Go back to categories</string>
   <string name="missing_fields_create_expense">There are missing fields remaining. Make sure you\'ve introduced a title, an amount, paid by and for whom is the expense.</string>
   <string name="expense_type_icon">Expense type icon</string>
+  <string name="for_label">For</string>
+  <string name="today">Today</string>
+  <string name="yesterday">Yesterday</string>
 </resources>

@@ -9,6 +9,7 @@ import com.google.firebase.database.ValueEventListener
 import com.madteam.split.data.repository.datastore.DatastoreManager
 import com.madteam.split.data.repository.expense.ExpenseRepository
 import com.madteam.split.data.repository.group.GroupRepository
+import com.madteam.split.domain.model.Group
 import com.madteam.split.ui.screens.group.state.GroupUIState
 import com.madteam.split.utils.network.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -61,7 +62,9 @@ class GroupViewModel @Inject constructor(
 
     private fun getCurrentGroup() {
         _state.value = _state.value.copy(
-            currentGroupId = groupRepository.getCurrentGroup()
+            currentGroupId = groupRepository.getCurrentGroup(),
+            currentGroup = _state.value.userGroups.find { it.id == _state.value.currentGroupId }
+                ?: Group()
         )
     }
 

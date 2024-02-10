@@ -39,6 +39,7 @@ class ExpenseDataSource @Inject constructor(
         try {
             val response = api.getGroupExpenses(groupId)
             if (response.isNotEmpty()) {
+                dao.deleteAllGroupExpenses()
                 dao.insertGroupExpenses(response.toEntity())
                 return Resource.Success(response.toDomainModel())
             }

@@ -6,6 +6,7 @@ import com.madteam.split.domain.model.Group
 data class GroupUIState(
     val currentGroupId: Int? = null,
     val userGroups: List<Group> = listOf(),
+    val currentGroup: Group = Group(),
     val isLoading: Boolean = false,
     val groupExpenses: List<Expense> = listOf(),
     val errorRetrievingExpenses: Boolean = false,

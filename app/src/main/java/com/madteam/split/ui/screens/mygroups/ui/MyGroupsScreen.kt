@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
@@ -28,9 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
@@ -38,7 +35,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -50,7 +46,6 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.madteam.split.R
 import com.madteam.split.domain.model.Group
-import com.madteam.split.domain.model.Member
 import com.madteam.split.domain.model.User
 import com.madteam.split.ui.navigation.Screens
 import com.madteam.split.ui.screens.mygroups.state.MyGroupsUIEvent
@@ -58,6 +53,7 @@ import com.madteam.split.ui.screens.mygroups.state.MyGroupsUIState
 import com.madteam.split.ui.screens.mygroups.viewmodel.MyGroupsViewModel
 import com.madteam.split.ui.theme.GroupSettingsModalBottomSheet
 import com.madteam.split.ui.theme.InfoMessage
+import com.madteam.split.ui.theme.MembersListItemList
 import com.madteam.split.ui.theme.PrimaryLargeButton
 import com.madteam.split.ui.theme.ProfileImage
 import com.madteam.split.ui.theme.SecondaryLargeButton
@@ -349,65 +345,5 @@ private fun GroupListItem(
             }
         }
 
-    }
-}
-
-@OptIn(ExperimentalGlideComposeApi::class)
-@Composable
-fun MembersListItemList(
-    modifier: Modifier = Modifier,
-    members: List<Member>,
-) {
-    Row(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy((-8).dp)
-    ) {
-        members.forEachIndexed { _, member ->
-            Box(
-                modifier = Modifier
-                    .shadow(
-                        elevation = 4.dp,
-                        shape = CircleShape
-                    )
-                    .background(
-                        color = SplitTheme.colors.secondary.backgroundMedium,
-                        shape = CircleShape
-                    )
-                    .size(24.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Row(
-                    modifier = Modifier,
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    if (!member.profileImage.isNullOrBlank()) {
-                        GlideImage(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .clip(CircleShape),
-                            model = member.profileImage,
-                            contentDescription = stringResource(
-                                id = R.string.user_profile_image_description
-                            ),
-                            contentScale = ContentScale.Crop,
-                        )
-                    } else {
-                        Text(
-                            text = member.name.firstOrNull().toString().uppercase(),
-                            style = SplitTheme.typography.heading.xxs,
-                            color = SplitTheme.colors.neutral.textTitle,
-                            modifier = Modifier
-                                .clip(CircleShape)
-                                .background(
-                                    color = SplitTheme.colors.secondary.backgroundMedium,
-                                    shape = CircleShape
-                                ),
-                            textAlign = TextAlign.Center
-                        )
-                    }
-                }
-            }
-        }
     }
 }
