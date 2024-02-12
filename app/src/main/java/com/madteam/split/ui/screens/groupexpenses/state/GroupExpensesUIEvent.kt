@@ -7,4 +7,5 @@ sealed class GroupExpensesUIEvent {
     data class ShowCategoryFilterDialog(val show: Boolean) : GroupExpensesUIEvent()
     data class SelectedCategoriesFilter(val selectedCategories: List<ExpenseType>) :
         GroupExpensesUIEvent()
+    data object OnClearFilters : GroupExpensesUIEvent()
 }

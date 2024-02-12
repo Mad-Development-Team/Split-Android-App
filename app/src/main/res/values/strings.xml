@@ -178,4 +178,5 @@
   <string name="time_to_spent">Nothing here... ¡Time to spend!</string>
   <string name="filter_by_categories">Filter by categories</string>
   <string name="apply">Apply</string>
+  <string name="clear">Clear</string>
 </resources>

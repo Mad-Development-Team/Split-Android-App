@@ -164,6 +164,11 @@ fun GroupExpensesScreen(
                             selectedCategories
                         )
                     )
+                },
+                onClearFilters = {
+                    viewModel.onEvent(
+                        GroupExpensesUIEvent.OnClearFilters
+                    )
                 }
             )
         }
@@ -177,6 +182,7 @@ fun GroupExpensesContent(
     retryUpdateExpenses: () -> Unit,
     onFilterByCategoriesDialogShow: (Boolean) -> Unit,
     onFilterByCategoriesSelected: (List<ExpenseType>) -> Unit,
+    onClearFilters: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -218,6 +224,18 @@ fun GroupExpensesContent(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             contentPadding = PaddingValues(start = 16.dp, end = 16.dp)
         ) {
+            if (state.isAnyFilterActive) {
+                item {
+                    SmallSecondaryButton(
+                        buttonText = R.string.clear,
+                        icon = null,
+                        enabled = true,
+                        onClick = {
+                            onClearFilters()
+                        }
+                    )
+                }
+            }
             itemsIndexed(state.availableFilters) { _, filter ->
                 SmallSecondaryButton(
                     buttonText = filter.title,

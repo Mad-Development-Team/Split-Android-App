@@ -42,6 +42,10 @@ class GroupExpensesViewModel @Inject constructor(
             is GroupExpensesUIEvent.SelectedCategoriesFilter -> {
                 onSelectedCategoriesFilter(event.selectedCategories)
             }
+
+            is GroupExpensesUIEvent.OnClearFilters -> {
+                onClearFilters()
+            }
         }
     }
 
@@ -49,6 +53,15 @@ class GroupExpensesViewModel @Inject constructor(
         _state.value = _state.value.copy(
             selectedCategoriesFilter = selectedCategories
         )
+        if (selectedCategories.isNotEmpty()) {
+            _state.value = _state.value.copy(
+                isAnyFilterActive = true
+            )
+        } else {
+            _state.value = _state.value.copy(
+                isAnyFilterActive = false
+            )
+        }
     }
 
     private fun onShowCategoryFilterDialog(show: Boolean) {
@@ -66,7 +79,6 @@ class GroupExpensesViewModel @Inject constructor(
                     enabled = true,
                     selected = false,
                     onClick = {
-
                     }
                 ),
                 ExpenseFilter(
@@ -93,6 +105,13 @@ class GroupExpensesViewModel @Inject constructor(
                     onClick = {}
                 ),
             )
+        )
+    }
+
+    private fun onClearFilters() {
+        _state.value = _state.value.copy(
+            selectedCategoriesFilter = listOf(),
+            isAnyFilterActive = false
         )
     }
 

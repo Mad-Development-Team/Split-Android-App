@@ -8,4 +8,5 @@ data class GroupExpensesUIState(
     val availableFilters: List<ExpenseFilter> = listOf(),
     val categoryFilterDialogIsVisible: Boolean = false,
     val selectedCategoriesFilter: List<ExpenseType> = listOf(),
+    val isAnyFilterActive: Boolean = false,
 )
