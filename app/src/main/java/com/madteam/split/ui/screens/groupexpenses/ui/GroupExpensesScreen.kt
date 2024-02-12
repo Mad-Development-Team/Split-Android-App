@@ -59,6 +59,8 @@ import com.madteam.split.ui.utils.formatDateBasedOnLocale
 import com.madteam.split.utils.ui.BackPressHandler
 import com.madteam.split.utils.ui.getEmojiByName
 import com.madteam.split.utils.ui.navigateWithPopUpTo
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun GroupExpensesScreen(
@@ -147,11 +149,21 @@ fun GroupExpensesContent(
         modifier = Modifier
             .fillMaxSize()
     ) {
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+
+        val lastDayExpenses = commonState.groupExpenses.filter {
+            LocalDateTime.parse(it.date, formatter).isAfter(LocalDateTime.now().minusDays(1))
+        }.sumOf { it.totalAmount }
+
+        val lastWeekExpenses = commonState.groupExpenses.filter {
+            LocalDateTime.parse(it.date, formatter).isAfter(LocalDateTime.now().minusWeeks(1))
+        }.sumOf { it.totalAmount }
+
         GroupExpensesSummarySection(
             values = mapOf(
-                R.string.last_day_expenses to 0.0,
-                R.string.total_expenses to 0.0,
-                R.string.last_week_expenses to 0.0,
+                R.string.last_day_expenses to lastDayExpenses,
+                R.string.total_expenses to commonState.groupExpenses.sumOf { it.totalAmount },
+                R.string.last_week_expenses to lastWeekExpenses
             ),
             currency = "€"
         )
