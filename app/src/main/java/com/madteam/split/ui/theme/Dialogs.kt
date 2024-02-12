@@ -936,6 +936,63 @@ fun CreateExpenseTypeDialog(
     }
 }
 
+@Composable
+fun FilterByCategoriesDialog(
+    categoriesAvailables: List<ExpenseType>,
+    onDismiss: () -> Unit,
+    onCategoriesSelected: (List<ExpenseType>) -> Unit,
+    selectedCategories: List<ExpenseType>,
+) {
+    Dialog(
+        onDismissRequest = { onDismiss() }
+    ) {
+        ElevatedCard(
+            modifier = Modifier
+                .fillMaxWidth(),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.elevatedCardColors(
+                containerColor = SplitTheme.colors.neutral.backgroundExtraWeak
+            )
+        ) {
+            Text(
+                modifier = Modifier
+                    .padding(24.dp)
+                    .align(Alignment.CenterHorizontally),
+                text = stringResource(id = R.string.filter_by_categories),
+                style = SplitTheme.typography.heading.m,
+            )
+
+        }
+    }
+}
+
+@Preview
+@Composable
+fun FilterByCategoriesPreview(
+
+) {
+    FilterByCategoriesDialog(
+        categoriesAvailables = listOf(
+            ExpenseType(1, "Food", "hamburger"),
+            ExpenseType(1, "Accommodation", "housewithgarden"),
+            ExpenseType(2, "Transport", "trolleybus"),
+            ExpenseType(3, "Entertainment", "joystick"),
+            ExpenseType(4, "Groceries", "shoppingcart"),
+            ExpenseType(5, "Health", "rescueworkershelmet"),
+            ExpenseType(6, "Restaurants", "forkandknifewithplate"),
+            ExpenseType(7, "Shopping", "shoppingbags"),
+            ExpenseType(8, "Travel", "airplane"),
+            ExpenseType(9, "Fuel", "fuelpump"),
+            ExpenseType(10, "Bars", "clinkingbeermugs"),
+            ExpenseType(9, "Other", "questionmark"),
+        ),
+        onDismiss = {},
+        onCategoriesSelected = {},
+        selectedCategories = listOf(
+        )
+    )
+}
+
 @Preview
 @Composable
 fun CreateExpenseTypeDialogPreview() {
