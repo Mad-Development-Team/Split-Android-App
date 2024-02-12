@@ -10,4 +10,5 @@ data class GroupUIState(
     val isLoading: Boolean = false,
     val groupExpenses: List<Expense> = listOf(),
     val errorRetrievingExpenses: Boolean = false,
+    val isSuccess: Boolean = false,
 )

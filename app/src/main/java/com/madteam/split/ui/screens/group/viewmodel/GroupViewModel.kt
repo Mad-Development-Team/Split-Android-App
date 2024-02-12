@@ -13,6 +13,7 @@ import com.madteam.split.domain.model.Group
 import com.madteam.split.ui.screens.group.state.GroupUIState
 import com.madteam.split.utils.network.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -51,12 +52,25 @@ class GroupViewModel @Inject constructor(
                 _state.value = _state.value.copy(
                     groupExpenses = groupExpenses.data
                 )
+                showSuccessState()
             } else {
                 _state.value = _state.value.copy(
                     errorRetrievingExpenses = true
                 )
             }
             isLoadingState(false)
+        }
+    }
+
+    private fun showSuccessState() {
+        viewModelScope.launch {
+            _state.value = _state.value.copy(
+                isSuccess = true
+            )
+            delay(1000)
+            _state.value = _state.value.copy(
+                isSuccess = false
+            )
         }
     }
 

@@ -171,4 +171,7 @@
   <string name="today">Today</string>
   <string name="yesterday">Yesterday</string>
   <string name="updating_group_information">Updating group information</string>
+  <string name="loading_expenses">Updating group expenses</string>
+  <string name="error_retrieving_expenses">Error retrieving group expenses</string>
+  <string name="expenses_loaded_successfully">Expenses updated successfully</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.madteam.split.ui.screens.groupexpenses.ui
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -55,6 +56,8 @@ import com.madteam.split.ui.theme.GroupsListModalBottomSheet
 import com.madteam.split.ui.theme.MembersListItemList
 import com.madteam.split.ui.theme.SmallSecondaryButton
 import com.madteam.split.ui.theme.SplitTheme
+import com.madteam.split.ui.theme.TopInfoMessage
+import com.madteam.split.ui.theme.TopSuccessMessage
 import com.madteam.split.ui.utils.formatDateBasedOnLocale
 import com.madteam.split.utils.ui.BackPressHandler
 import com.madteam.split.utils.ui.getEmojiByName
@@ -149,6 +152,16 @@ fun GroupExpensesContent(
         modifier = Modifier
             .fillMaxSize()
     ) {
+        AnimatedVisibility(visible = commonState.isLoading || commonState.errorRetrievingExpenses) {
+            if (commonState.errorRetrievingExpenses) {
+                TopInfoMessage(text = stringResource(id = R.string.error_retrieving_expenses))
+            } else {
+                TopInfoMessage(text = stringResource(id = R.string.loading_expenses))
+            }
+        }
+        AnimatedVisibility(visible = commonState.isSuccess) {
+            TopSuccessMessage(text = stringResource(id = R.string.expenses_loaded_successfully))
+        }
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
 
         val lastDayExpenses = commonState.groupExpenses.filter {
