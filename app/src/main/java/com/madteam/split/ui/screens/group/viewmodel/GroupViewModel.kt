@@ -38,7 +38,6 @@ class GroupViewModel @Inject constructor(
         getUserGroups()
         getCurrentGroup()
         getGroupExpenses(update = false)
-        resetLastTimeGroupUpdatedFromLocalToZero()
         obtainLastTimeGroupUpdated()
     }
 
