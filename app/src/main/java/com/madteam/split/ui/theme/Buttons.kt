@@ -201,6 +201,7 @@ fun SmallSecondaryButton(
     icon: ImageVector? = null,
     buttonText: Int,
     enabled: Boolean = true,
+    onClick: () -> Unit,
 ) {
     ElevatedButton(
         modifier = modifier,
@@ -216,7 +217,7 @@ fun SmallSecondaryButton(
             disabledContentColor = SplitTheme.colors.neutral.textExtraWeak
         ),
         onClick = {
-            //TODO: Add action
+            onClick()
         },
         enabled = enabled
     ) {
@@ -309,7 +310,8 @@ fun SmallSecondaryButtonPreview() {
         modifier = Modifier,
         icon = Icons.Outlined.CalendarMonth,
         buttonText = R.string.discard_changes,
-        enabled = true
+        enabled = true,
+        onClick = {}
     )
 }
 

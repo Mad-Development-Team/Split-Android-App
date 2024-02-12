@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -938,7 +939,7 @@ fun CreateExpenseTypeDialog(
 
 @Composable
 fun FilterByCategoriesDialog(
-    categoriesAvailables: List<ExpenseType>,
+    categoriesAvailable: List<ExpenseType>,
     onDismiss: () -> Unit,
     onCategoriesSelected: (List<ExpenseType>) -> Unit,
     selectedCategories: List<ExpenseType>,
@@ -956,12 +957,82 @@ fun FilterByCategoriesDialog(
         ) {
             Text(
                 modifier = Modifier
-                    .padding(24.dp)
+                    .padding(16.dp)
                     .align(Alignment.CenterHorizontally),
                 text = stringResource(id = R.string.filter_by_categories),
                 style = SplitTheme.typography.heading.m,
             )
-
+            LazyRow(
+                contentPadding = PaddingValues(horizontal = 8.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                itemsIndexed(categoriesAvailable) { _, category ->
+                    val isSelected = selectedCategories.contains(category)
+                    val backgroundColor = if (isSelected) {
+                        SplitTheme.colors.primary.backgroundStrong
+                    } else {
+                        SplitTheme.colors.neutral.backgroundMedium
+                    }
+                    val textColor = if (isSelected) {
+                        SplitTheme.colors.neutral.textHeavy
+                    } else {
+                        SplitTheme.colors.neutral.textBody
+                    }
+                    val textStyle = if (isSelected) {
+                        SplitTheme.typography.heading.xxs
+                    } else {
+                        SplitTheme.typography.body.s
+                    }
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .shadow(
+                                    elevation = if (isSelected) 16.dp else 0.dp,
+                                    shape = CircleShape
+                                )
+                                .clip(CircleShape)
+                                .background(
+                                    color = backgroundColor
+                                )
+                                .clickable {
+                                    onCategoriesSelected(
+                                        if (isSelected) {
+                                            selectedCategories.filter { it != category }
+                                        } else {
+                                            selectedCategories + category
+                                        }
+                                    )
+                                }
+                        ) {
+                            Image(
+                                modifier = Modifier
+                                    .size(56.dp)
+                                    .padding(8.dp),
+                                painter = painterResource(
+                                    id = getEmojiByName(category.icon)
+                                ),
+                                contentDescription = null
+                            )
+                        }
+                        Spacer(modifier = Modifier.size(4.dp))
+                        Text(
+                            text = category.title,
+                            style = textStyle,
+                            color = textColor,
+                        )
+                    }
+                }
+            }
+            Spacer(modifier = Modifier.size(16.dp))
+            PrimaryLargeButton(
+                modifier = Modifier
+                    .padding(horizontal = 24.dp),
+                onClick = { onDismiss() },
+                text = R.string.apply
+            )
+            Spacer(modifier = Modifier.size(16.dp))
         }
     }
 }
@@ -972,7 +1043,7 @@ fun FilterByCategoriesPreview(
 
 ) {
     FilterByCategoriesDialog(
-        categoriesAvailables = listOf(
+        categoriesAvailable = listOf(
             ExpenseType(1, "Food", "hamburger"),
             ExpenseType(1, "Accommodation", "housewithgarden"),
             ExpenseType(2, "Transport", "trolleybus"),
@@ -987,8 +1058,10 @@ fun FilterByCategoriesPreview(
             ExpenseType(9, "Other", "questionmark"),
         ),
         onDismiss = {},
-        onCategoriesSelected = {},
+        onCategoriesSelected = {
+        },
         selectedCategories = listOf(
+            ExpenseType(1, "Accommodation", "housewithgarden"),
         )
     )
 }

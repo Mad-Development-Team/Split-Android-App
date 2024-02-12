@@ -41,6 +41,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.madteam.split.R
 import com.madteam.split.domain.model.Expense
+import com.madteam.split.domain.model.ExpenseType
 import com.madteam.split.domain.model.Group
 import com.madteam.split.domain.model.Member
 import com.madteam.split.domain.model.MemberExpense
@@ -55,6 +56,7 @@ import com.madteam.split.ui.screens.groupexpenses.viewmodel.GroupExpensesViewMod
 import com.madteam.split.ui.theme.AmountTextView
 import com.madteam.split.ui.theme.DSBottomNavigation
 import com.madteam.split.ui.theme.DefaultFloatingButton
+import com.madteam.split.ui.theme.FilterByCategoriesDialog
 import com.madteam.split.ui.theme.GroupNavigationTopAppBar
 import com.madteam.split.ui.theme.GroupsListModalBottomSheet
 import com.madteam.split.ui.theme.MembersListItemList
@@ -148,6 +150,20 @@ fun GroupExpensesScreen(
                     commonViewModel.onEvent(
                         GroupUIEvent.RetryGetGroupExpenses
                     )
+                },
+                onFilterByCategoriesDialogShow = { show ->
+                    viewModel.onEvent(
+                        GroupExpensesUIEvent.ShowCategoryFilterDialog(
+                            show
+                        )
+                    )
+                },
+                onFilterByCategoriesSelected = { selectedCategories ->
+                    viewModel.onEvent(
+                        GroupExpensesUIEvent.SelectedCategoriesFilter(
+                            selectedCategories
+                        )
+                    )
                 }
             )
         }
@@ -159,6 +175,8 @@ fun GroupExpensesContent(
     state: GroupExpensesUIState,
     commonState: GroupUIState,
     retryUpdateExpenses: () -> Unit,
+    onFilterByCategoriesDialogShow: (Boolean) -> Unit,
+    onFilterByCategoriesSelected: (List<ExpenseType>) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -204,7 +222,10 @@ fun GroupExpensesContent(
                 SmallSecondaryButton(
                     buttonText = filter.title,
                     icon = filter.icon,
-                    enabled = filter.enabled
+                    enabled = filter.enabled,
+                    onClick = {
+                        filter.onClick()
+                    }
                 )
             }
         }
@@ -263,9 +284,29 @@ fun GroupExpensesContent(
             )
         }
         if (commonState.groupExpenses.isNotEmpty() && !commonState.errorRetrievingExpenses) {
+            val filteredExpenses = if (state.selectedCategoriesFilter.isNotEmpty()) {
+                commonState.groupExpenses.filter { expense ->
+                    state.selectedCategoriesFilter.contains(expense.type)
+                }
+            } else {
+                commonState.groupExpenses
+            }
             GroupExpensesList(
-                expenses = commonState.groupExpenses,
+                expenses = filteredExpenses,
                 groupInfo = commonState.userGroups.first { it.id == commonState.currentGroupId }
+            )
+        }
+
+        if (state.categoryFilterDialogIsVisible) {
+            FilterByCategoriesDialog(
+                categoriesAvailable = commonState.groupExpenses.map { it.type }.distinct(),
+                onDismiss = {
+                    onFilterByCategoriesDialogShow(false)
+                },
+                onCategoriesSelected = {
+                    onFilterByCategoriesSelected(it)
+                },
+                selectedCategories = state.selectedCategoriesFilter
             )
         }
     }

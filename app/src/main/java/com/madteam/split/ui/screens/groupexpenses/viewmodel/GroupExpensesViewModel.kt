@@ -8,6 +8,7 @@ import androidx.compose.material.icons.outlined.Person
 import androidx.lifecycle.ViewModel
 import com.madteam.split.R
 import com.madteam.split.domain.model.ExpenseFilter
+import com.madteam.split.domain.model.ExpenseType
 import com.madteam.split.ui.screens.groupexpenses.state.GroupExpensesUIEvent
 import com.madteam.split.ui.screens.groupexpenses.state.GroupExpensesUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -37,7 +38,17 @@ class GroupExpensesViewModel @Inject constructor(
             is GroupExpensesUIEvent.ShowCategoryFilterDialog -> {
                 onShowCategoryFilterDialog(event.show)
             }
+
+            is GroupExpensesUIEvent.SelectedCategoriesFilter -> {
+                onSelectedCategoriesFilter(event.selectedCategories)
+            }
         }
+    }
+
+    private fun onSelectedCategoriesFilter(selectedCategories: List<ExpenseType>) {
+        _state.value = _state.value.copy(
+            selectedCategoriesFilter = selectedCategories
+        )
     }
 
     private fun onShowCategoryFilterDialog(show: Boolean) {
@@ -64,7 +75,7 @@ class GroupExpensesViewModel @Inject constructor(
                     enabled = true,
                     selected = false,
                     onClick = {
-
+                        onShowCategoryFilterDialog(true)
                     }
                 ),
                 ExpenseFilter(

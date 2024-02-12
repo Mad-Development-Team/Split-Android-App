@@ -177,4 +177,5 @@
   <string name="retry">Retry</string>
   <string name="time_to_spent">Nothing here... ¡Time to spend!</string>
   <string name="filter_by_categories">Filter by categories</string>
+  <string name="apply">Apply</string>
 </resources>
