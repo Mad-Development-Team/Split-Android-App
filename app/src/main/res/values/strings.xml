@@ -174,4 +174,6 @@
   <string name="loading_expenses">Updating group expenses</string>
   <string name="error_retrieving_expenses">Error retrieving group expenses</string>
   <string name="expenses_loaded_successfully">Expenses updated successfully</string>
+  <string name="retry">Retry</string>
+  <string name="time_to_spent">Nothing here... ¡Time to spend!</string>
 </resources>

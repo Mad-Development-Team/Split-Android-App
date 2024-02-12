@@ -10,6 +10,7 @@ import com.madteam.split.data.repository.datastore.DatastoreManager
 import com.madteam.split.data.repository.expense.ExpenseRepository
 import com.madteam.split.data.repository.group.GroupRepository
 import com.madteam.split.domain.model.Group
+import com.madteam.split.ui.screens.group.state.GroupUIEvent
 import com.madteam.split.ui.screens.group.state.GroupUIState
 import com.madteam.split.utils.network.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -39,6 +40,14 @@ class GroupViewModel @Inject constructor(
         getGroupExpenses(update = false)
         resetLastTimeGroupUpdatedFromLocalToZero()
         obtainLastTimeGroupUpdated()
+    }
+
+    fun onEvent(event: GroupUIEvent) {
+        when (event) {
+            is GroupUIEvent.RetryGetGroupExpenses -> {
+                getGroupExpenses(update = true)
+            }
+        }
     }
 
     private fun getGroupExpenses(update: Boolean) {

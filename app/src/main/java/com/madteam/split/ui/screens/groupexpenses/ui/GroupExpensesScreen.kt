@@ -17,6 +17,8 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material3.CardDefaults
@@ -30,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -43,6 +46,7 @@ import com.madteam.split.domain.model.Member
 import com.madteam.split.domain.model.MemberExpense
 import com.madteam.split.domain.model.PaidByExpense
 import com.madteam.split.ui.navigation.Screens
+import com.madteam.split.ui.screens.group.state.GroupUIEvent
 import com.madteam.split.ui.screens.group.state.GroupUIState
 import com.madteam.split.ui.screens.group.viewmodel.GroupViewModel
 import com.madteam.split.ui.screens.groupexpenses.state.GroupExpensesUIEvent
@@ -54,8 +58,10 @@ import com.madteam.split.ui.theme.DefaultFloatingButton
 import com.madteam.split.ui.theme.GroupNavigationTopAppBar
 import com.madteam.split.ui.theme.GroupsListModalBottomSheet
 import com.madteam.split.ui.theme.MembersListItemList
+import com.madteam.split.ui.theme.PrimaryLargeButton
 import com.madteam.split.ui.theme.SmallSecondaryButton
 import com.madteam.split.ui.theme.SplitTheme
+import com.madteam.split.ui.theme.TopErrorMessage
 import com.madteam.split.ui.theme.TopInfoMessage
 import com.madteam.split.ui.theme.TopSuccessMessage
 import com.madteam.split.ui.utils.formatDateBasedOnLocale
@@ -137,7 +143,12 @@ fun GroupExpensesScreen(
         ) {
             GroupExpensesContent(
                 state = state,
-                commonState = commonState
+                commonState = commonState,
+                retryUpdateExpenses = {
+                    commonViewModel.onEvent(
+                        GroupUIEvent.RetryGetGroupExpenses
+                    )
+                }
             )
         }
     }
@@ -147,14 +158,16 @@ fun GroupExpensesScreen(
 fun GroupExpensesContent(
     state: GroupExpensesUIState,
     commonState: GroupUIState,
+    retryUpdateExpenses: () -> Unit,
 ) {
     Column(
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         AnimatedVisibility(visible = commonState.isLoading || commonState.errorRetrievingExpenses) {
             if (commonState.errorRetrievingExpenses) {
-                TopInfoMessage(text = stringResource(id = R.string.error_retrieving_expenses))
+                TopErrorMessage(text = stringResource(id = R.string.error_retrieving_expenses))
             } else {
                 TopInfoMessage(text = stringResource(id = R.string.loading_expenses))
             }
@@ -196,10 +209,65 @@ fun GroupExpensesContent(
             }
         }
         Spacer(modifier = Modifier.size(16.dp))
-        GroupExpensesList(
-            expenses = commonState.groupExpenses,
-            groupInfo = commonState.userGroups.first { it.id == commonState.currentGroupId }
-        )
+        if (commonState.errorRetrievingExpenses) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState())
+            ) {
+                Image(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(250.dp)
+                        .padding(24.dp),
+                    painter = painterResource(id = R.drawable.image_error_sticker),
+                    contentDescription = null
+                )
+                Text(
+                    text = stringResource(id = R.string.error_retrieving_expenses),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.CenterHorizontally),
+                    style = SplitTheme.typography.body.l,
+                    color = SplitTheme.colors.neutral.textBody,
+                    textAlign = TextAlign.Center
+                )
+                PrimaryLargeButton(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(24.dp),
+                    onClick = {
+                        retryUpdateExpenses()
+                    },
+                    text = R.string.retry
+                )
+            }
+        }
+        if (commonState.groupExpenses.isEmpty() && !commonState.isLoading && !commonState.errorRetrievingExpenses) {
+            Image(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(250.dp)
+                    .padding(24.dp),
+                painter = painterResource(id = R.drawable.image_skating_sticker),
+                contentDescription = null
+            )
+            Text(
+                text = stringResource(id = R.string.time_to_spent),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.CenterHorizontally),
+                style = SplitTheme.typography.body.l,
+                color = SplitTheme.colors.neutral.textBody,
+                textAlign = TextAlign.Center
+            )
+        }
+        if (commonState.groupExpenses.isNotEmpty() && !commonState.errorRetrievingExpenses) {
+            GroupExpensesList(
+                expenses = commonState.groupExpenses,
+                groupInfo = commonState.userGroups.first { it.id == commonState.currentGroupId }
+            )
+        }
     }
 }
 
