@@ -1196,24 +1196,16 @@ fun FilterByAmountDialog(
                     .padding(horizontal = 16.dp),
                 horizontalArrangement = Arrangement.Center
             ) {
-                val minAmountIndexOfDecimal = minAmount.toString().indexOf('.')
-                val minAmountDecimalPart =
-                    minAmount.toString().substring(minAmountIndexOfDecimal + 1)
-                val maxAmountIndexOfDecimal = maxAmount.toString().indexOf('.')
-                val maxAmountDecimalPart =
-                    maxAmount.toString().substring(maxAmountIndexOfDecimal + 1)
                 BlobWithAmount(
                     modifier = Modifier.size(125.dp),
                     amountValue = minAmountSelected,
-                    currency = currency.symbol,
-                    decimalPart = minAmountDecimalPart,
+                    currency = currency
                 )
                 Spacer(modifier = Modifier.size(16.dp))
                 BlobWithAmount(
                     modifier = Modifier.size(125.dp),
                     amountValue = maxAmountSelected,
-                    currency = currency.symbol,
-                    decimalPart = maxAmountDecimalPart,
+                    currency = currency
                 )
             }
             Spacer(modifier = Modifier.size(8.dp))

@@ -39,7 +39,15 @@ class GroupViewModel @Inject constructor(
         getUserGroups()
         getCurrentGroup()
         getGroupExpenses(update = false)
+        getCurrentExpense()
         obtainLastTimeGroupUpdated()
+    }
+
+    private fun getCurrentExpense() {
+        val currentExpenseId = groupRepository.getCurrentExpenseId()
+        _state.value = _state.value.copy(
+            currentExpense = currentExpenseId
+        )
     }
 
     fun onEvent(event: GroupUIEvent) {
@@ -55,9 +63,7 @@ class GroupViewModel @Inject constructor(
     }
 
     private fun onExpenseClicked(expense: Expense) {
-        _state.value = _state.value.copy(
-            currentExpense = expense
-        )
+        groupRepository.setCurrentExpense(expense.id)
     }
 
     private fun getGroupExpenses(update: Boolean) {

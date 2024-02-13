@@ -29,6 +29,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.madteam.split.R
+import com.madteam.split.domain.model.Currency
 import com.madteam.split.domain.model.User
 import kotlin.math.absoluteValue
 
@@ -108,9 +109,11 @@ fun ProfileImage(
 fun BlobWithAmount(
     modifier: Modifier = Modifier,
     amountValue: Double,
-    currency: String,
-    decimalPart: String,
+    currency: Currency,
 ) {
+    val indexOfDecimal = amountValue.toString().indexOf('.')
+    val amountDecimalPart =
+        amountValue.toString().substring(indexOfDecimal + 1)
     ConstraintLayout(
         modifier = modifier
     ) {
@@ -154,7 +157,7 @@ fun BlobWithAmount(
                 )
             }
             AnimatedContent(
-                targetState = decimalPart.toInt(),
+                targetState = amountDecimalPart.toInt(),
                 transitionSpec = {
                     if (targetState > initialState) {
                         slideInVertically { -it } togetherWith slideOutVertically { it }
@@ -166,7 +169,7 @@ fun BlobWithAmount(
                 Text(
                     modifier = Modifier
                         .padding(top = 4.dp),
-                    text = if (decimalPart == "0" || decimalPart == "00") ""
+                    text = if (amountDecimalPart == "0" || amountDecimalPart == "00") ""
                     else animatedDecimalValue.toString(),
                     color = SplitTheme.colors.neutral.textExtraWeak,
                     style = SplitTheme.typography.heading.s
@@ -175,7 +178,7 @@ fun BlobWithAmount(
             Text(
                 modifier = Modifier
                     .padding(top = 4.dp),
-                text = currency,
+                text = currency.symbol,
                 color = SplitTheme.colors.neutral.textExtraWeak,
                 style = SplitTheme.typography.heading.s
             )

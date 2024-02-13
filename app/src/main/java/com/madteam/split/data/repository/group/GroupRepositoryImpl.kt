@@ -16,6 +16,7 @@ class GroupRepositoryImpl @Inject constructor(
     private var newGroup: Group
     private var userGroups: List<Group> = listOf()
     private var currentGroupId: Int? = null
+    private var currentExpenseId: Int? = null
 
     init {
         newGroup = Group(
@@ -100,6 +101,12 @@ class GroupRepositoryImpl @Inject constructor(
     override fun setCurrentGroup(groupId: Int) {
         currentGroupId = groupId
     }
+
+    override fun setCurrentExpense(expenseId: Int) {
+        currentExpenseId = expenseId
+    }
+
+    override fun getCurrentExpenseId(): Int? = currentExpenseId
 
     override fun getCurrentGroup(): Int? = currentGroupId
 
