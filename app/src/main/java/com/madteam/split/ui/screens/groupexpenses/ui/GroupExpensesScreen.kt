@@ -69,7 +69,7 @@ import com.madteam.split.ui.theme.SplitTheme
 import com.madteam.split.ui.theme.TopErrorMessage
 import com.madteam.split.ui.theme.TopInfoMessage
 import com.madteam.split.ui.theme.TopSuccessMessage
-import com.madteam.split.ui.utils.formatDateBasedOnLocale
+import com.madteam.split.ui.utils.formatSmallDateBasedOnLocale
 import com.madteam.split.utils.ui.BackPressHandler
 import com.madteam.split.utils.ui.getEmojiByName
 import com.madteam.split.utils.ui.navigateWithPopUpTo
@@ -497,7 +497,7 @@ fun ExpenseItem(
                 overflow = TextOverflow.Ellipsis
             )
             Text(
-                text = formatDateBasedOnLocale(
+                text = formatSmallDateBasedOnLocale(
                     dateString = expense.date,
                     context = context
                 ),

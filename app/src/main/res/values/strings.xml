@@ -184,4 +184,5 @@
   <string name="filter_by_date">Filter by date</string>
   <string name="expense_details">Expense details</string>
   <string name="who_pays">Who pays?</string>
+  <string name="share_expense">Share expense</string>
 </resources>

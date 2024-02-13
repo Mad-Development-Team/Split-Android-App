@@ -13,7 +13,7 @@ fun getCurrentDate(): String {
     return current.format(formatter)
 }
 
-fun formatDateBasedOnLocale(context: Context, dateString: String): String {
+fun formatSmallDateBasedOnLocale(context: Context, dateString: String): String {
     val inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
     val dateInput = LocalDateTime.parse(dateString, inputFormatter)
 

@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
@@ -37,6 +39,7 @@ import com.madteam.split.ui.screens.group.state.GroupUIState
 import com.madteam.split.ui.screens.group.viewmodel.GroupViewModel
 import com.madteam.split.ui.theme.BlobWithAmount
 import com.madteam.split.ui.theme.MemberWithAmount
+import com.madteam.split.ui.theme.PrimaryLargeButton
 import com.madteam.split.ui.theme.SplitTheme
 import com.madteam.split.utils.ui.getEmojiByName
 
@@ -76,7 +79,8 @@ fun ExpenseDetailContent(
 
     Column(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
@@ -100,7 +104,7 @@ fun ExpenseDetailContent(
                 color = SplitTheme.colors.neutral.textTitle,
             )
         }
-        Spacer(modifier = Modifier.size(24.dp))
+        Spacer(modifier = Modifier.size(16.dp))
         BlobWithAmount(
             amountValue = currentExpense.totalAmount,
             currency = currentExpense.currency,
@@ -128,7 +132,7 @@ fun ExpenseDetailContent(
                 color = SplitTheme.colors.neutral.textBody,
             )
         }
-        Spacer(modifier = Modifier.size(24.dp))
+        Spacer(modifier = Modifier.size(16.dp))
         if (!currentExpense.description.isNullOrEmpty()) {
             Text(
                 text = currentExpense.description,
@@ -194,6 +198,14 @@ fun ExpenseDetailContent(
                 )
             }
         }
+        Spacer(modifier = Modifier.size(24.dp))
+        PrimaryLargeButton(
+            modifier = Modifier.padding(horizontal = 24.dp),
+            onClick = { /*TODO*/ },
+            text = R.string.share_expense,
+            enabled = false
+        )
+        Spacer(modifier = Modifier.size(24.dp))
     }
 }
 
