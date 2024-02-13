@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import com.madteam.split.R
 import com.madteam.split.domain.model.ExpenseFilter
 import com.madteam.split.domain.model.ExpenseType
+import com.madteam.split.domain.model.Member
 import com.madteam.split.ui.screens.groupexpenses.state.GroupExpensesUIEvent
 import com.madteam.split.ui.screens.groupexpenses.state.GroupExpensesUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -46,14 +47,28 @@ class GroupExpensesViewModel @Inject constructor(
             is GroupExpensesUIEvent.OnClearFilters -> {
                 onClearFilters()
             }
+
+            is GroupExpensesUIEvent.ShowPayerFilterDialog -> {
+                onShowPayerFilterDialog(event.show)
+            }
+
+            is GroupExpensesUIEvent.SelectedPayersFilter -> {
+                onSelectedPayersFilter(event.selectedPayers)
+            }
         }
     }
 
-    private fun onSelectedCategoriesFilter(selectedCategories: List<ExpenseType>) {
+    private fun onSelectedPayersFilter(selectedPayers: List<Member>) {
         _state.value = _state.value.copy(
-            selectedCategoriesFilter = selectedCategories
+            selectedPayersFilter = selectedPayers
         )
-        if (selectedCategories.isNotEmpty()) {
+        checkIfAnyFilterIsActive()
+    }
+
+    private fun checkIfAnyFilterIsActive() {
+        if (_state.value.selectedCategoriesFilter.isNotEmpty() ||
+            _state.value.selectedPayersFilter.isNotEmpty()
+        ) {
             _state.value = _state.value.copy(
                 isAnyFilterActive = true
             )
@@ -62,6 +77,19 @@ class GroupExpensesViewModel @Inject constructor(
                 isAnyFilterActive = false
             )
         }
+    }
+
+    private fun onShowPayerFilterDialog(show: Boolean) {
+        _state.value = _state.value.copy(
+            payerFilterDialogIsVisible = show
+        )
+    }
+
+    private fun onSelectedCategoriesFilter(selectedCategories: List<ExpenseType>) {
+        _state.value = _state.value.copy(
+            selectedCategoriesFilter = selectedCategories
+        )
+        checkIfAnyFilterIsActive()
     }
 
     private fun onShowCategoryFilterDialog(show: Boolean) {
@@ -102,7 +130,9 @@ class GroupExpensesViewModel @Inject constructor(
                     icon = Icons.Outlined.Person,
                     enabled = true,
                     selected = false,
-                    onClick = {}
+                    onClick = {
+                        onShowPayerFilterDialog(true)
+                    }
                 ),
             )
         )
@@ -111,6 +141,7 @@ class GroupExpensesViewModel @Inject constructor(
     private fun onClearFilters() {
         _state.value = _state.value.copy(
             selectedCategoriesFilter = listOf(),
+            selectedPayersFilter = listOf(),
             isAnyFilterActive = false
         )
     }

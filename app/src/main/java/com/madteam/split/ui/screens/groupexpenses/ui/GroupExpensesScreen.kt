@@ -57,6 +57,7 @@ import com.madteam.split.ui.theme.AmountTextView
 import com.madteam.split.ui.theme.DSBottomNavigation
 import com.madteam.split.ui.theme.DefaultFloatingButton
 import com.madteam.split.ui.theme.FilterByCategoriesDialog
+import com.madteam.split.ui.theme.FilterByPayerMemberDialog
 import com.madteam.split.ui.theme.GroupNavigationTopAppBar
 import com.madteam.split.ui.theme.GroupsListModalBottomSheet
 import com.madteam.split.ui.theme.MembersListItemList
@@ -169,6 +170,20 @@ fun GroupExpensesScreen(
                     viewModel.onEvent(
                         GroupExpensesUIEvent.OnClearFilters
                     )
+                },
+                onFilterByPayerDialogShow = { show ->
+                    viewModel.onEvent(
+                        GroupExpensesUIEvent.ShowPayerFilterDialog(
+                            show
+                        )
+                    )
+                },
+                onFilterByPayersSelected = { selectedPayers ->
+                    viewModel.onEvent(
+                        GroupExpensesUIEvent.SelectedPayersFilter(
+                            selectedPayers
+                        )
+                    )
                 }
             )
         }
@@ -181,9 +196,26 @@ fun GroupExpensesContent(
     commonState: GroupUIState,
     retryUpdateExpenses: () -> Unit,
     onFilterByCategoriesDialogShow: (Boolean) -> Unit,
+    onFilterByPayerDialogShow: (Boolean) -> Unit,
     onFilterByCategoriesSelected: (List<ExpenseType>) -> Unit,
+    onFilterByPayersSelected: (List<Member>) -> Unit,
     onClearFilters: () -> Unit,
 ) {
+    val filteredExpenses = commonState.groupExpenses.filter { expense ->
+        val categoryFilterPassed = if (state.selectedCategoriesFilter.isNotEmpty()) {
+            state.selectedCategoriesFilter.contains(expense.type)
+        } else {
+            true
+        }
+
+        val payerFilterPassed = if (state.selectedPayersFilter.isNotEmpty()) {
+            expense.paidBy.any { paidByExpense -> state.selectedPayersFilter.any { it.id == paidByExpense.memberId } }
+        } else {
+            true
+        }
+
+        categoryFilterPassed && payerFilterPassed
+    }
     Column(
         modifier = Modifier
             .fillMaxWidth(),
@@ -302,13 +334,6 @@ fun GroupExpensesContent(
             )
         }
         if (commonState.groupExpenses.isNotEmpty() && !commonState.errorRetrievingExpenses) {
-            val filteredExpenses = if (state.selectedCategoriesFilter.isNotEmpty()) {
-                commonState.groupExpenses.filter { expense ->
-                    state.selectedCategoriesFilter.contains(expense.type)
-                }
-            } else {
-                commonState.groupExpenses
-            }
             GroupExpensesList(
                 expenses = filteredExpenses,
                 groupInfo = commonState.userGroups.first { it.id == commonState.currentGroupId }
@@ -317,7 +342,7 @@ fun GroupExpensesContent(
 
         if (state.categoryFilterDialogIsVisible) {
             FilterByCategoriesDialog(
-                categoriesAvailable = commonState.groupExpenses.map { it.type }.distinct(),
+                categoriesAvailable = filteredExpenses.map { it.type }.distinct(),
                 onDismiss = {
                     onFilterByCategoriesDialogShow(false)
                 },
@@ -325,6 +350,22 @@ fun GroupExpensesContent(
                     onFilterByCategoriesSelected(it)
                 },
                 selectedCategories = state.selectedCategoriesFilter
+            )
+        }
+
+        if (state.payerFilterDialogIsVisible) {
+            val membersAvailable =
+                commonState.userGroups.first { it.id == commonState.currentGroupId }.members
+
+            FilterByPayerMemberDialog(
+                membersAvailable = membersAvailable,
+                onDismiss = {
+                    onFilterByPayerDialogShow(false)
+                },
+                onPayerMemberSelected = {
+                    onFilterByPayersSelected(it)
+                },
+                selectedMembers = state.selectedPayersFilter
             )
         }
     }

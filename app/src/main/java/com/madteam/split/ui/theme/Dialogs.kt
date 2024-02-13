@@ -50,7 +50,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -60,11 +62,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.constraintlayout.compose.ConstraintLayout
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.madteam.split.R
 import com.madteam.split.domain.model.Currency
 import com.madteam.split.domain.model.ExpenseType
+import com.madteam.split.domain.model.Member
 import com.madteam.split.utils.ui.getEmojiByName
 import com.madteam.split.utils.ui.getFlagByCurrency
 import kotlin.random.Random
@@ -1035,6 +1039,195 @@ fun FilterByCategoriesDialog(
             Spacer(modifier = Modifier.size(16.dp))
         }
     }
+}
+
+@OptIn(ExperimentalGlideComposeApi::class)
+@Composable
+fun FilterByPayerMemberDialog(
+    membersAvailable: List<Member>,
+    onDismiss: () -> Unit,
+    onPayerMemberSelected: (List<Member>) -> Unit,
+    selectedMembers: List<Member>,
+) {
+    Dialog(
+        onDismissRequest = { onDismiss() }
+    ) {
+        ElevatedCard(
+            modifier = Modifier
+                .fillMaxWidth(),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.elevatedCardColors(
+                containerColor = SplitTheme.colors.neutral.backgroundExtraWeak
+            )
+        ) {
+            Text(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .align(Alignment.CenterHorizontally),
+                text = stringResource(id = R.string.filter_by_payer),
+                style = SplitTheme.typography.heading.m,
+            )
+            LazyRow(
+                contentPadding = PaddingValues(horizontal = 8.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                itemsIndexed(membersAvailable) { _, member ->
+                    val memberIdIsSelected = selectedMembers.any { it.id == member.id }
+                    val hexColor = member.color?.removePrefix("0x")?.toLong(16) ?: 0xFF000000
+                    val color =
+                        if (memberIdIsSelected) SplitTheme.colors.primary.backgroundStrong else Color(
+                            hexColor
+                        )
+                    ConstraintLayout(
+                        modifier = Modifier
+                            .shadow(
+                                elevation = 8.dp,
+                                shape = CircleShape
+                            )
+                    ) {
+                        val (image, name, degrade) = createRefs()
+                        GlideImage(
+                            model = member.profileImage,
+                            contentDescription = stringResource(
+                                id = R.string.user_profile_image_description
+                            ),
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .constrainAs(image) {
+                                    top.linkTo(parent.top)
+                                    bottom.linkTo(parent.bottom)
+                                    start.linkTo(parent.start)
+                                    end.linkTo(parent.end)
+                                }
+                                .clickable {
+                                    onPayerMemberSelected(
+                                        if (memberIdIsSelected) {
+                                            selectedMembers.filter { it.id != member.id }
+                                        } else {
+                                            selectedMembers + member
+                                        }
+                                    )
+                                }
+                                .size(120.dp)
+                                .background(
+                                    color,
+                                    CircleShape
+                                )
+                                .clip(CircleShape)
+                        )
+                        Box(
+                            modifier = Modifier
+                                .size(120.dp)
+                                .clip(CircleShape)
+                                .background(
+                                    brush = Brush.verticalGradient(
+                                        colors = listOf(
+                                            Color.Transparent,
+                                            Color.Black
+                                        )
+                                    )
+                                )
+                                .constrainAs(degrade) {
+                                    top.linkTo(image.top)
+                                    start.linkTo(image.start)
+                                    end.linkTo(image.end)
+                                    bottom.linkTo(image.bottom)
+                                }
+                        )
+                        Text(
+                            modifier = Modifier
+                                .constrainAs(name) {
+                                    start.linkTo(image.start)
+                                    end.linkTo(image.end)
+                                    bottom.linkTo(image.bottom, 30.dp)
+                                },
+                            text = member.name,
+                            color = Color.White,
+                            textAlign = TextAlign.Center,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            style = SplitTheme.typography.heading.m
+                        )
+                    }
+                }
+            }
+            Spacer(modifier = Modifier.size(16.dp))
+            PrimaryLargeButton(
+                modifier = Modifier
+                    .padding(horizontal = 24.dp),
+                onClick = { onDismiss() },
+                text = R.string.apply
+            )
+            Spacer(modifier = Modifier.size(16.dp))
+        }
+    }
+}
+
+@Preview
+@Composable
+fun FilterByPayerMemberDialogPreview() {
+    FilterByPayerMemberDialog(
+        membersAvailable = listOf(
+            Member(
+                id = 1,
+                name = "John",
+                profileImage = "https://i.pravatar.cc/150?img=1",
+                color = "0xFF55FD01",
+                user = 3,
+                joinedDate = "",
+                groupId = 3
+            ),
+            Member(
+                id = 2,
+                name = "Jane",
+                profileImage = "https://i.pravatar.cc/150?img=2",
+                color = "0xFF8EE189",
+                user = 3,
+                joinedDate = "",
+                groupId = 3
+            ),
+            Member(
+                id = 3,
+                name = "Doe",
+                profileImage = "https://i.pravatar.cc/150?img=3",
+                color = "0xFFF91439",
+                user = 3,
+                joinedDate = "",
+                groupId = 3
+            ),
+            Member(
+                id = 4,
+                name = "Doe",
+                profileImage = "https://i.pravatar.cc/150?img=4",
+                color = "0xFFE9A22B",
+                user = 3,
+                joinedDate = "",
+                groupId = 3
+            ),
+        ),
+        onDismiss = { /*TODO*/ },
+        onPayerMemberSelected = {},
+        selectedMembers = listOf(
+            Member(
+                id = 1,
+                name = "John",
+                profileImage = "https://i.pravatar.cc/150?img=1",
+                color = "#FF0000",
+                user = 3,
+                joinedDate = "",
+                groupId = 3
+            ),
+            Member(
+                id = 2,
+                name = "Jane",
+                profileImage = "https://i.pravatar.cc/150?img=2",
+                color = "#00FF00",
+                user = 3,
+                joinedDate = "",
+                groupId = 3
+            ),
+        )
+    )
 }
 
 @Preview
