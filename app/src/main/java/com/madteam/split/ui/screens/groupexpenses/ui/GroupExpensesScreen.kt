@@ -2,6 +2,7 @@ package com.madteam.split.ui.screens.groupexpenses.ui
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -200,6 +201,14 @@ fun GroupExpensesScreen(
                             maxAmount
                         )
                     )
+                },
+                onExpenseClick = { expense ->
+                    commonViewModel.onEvent(
+                        GroupUIEvent.OnExpenseClick(
+                            expense
+                        )
+                    )
+                    navController.navigate(Screens.ExpenseDetailScreen.route)
                 }
             )
         }
@@ -217,6 +226,7 @@ fun GroupExpensesContent(
     onFilterByCategoriesSelected: (List<ExpenseType>) -> Unit,
     onFilterByPayersSelected: (List<Member>) -> Unit,
     onFilterByAmountSelected: (Double, Double) -> Unit,
+    onExpenseClick: (Expense) -> Unit,
     onClearFilters: () -> Unit,
 ) {
     val filteredExpenses = commonState.groupExpenses.filter { expense ->
@@ -359,7 +369,10 @@ fun GroupExpensesContent(
         if (commonState.groupExpenses.isNotEmpty() && !commonState.errorRetrievingExpenses) {
             GroupExpensesList(
                 expenses = filteredExpenses,
-                groupInfo = commonState.userGroups.first { it.id == commonState.currentGroupId }
+                groupInfo = commonState.userGroups.first { it.id == commonState.currentGroupId },
+                onExpenseClick = {
+                    onExpenseClick(it)
+                }
             )
         }
 
@@ -413,6 +426,7 @@ fun GroupExpensesContent(
 fun GroupExpensesList(
     expenses: List<Expense>,
     groupInfo: Group,
+    onExpenseClick: (Expense) -> Unit,
 ) {
     val sortedExpenses = expenses.sortedByDescending { it.date }
     LazyColumn(
@@ -422,7 +436,10 @@ fun GroupExpensesList(
         itemsIndexed(sortedExpenses) { _, expense ->
             ExpenseItem(
                 expense = expense,
-                groupInfo = groupInfo
+                groupInfo = groupInfo,
+                onExpenseClick = {
+                    onExpenseClick(it)
+                }
             )
         }
     }
@@ -432,6 +449,7 @@ fun GroupExpensesList(
 fun ExpenseItem(
     expense: Expense,
     groupInfo: Group,
+    onExpenseClick: (Expense) -> Unit,
 ) {
     ElevatedCard(
         modifier = Modifier
@@ -450,6 +468,9 @@ fun ExpenseItem(
         ConstraintLayout(
             modifier = Modifier
                 .fillMaxSize()
+                .clickable {
+                    onExpenseClick(expense)
+                }
                 .padding(horizontal = 16.dp, vertical = 8.dp)
         ) {
             val (expenseTypeIcon, expenseTitle, expenseDate, expenseTotalAmount, paidBySection, forWhomSection, expenseDescription) = createRefs()

@@ -182,4 +182,5 @@
   <string name="filter_by_payer">Filter by payer</string>
   <string name="filter_by_amount">Filter by amount</string>
   <string name="filter_by_date">Filter by date</string>
+  <string name="expense_details">Expense details</string>
 </resources>

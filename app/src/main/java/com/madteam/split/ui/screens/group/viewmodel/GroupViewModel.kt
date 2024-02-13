@@ -9,6 +9,7 @@ import com.google.firebase.database.ValueEventListener
 import com.madteam.split.data.repository.datastore.DatastoreManager
 import com.madteam.split.data.repository.expense.ExpenseRepository
 import com.madteam.split.data.repository.group.GroupRepository
+import com.madteam.split.domain.model.Expense
 import com.madteam.split.domain.model.Group
 import com.madteam.split.ui.screens.group.state.GroupUIEvent
 import com.madteam.split.ui.screens.group.state.GroupUIState
@@ -46,7 +47,17 @@ class GroupViewModel @Inject constructor(
             is GroupUIEvent.RetryGetGroupExpenses -> {
                 getGroupExpenses(update = true)
             }
+
+            is GroupUIEvent.OnExpenseClick -> {
+                onExpenseClicked(event.expense)
+            }
         }
+    }
+
+    private fun onExpenseClicked(expense: Expense) {
+        _state.value = _state.value.copy(
+            currentExpense = expense
+        )
     }
 
     private fun getGroupExpenses(update: Boolean) {
