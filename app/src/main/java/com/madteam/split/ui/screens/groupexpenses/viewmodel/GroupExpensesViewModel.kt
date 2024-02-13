@@ -1,10 +1,5 @@
 package com.madteam.split.ui.screens.groupexpenses.viewmodel
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.CalendarMonth
-import androidx.compose.material.icons.outlined.Category
-import androidx.compose.material.icons.outlined.Money
-import androidx.compose.material.icons.outlined.Person
 import androidx.lifecycle.ViewModel
 import com.madteam.split.R
 import com.madteam.split.domain.model.ExpenseFilter
@@ -55,7 +50,28 @@ class GroupExpensesViewModel @Inject constructor(
             is GroupExpensesUIEvent.SelectedPayersFilter -> {
                 onSelectedPayersFilter(event.selectedPayers)
             }
+
+            is GroupExpensesUIEvent.ShowAmountFilterDialog -> {
+                onShowAmountFilterDialog(event.show)
+            }
+
+            is GroupExpensesUIEvent.SelectedAmountFilter -> {
+                onSelectedAmountFilter(event.minAmount, event.maxAmount)
+            }
         }
+    }
+
+    private fun onSelectedAmountFilter(minAmount: Double, maxAmount: Double) {
+        _state.value = _state.value.copy(
+            selectedAmountFilter = Pair(minAmount, maxAmount)
+        )
+        checkIfAnyFilterIsActive()
+    }
+
+    private fun onShowAmountFilterDialog(show: Boolean) {
+        _state.value = _state.value.copy(
+            amountFilterDialogIsVisible = show
+        )
     }
 
     private fun onSelectedPayersFilter(selectedPayers: List<Member>) {
@@ -67,7 +83,9 @@ class GroupExpensesViewModel @Inject constructor(
 
     private fun checkIfAnyFilterIsActive() {
         if (_state.value.selectedCategoriesFilter.isNotEmpty() ||
-            _state.value.selectedPayersFilter.isNotEmpty()
+            _state.value.selectedPayersFilter.isNotEmpty() ||
+            _state.value.selectedAmountFilter.first != 0.0 ||
+            _state.value.selectedAmountFilter.second != 0.0
         ) {
             _state.value = _state.value.copy(
                 isAnyFilterActive = true
@@ -102,32 +120,27 @@ class GroupExpensesViewModel @Inject constructor(
         _state.value = _state.value.copy(
             availableFilters = listOf(
                 ExpenseFilter(
-                    title = R.string.date,
-                    icon = Icons.Outlined.CalendarMonth,
-                    enabled = true,
-                    selected = false,
-                    onClick = {
-                    }
-                ),
-                ExpenseFilter(
                     title = R.string.category,
-                    icon = Icons.Outlined.Category,
+                    icon = "label",
                     enabled = true,
                     selected = false,
                     onClick = {
                         onShowCategoryFilterDialog(true)
                     }
                 ),
-                ExpenseFilter(
-                    title = R.string.amount,
-                    icon = Icons.Outlined.Money,
-                    enabled = true,
-                    selected = false,
-                    onClick = {}
-                ),
+                /* TODO: Implement this filter, slider is not working
+                               ExpenseFilter(
+                                   title = R.string.amount,
+                                   icon = Icons.Outlined.Money,
+                                   enabled = true,
+                                   selected = false,
+                                   onClick = {
+                                       onShowAmountFilterDialog(true)
+                                   }
+                               ), */
                 ExpenseFilter(
                     title = R.string.payer,
-                    icon = Icons.Outlined.Person,
+                    icon = "moneywithwings",
                     enabled = true,
                     selected = false,
                     onClick = {
@@ -142,7 +155,8 @@ class GroupExpensesViewModel @Inject constructor(
         _state.value = _state.value.copy(
             selectedCategoriesFilter = listOf(),
             selectedPayersFilter = listOf(),
-            isAnyFilterActive = false
+            selectedAmountFilter = Pair(0.0, 0.0),
+            isAnyFilterActive = false,
         )
     }
 

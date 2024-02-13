@@ -56,6 +56,7 @@ import com.madteam.split.ui.screens.groupexpenses.viewmodel.GroupExpensesViewMod
 import com.madteam.split.ui.theme.AmountTextView
 import com.madteam.split.ui.theme.DSBottomNavigation
 import com.madteam.split.ui.theme.DefaultFloatingButton
+import com.madteam.split.ui.theme.FilterByAmountDialog
 import com.madteam.split.ui.theme.FilterByCategoriesDialog
 import com.madteam.split.ui.theme.FilterByPayerMemberDialog
 import com.madteam.split.ui.theme.GroupNavigationTopAppBar
@@ -184,6 +185,21 @@ fun GroupExpensesScreen(
                             selectedPayers
                         )
                     )
+                },
+                onFilterByAmountDialogShow = { show ->
+                    viewModel.onEvent(
+                        GroupExpensesUIEvent.ShowAmountFilterDialog(
+                            show
+                        )
+                    )
+                },
+                onFilterByAmountSelected = { minAmount, maxAmount ->
+                    viewModel.onEvent(
+                        GroupExpensesUIEvent.SelectedAmountFilter(
+                            minAmount,
+                            maxAmount
+                        )
+                    )
                 }
             )
         }
@@ -197,8 +213,10 @@ fun GroupExpensesContent(
     retryUpdateExpenses: () -> Unit,
     onFilterByCategoriesDialogShow: (Boolean) -> Unit,
     onFilterByPayerDialogShow: (Boolean) -> Unit,
+    onFilterByAmountDialogShow: (Boolean) -> Unit,
     onFilterByCategoriesSelected: (List<ExpenseType>) -> Unit,
     onFilterByPayersSelected: (List<Member>) -> Unit,
+    onFilterByAmountSelected: (Double, Double) -> Unit,
     onClearFilters: () -> Unit,
 ) {
     val filteredExpenses = commonState.groupExpenses.filter { expense ->
@@ -214,7 +232,14 @@ fun GroupExpensesContent(
             true
         }
 
-        categoryFilterPassed && payerFilterPassed
+        val amountFilterPassed =
+            if (state.selectedAmountFilter.first != 0.0 || state.selectedAmountFilter.second != 0.0) {
+                expense.totalAmount in state.selectedAmountFilter.first..state.selectedAmountFilter.second
+            } else {
+                true
+            }
+
+        categoryFilterPassed && payerFilterPassed && amountFilterPassed
     }
     Column(
         modifier = Modifier
@@ -260,7 +285,7 @@ fun GroupExpensesContent(
                 item {
                     SmallSecondaryButton(
                         buttonText = R.string.clear,
-                        icon = null,
+                        emoji = getEmojiByName("crossmark"),
                         enabled = true,
                         onClick = {
                             onClearFilters()
@@ -271,7 +296,7 @@ fun GroupExpensesContent(
             itemsIndexed(state.availableFilters) { _, filter ->
                 SmallSecondaryButton(
                     buttonText = filter.title,
-                    icon = filter.icon,
+                    emoji = getEmojiByName(filter.icon ?: ""),
                     enabled = filter.enabled,
                     onClick = {
                         filter.onClick()
@@ -342,7 +367,7 @@ fun GroupExpensesContent(
 
         if (state.categoryFilterDialogIsVisible) {
             FilterByCategoriesDialog(
-                categoriesAvailable = filteredExpenses.map { it.type }.distinct(),
+                categoriesAvailable = commonState.groupExpenses.map { it.type }.distinct(),
                 onDismiss = {
                     onFilterByCategoriesDialogShow(false)
                 },
@@ -356,7 +381,6 @@ fun GroupExpensesContent(
         if (state.payerFilterDialogIsVisible) {
             val membersAvailable =
                 commonState.userGroups.first { it.id == commonState.currentGroupId }.members
-
             FilterByPayerMemberDialog(
                 membersAvailable = membersAvailable,
                 onDismiss = {
@@ -366,6 +390,22 @@ fun GroupExpensesContent(
                     onFilterByPayersSelected(it)
                 },
                 selectedMembers = state.selectedPayersFilter
+            )
+        }
+
+        if (state.amountFilterDialogIsVisible) {
+            FilterByAmountDialog(
+                minAmount = commonState.groupExpenses.minOf { it.totalAmount },
+                maxAmount = commonState.groupExpenses.maxOf { it.totalAmount },
+                minAmountSelected = state.selectedAmountFilter.first,
+                maxAmountSelected = state.selectedAmountFilter.second,
+                onDismiss = {
+                    onFilterByAmountDialogShow(false)
+                },
+                currency = commonState.userGroups.first { it.id == commonState.currentGroupId }.currency,
+                onAmountSelected = { minAmount, maxAmount ->
+                    onFilterByAmountSelected(minAmount, maxAmount)
+                }
             )
         }
     }

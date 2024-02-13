@@ -14,7 +14,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
@@ -35,6 +34,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.madteam.split.R
+import com.madteam.split.utils.ui.getEmojiByName
 
 @Composable
 fun SecondaryLargeButton(
@@ -198,7 +198,7 @@ fun ElevatedIconButton(
 @Composable
 fun SmallSecondaryButton(
     modifier: Modifier = Modifier,
-    icon: ImageVector? = null,
+    emoji: Int? = null,
     buttonText: Int,
     enabled: Boolean = true,
     onClick: () -> Unit,
@@ -221,11 +221,11 @@ fun SmallSecondaryButton(
         },
         enabled = enabled
     ) {
-        if (icon != null) {
-            Icon(
-                imageVector = icon,
+        if (emoji != null) {
+            Image(
+                modifier = Modifier.size(24.dp),
+                painter = painterResource(id = emoji),
                 contentDescription = null,
-                tint = SplitTheme.colors.neutral.iconExtraWeak
             )
             Spacer(modifier = Modifier.size(8.dp))
         }
@@ -308,7 +308,7 @@ fun SmallIconButtonPreview() {
 fun SmallSecondaryButtonPreview() {
     SmallSecondaryButton(
         modifier = Modifier,
-        icon = Icons.Outlined.CalendarMonth,
+        emoji = getEmojiByName("crossmark"),
         buttonText = R.string.discard_changes,
         enabled = true,
         onClick = {}

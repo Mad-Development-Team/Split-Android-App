@@ -180,4 +180,6 @@
   <string name="apply">Apply</string>
   <string name="clear">Clear</string>
   <string name="filter_by_payer">Filter by payer</string>
+  <string name="filter_by_amount">Filter by amount</string>
+  <string name="filter_by_date">Filter by date</string>
 </resources>

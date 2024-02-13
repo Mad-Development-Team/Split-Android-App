@@ -1163,6 +1163,92 @@ fun FilterByPayerMemberDialog(
     }
 }
 
+@Composable
+fun FilterByAmountDialog(
+    minAmount: Double,
+    maxAmount: Double,
+    minAmountSelected: Double,
+    maxAmountSelected: Double,
+    onDismiss: () -> Unit,
+    currency: Currency,
+    onAmountSelected: (Double, Double) -> Unit,
+) {
+    Dialog(onDismissRequest = { onDismiss() }) {
+        ElevatedCard(
+            modifier = Modifier
+                .fillMaxWidth(),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.elevatedCardColors(
+                containerColor = SplitTheme.colors.neutral.backgroundExtraWeak
+            )
+        ) {
+            Text(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .align(Alignment.CenterHorizontally),
+                text = stringResource(id = R.string.filter_by_amount),
+                style = SplitTheme.typography.heading.m,
+            )
+            Spacer(modifier = Modifier.size(8.dp))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                val minAmountIndexOfDecimal = minAmount.toString().indexOf('.')
+                val minAmountDecimalPart =
+                    minAmount.toString().substring(minAmountIndexOfDecimal + 1)
+                val maxAmountIndexOfDecimal = maxAmount.toString().indexOf('.')
+                val maxAmountDecimalPart =
+                    maxAmount.toString().substring(maxAmountIndexOfDecimal + 1)
+                BlobWithAmount(
+                    modifier = Modifier.size(125.dp),
+                    amountValue = minAmountSelected,
+                    currency = currency.symbol,
+                    decimalPart = minAmountDecimalPart,
+                )
+                Spacer(modifier = Modifier.size(16.dp))
+                BlobWithAmount(
+                    modifier = Modifier.size(125.dp),
+                    amountValue = maxAmountSelected,
+                    currency = currency.symbol,
+                    decimalPart = maxAmountDecimalPart,
+                )
+            }
+            Spacer(modifier = Modifier.size(8.dp))
+            AmountSlider(
+                minAmount = minAmount,
+                maxAmount = maxAmount,
+                onAmountSelected = onAmountSelected
+            )
+            Spacer(modifier = Modifier.size(16.dp))
+            PrimaryLargeButton(
+                modifier = Modifier
+                    .padding(horizontal = 24.dp),
+                onClick = { onDismiss() },
+                text = R.string.apply
+            )
+            Spacer(modifier = Modifier.size(16.dp))
+        }
+
+    }
+}
+
+@Preview
+@Composable
+fun FilterByAmountDialogPreview() {
+    FilterByAmountDialog(
+        minAmount = 0.0,
+        maxAmount = 100.0,
+        minAmountSelected = 0.0,
+        maxAmountSelected = 100.0,
+        onDismiss = {},
+        currency = Currency("USD", "$", "€"),
+        onAmountSelected = { _, _ -> }
+    )
+}
+
 @Preview
 @Composable
 fun FilterByPayerMemberDialogPreview() {
@@ -1171,7 +1257,7 @@ fun FilterByPayerMemberDialogPreview() {
             Member(
                 id = 1,
                 name = "John",
-                profileImage = "https://i.pravatar.cc/150?img=1",
+                profileImage = "",
                 color = "0xFF55FD01",
                 user = 3,
                 joinedDate = "",
@@ -1180,7 +1266,7 @@ fun FilterByPayerMemberDialogPreview() {
             Member(
                 id = 2,
                 name = "Jane",
-                profileImage = "https://i.pravatar.cc/150?img=2",
+                profileImage = "",
                 color = "0xFF8EE189",
                 user = 3,
                 joinedDate = "",
@@ -1189,7 +1275,7 @@ fun FilterByPayerMemberDialogPreview() {
             Member(
                 id = 3,
                 name = "Doe",
-                profileImage = "https://i.pravatar.cc/150?img=3",
+                profileImage = "",
                 color = "0xFFF91439",
                 user = 3,
                 joinedDate = "",
@@ -1198,7 +1284,7 @@ fun FilterByPayerMemberDialogPreview() {
             Member(
                 id = 4,
                 name = "Doe",
-                profileImage = "https://i.pravatar.cc/150?img=4",
+                profileImage = "",
                 color = "0xFFE9A22B",
                 user = 3,
                 joinedDate = "",
