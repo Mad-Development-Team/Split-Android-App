@@ -34,7 +34,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.madteam.split.R
-import com.madteam.split.utils.ui.getEmojiByName
 
 @Composable
 fun SecondaryLargeButton(
@@ -198,7 +197,6 @@ fun ElevatedIconButton(
 @Composable
 fun SmallSecondaryButton(
     modifier: Modifier = Modifier,
-    emoji: Int? = null,
     buttonText: Int,
     enabled: Boolean = true,
     onClick: () -> Unit,
@@ -221,14 +219,6 @@ fun SmallSecondaryButton(
         },
         enabled = enabled
     ) {
-        if (emoji != null) {
-            Image(
-                modifier = Modifier.size(24.dp),
-                painter = painterResource(id = emoji),
-                contentDescription = null,
-            )
-            Spacer(modifier = Modifier.size(8.dp))
-        }
         Text(
             text = stringResource(id = buttonText),
             style = SplitTheme.typography.body.l,
@@ -308,7 +298,6 @@ fun SmallIconButtonPreview() {
 fun SmallSecondaryButtonPreview() {
     SmallSecondaryButton(
         modifier = Modifier,
-        emoji = getEmojiByName("crossmark"),
         buttonText = R.string.discard_changes,
         enabled = true,
         onClick = {}

@@ -285,7 +285,6 @@ fun GroupExpensesContent(
                 item {
                     SmallSecondaryButton(
                         buttonText = R.string.clear,
-                        emoji = getEmojiByName("crossmark"),
                         enabled = true,
                         onClick = {
                             onClearFilters()
@@ -296,7 +295,6 @@ fun GroupExpensesContent(
             itemsIndexed(state.availableFilters) { _, filter ->
                 SmallSecondaryButton(
                     buttonText = filter.title,
-                    emoji = getEmojiByName(filter.icon ?: ""),
                     enabled = filter.enabled,
                     onClick = {
                         filter.onClick()
