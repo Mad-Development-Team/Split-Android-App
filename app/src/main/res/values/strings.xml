@@ -185,4 +185,9 @@
   <string name="expense_details">Expense details</string>
   <string name="who_pays">Who pays?</string>
   <string name="share_expense">Share expense</string>
+  <string name="edit_expense">Edit expense</string>
+  <string name="icon_close_description">"An icon to close "</string>
+  <string name="are_you_sure">Are you sure?</string>
+  <string name="delete_expense_description">"This will delete the expense and recalculate the balance. This action is irreversible, do you want to continue? "</string>
+  <string name="delete_expense">Delete expense</string>
 </resources>

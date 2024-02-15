@@ -13,6 +13,14 @@ fun getCurrentDate(): String {
     return current.format(formatter)
 }
 
+fun convertToShortDateFormat(dateString: String): String {
+    if (dateString.isEmpty()) return ""
+    val inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+    val date = LocalDateTime.parse(dateString, inputFormatter)
+    val outputFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)
+    return date.format(outputFormatter)
+}
+
 fun formatSmallDateBasedOnLocale(context: Context, dateString: String): String {
     val inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
     val dateInput = LocalDateTime.parse(dateString, inputFormatter)

@@ -35,19 +35,30 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.madteam.split.R
 import com.madteam.split.domain.model.Expense
+import com.madteam.split.ui.navigation.Screens
 import com.madteam.split.ui.screens.group.state.GroupUIState
 import com.madteam.split.ui.screens.group.viewmodel.GroupViewModel
 import com.madteam.split.ui.theme.BlobWithAmount
 import com.madteam.split.ui.theme.MemberWithAmount
 import com.madteam.split.ui.theme.PrimaryLargeButton
 import com.madteam.split.ui.theme.SplitTheme
+import com.madteam.split.utils.ui.BackPressHandler
 import com.madteam.split.utils.ui.getEmojiByName
+import com.madteam.split.utils.ui.navigateWithPopUpTo
 
 @Composable
 fun ExpenseDetailScreen(
     navController: NavController,
     commonViewModel: GroupViewModel = hiltViewModel(),
 ) {
+
+    BackPressHandler {
+        navController.navigateWithPopUpTo(
+            route = Screens.GroupExpensesScreen.route,
+            popUpTo = Screens.ExpenseDetailScreen.route,
+            inclusive = true
+        )
+    }
 
     val commonState by commonViewModel.state.collectAsStateWithLifecycle()
 
@@ -61,7 +72,16 @@ fun ExpenseDetailScreen(
         ) {
             ExpenseDetailContent(
                 commonState = commonState,
-                navigateBack = navController::popBackStack,
+                navigateBack = {
+                    navController.navigateWithPopUpTo(
+                        route = Screens.GroupExpensesScreen.route,
+                        popUpTo = Screens.ExpenseDetailScreen.route,
+                        inclusive = true
+                    )
+                },
+                navigateToEdit = {
+                    navController.navigate(Screens.EditExpenseScreen.route)
+                }
             )
         }
     }
@@ -71,6 +91,7 @@ fun ExpenseDetailScreen(
 fun ExpenseDetailContent(
     commonState: GroupUIState,
     navigateBack: () -> Unit,
+    navigateToEdit: () -> Unit,
 ) {
     val currentExpense =
         commonState.groupExpenses.find { it.id == commonState.currentExpense } ?: Expense()
@@ -199,6 +220,13 @@ fun ExpenseDetailContent(
             }
         }
         Spacer(modifier = Modifier.size(24.dp))
+        PrimaryLargeButton(
+            modifier = Modifier.padding(horizontal = 24.dp),
+            onClick = { navigateToEdit() },
+            text = R.string.edit_expense,
+            enabled = true
+        )
+        Spacer(modifier = Modifier.size(16.dp))
         PrimaryLargeButton(
             modifier = Modifier.padding(horizontal = 24.dp),
             onClick = { /*TODO*/ },

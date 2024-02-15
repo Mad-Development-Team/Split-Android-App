@@ -20,4 +20,5 @@ sealed class Screens(
     data object InviteCodeScreen : Screens("invite_code_screen")
     data object CreateExpenseScreen : Screens("create_expense_screen")
     data object ExpenseDetailScreen : Screens("expense_detail_screen")
+    data object EditExpenseScreen : Screens("edit_expense_screen")
 }
