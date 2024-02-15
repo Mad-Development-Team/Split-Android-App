@@ -65,6 +65,7 @@ androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-storage = { module = "com.google.firebase:firebase-storage" }
+firebase-database = { module = "com.google.firebase:firebase-database-ktx" }
 swiperefresh = { module = "com.google.accompanist:accompanist-swiperefresh", version.ref = "swipeRefresh" }
 datastore = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
 

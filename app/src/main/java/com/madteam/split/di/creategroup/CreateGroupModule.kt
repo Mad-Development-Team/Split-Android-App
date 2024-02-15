@@ -17,8 +17,8 @@ object CreateGroupModule {
     @Singleton
     fun provideCreateGroupRepository(groupDataSource: GroupDataSource): GroupRepository {
         return GroupRepositoryImpl(
-            createGroupDataSource = groupDataSource,
-            createGroupRemoteDataSource = groupDataSource
+            groupDataSource = groupDataSource,
+            groupRemoteDataSource = groupDataSource
         )
     }
 }

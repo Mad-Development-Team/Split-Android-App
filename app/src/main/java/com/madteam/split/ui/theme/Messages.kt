@@ -7,15 +7,20 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -120,13 +125,123 @@ private fun DSBaseMessage(
 }
 
 @Composable
+fun TopInfoMessage(
+    modifier: Modifier = Modifier,
+    text: String,
+) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(40.dp)
+            .background(
+                color = SplitTheme.colors.primary.backgroundWeak
+            )
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .fillMaxSize(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .size(20.dp),
+                color = SplitTheme.colors.primary.backgroundMedium,
+                trackColor = SplitTheme.colors.primary.backgroundWeak,
+                strokeWidth = 2.dp
+            )
+            Spacer(modifier = Modifier.size(16.dp))
+            Text(
+                text = text,
+                style = SplitTheme.typography.body.m,
+                color = SplitTheme.colors.primary.backgroundMedium,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+    }
+}
+
+@Composable
+fun TopErrorMessage(
+    modifier: Modifier = Modifier,
+    text: String,
+) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(40.dp)
+            .background(
+                color = SplitTheme.colors.error.backgroundDefault
+            )
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .fillMaxSize(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = Icons.Filled.Error,
+                contentDescription = null,
+                tint = SplitTheme.colors.error.iconDefault
+            )
+            Spacer(modifier = Modifier.size(16.dp))
+            Text(
+                text = text,
+                style = SplitTheme.typography.body.m,
+                color = SplitTheme.colors.error.textDefault,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+    }
+}
+
+@Composable
+fun TopSuccessMessage(
+    modifier: Modifier = Modifier,
+    text: String,
+) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(40.dp)
+            .background(
+                color = SplitTheme.colors.success.backgroundDefault
+            )
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .fillMaxSize(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = Icons.Filled.CheckCircle,
+                contentDescription = null,
+                tint = SplitTheme.colors.success.iconDefault
+            )
+            Spacer(modifier = Modifier.size(16.dp))
+            Text(
+                text = text,
+                style = SplitTheme.typography.body.m,
+                color = SplitTheme.colors.success.textDefault,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+    }
+}
+
+@Composable
 fun InfoMessage(
     modifier: Modifier = Modifier,
     @StringRes messageText: Int,
     @StringRes titleText: Int? = null,
     cancelable: Boolean = false,
     onCloseClick: () -> Unit = {},
-    onLinkClick: (String) -> Unit = {}
+    onLinkClick: (String) -> Unit = {},
 ) {
     DSBaseMessage(
         modifier = modifier,
@@ -151,7 +266,7 @@ fun ErrorMessage(
     titleText: Int? = null,
     cancelable: Boolean = false,
     onCloseClick: () -> Unit = {},
-    onLinkClick: (String) -> Unit = {}
+    onLinkClick: (String) -> Unit = {},
 ) {
     DSBaseMessage(
         modifier = modifier,
@@ -176,7 +291,7 @@ fun SuccessMessage(
     titleText: Int? = null,
     cancelable: Boolean = false,
     onCloseClick: () -> Unit = {},
-    onLinkClick: (String) -> Unit = {}
+    onLinkClick: (String) -> Unit = {},
 ) {
     DSBaseMessage(
         modifier = modifier,
@@ -196,8 +311,41 @@ fun SuccessMessage(
 
 @Preview
 @Composable
+fun TopInfoMessagePreview() {
+    TopInfoMessage(
+        text = "Updating group information"
+    )
+}
+
+@Preview
+@Composable
+fun TopInfoSuccessPreview() {
+    TopSuccessMessage(
+        text = "Updated group information successfully"
+    )
+}
+
+@Preview
+@Composable
+fun TopErrorMessagePreview() {
+    TopErrorMessage(
+        text = "Error updating group information"
+    )
+}
+
+@Preview
+@Composable
 fun InfoMessagePreview() {
     InfoMessage(
+        messageText = R.string.shared_user_changes_info,
+        cancelable = true
+    )
+}
+
+@Preview
+@Composable
+fun SuccessMessagePreview() {
+    SuccessMessage(
         messageText = R.string.shared_user_changes_info,
         cancelable = true
     )

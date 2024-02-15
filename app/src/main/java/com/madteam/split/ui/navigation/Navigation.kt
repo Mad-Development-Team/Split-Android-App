@@ -12,6 +12,7 @@ import com.madteam.split.ui.screens.createexpense.ui.CreateExpenseScreen
 import com.madteam.split.ui.screens.creategroup.info.ui.CreateGroupInfoScreen
 import com.madteam.split.ui.screens.creategroup.invite.ui.CreateGroupInviteScreen
 import com.madteam.split.ui.screens.creategroup.members.ui.CreateGroupMembersScreen
+import com.madteam.split.ui.screens.expensedetail.ui.ExpenseDetailScreen
 import com.madteam.split.ui.screens.forgotpassword.ui.ForgotPasswordScreen
 import com.madteam.split.ui.screens.groupbalance.ui.GroupBalanceScreen
 import com.madteam.split.ui.screens.groupexpenses.ui.GroupExpensesScreen
@@ -377,7 +378,9 @@ fun Navigation() {
             route = Screens.GroupExpensesScreen.route,
             enterTransition = {
                 when (initialState.destination.route) {
-                    Screens.CreateExpenseScreen.route -> {
+                    Screens.ExpenseDetailScreen.route,
+                    Screens.CreateExpenseScreen.route,
+                    -> {
                         slideIntoContainer(
                             AnimatedContentTransitionScope.SlideDirection.Right,
                             animationSpec = tween(DEFAULT_ANIMATION_DURATION_IN_MILLIS)
@@ -391,7 +394,9 @@ fun Navigation() {
             },
             exitTransition = {
                 when (targetState.destination.route) {
-                    Screens.CreateExpenseScreen.route -> {
+                    Screens.ExpenseDetailScreen.route,
+                    Screens.CreateExpenseScreen.route,
+                    -> {
                         slideOutOfContainer(
                             AnimatedContentTransitionScope.SlideDirection.Left,
                             animationSpec = tween(DEFAULT_ANIMATION_DURATION_IN_MILLIS)
@@ -453,6 +458,24 @@ fun Navigation() {
             }
         ) {
             CreateExpenseScreen(navController = navController)
+        }
+
+        composable(
+            route = Screens.ExpenseDetailScreen.route,
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left,
+                    animationSpec = tween(DEFAULT_ANIMATION_DURATION_IN_MILLIS)
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Right,
+                    animationSpec = tween(DEFAULT_ANIMATION_DURATION_IN_MILLIS)
+                )
+            }
+        ) {
+            ExpenseDetailScreen(navController = navController)
         }
     }
 }

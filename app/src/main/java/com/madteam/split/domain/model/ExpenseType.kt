@@ -1,5 +1,7 @@
 package com.madteam.split.domain.model
 
+import com.madteam.split.data.model.response.ExpenseTypeDTO
+
 data class ExpenseType(
     val id: Int,
     val title: String,
@@ -13,3 +15,10 @@ data class ExpenseType(
         group = null,
     )
 }
+
+fun ExpenseType.toDto() = ExpenseTypeDTO(
+    id = id,
+    title = title,
+    icon = icon,
+    group = group,
+)

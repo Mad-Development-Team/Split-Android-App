@@ -165,4 +165,24 @@
   <string name="category_name">Category name</string>
   <string name="create_group_category">Create category</string>
   <string name="go_back_categories">Go back to categories</string>
+  <string name="missing_fields_create_expense">There are missing fields remaining. Make sure you\'ve introduced a title, an amount, paid by and for whom is the expense.</string>
+  <string name="expense_type_icon">Expense type icon</string>
+  <string name="for_label">For</string>
+  <string name="today">Today</string>
+  <string name="yesterday">Yesterday</string>
+  <string name="updating_group_information">Updating group information</string>
+  <string name="loading_expenses">Updating group expenses</string>
+  <string name="error_retrieving_expenses">Error retrieving group expenses</string>
+  <string name="expenses_loaded_successfully">Expenses updated successfully</string>
+  <string name="retry">Retry</string>
+  <string name="time_to_spent">Nothing here... ¡Time to spend!</string>
+  <string name="filter_by_categories">Filter by categories</string>
+  <string name="apply">Apply</string>
+  <string name="clear">Clear</string>
+  <string name="filter_by_payer">Filter by payer</string>
+  <string name="filter_by_amount">Filter by amount</string>
+  <string name="filter_by_date">Filter by date</string>
+  <string name="expense_details">Expense details</string>
+  <string name="who_pays">Who pays?</string>
+  <string name="share_expense">Share expense</string>
 </resources>

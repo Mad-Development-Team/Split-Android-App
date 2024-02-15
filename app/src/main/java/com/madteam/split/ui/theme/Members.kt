@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
@@ -18,6 +19,7 @@ import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
@@ -289,7 +291,8 @@ fun MemberWithAmount(
             ) {
                 AmountTextView(
                     amount = amount,
-                    currency = currency
+                    currency = currency,
+                    color = SplitTheme.colors.neutral.textExtraWeak
                 )
             }
         }
@@ -344,4 +347,64 @@ fun AddMembersHorizontalListPreview() {
             ),
         )
     )
+}
+
+@OptIn(ExperimentalGlideComposeApi::class)
+@Composable
+fun MembersListItemList(
+    modifier: Modifier = Modifier,
+    members: List<Member>,
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy((-8).dp)
+    ) {
+        members.forEachIndexed { _, member ->
+            Box(
+                modifier = Modifier
+                    .shadow(
+                        elevation = 4.dp,
+                        shape = CircleShape
+                    )
+                    .background(
+                        color = SplitTheme.colors.secondary.backgroundMedium,
+                        shape = CircleShape
+                    )
+                    .size(24.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Row(
+                    modifier = Modifier,
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    if (!member.profileImage.isNullOrBlank()) {
+                        GlideImage(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .clip(CircleShape),
+                            model = member.profileImage,
+                            contentDescription = stringResource(
+                                id = R.string.user_profile_image_description
+                            ),
+                            contentScale = ContentScale.Crop,
+                        )
+                    } else {
+                        Text(
+                            text = member.name.firstOrNull().toString().uppercase(),
+                            style = SplitTheme.typography.heading.xxs,
+                            color = SplitTheme.colors.neutral.textTitle,
+                            modifier = Modifier
+                                .clip(CircleShape)
+                                .background(
+                                    color = SplitTheme.colors.secondary.backgroundMedium,
+                                    shape = CircleShape
+                                ),
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
+            }
+        }
+    }
 }

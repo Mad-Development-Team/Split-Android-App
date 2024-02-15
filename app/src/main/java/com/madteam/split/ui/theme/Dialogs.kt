@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -49,7 +50,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -59,11 +62,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.constraintlayout.compose.ConstraintLayout
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.madteam.split.R
 import com.madteam.split.domain.model.Currency
 import com.madteam.split.domain.model.ExpenseType
+import com.madteam.split.domain.model.Member
 import com.madteam.split.utils.ui.getEmojiByName
 import com.madteam.split.utils.ui.getFlagByCurrency
 import kotlin.random.Random
@@ -934,6 +939,402 @@ fun CreateExpenseTypeDialog(
             }
         )
     }
+}
+
+@Composable
+fun FilterByCategoriesDialog(
+    categoriesAvailable: List<ExpenseType>,
+    onDismiss: () -> Unit,
+    onCategoriesSelected: (List<ExpenseType>) -> Unit,
+    selectedCategories: List<ExpenseType>,
+) {
+    Dialog(
+        onDismissRequest = { onDismiss() }
+    ) {
+        ElevatedCard(
+            modifier = Modifier
+                .fillMaxWidth(),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.elevatedCardColors(
+                containerColor = SplitTheme.colors.neutral.backgroundExtraWeak
+            )
+        ) {
+            Text(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .align(Alignment.CenterHorizontally),
+                text = stringResource(id = R.string.filter_by_categories),
+                style = SplitTheme.typography.heading.m,
+            )
+            LazyRow(
+                contentPadding = PaddingValues(horizontal = 8.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                itemsIndexed(categoriesAvailable) { _, category ->
+                    val isSelected = selectedCategories.contains(category)
+                    val backgroundColor = if (isSelected) {
+                        SplitTheme.colors.primary.backgroundStrong
+                    } else {
+                        SplitTheme.colors.neutral.backgroundMedium
+                    }
+                    val textColor = if (isSelected) {
+                        SplitTheme.colors.neutral.textHeavy
+                    } else {
+                        SplitTheme.colors.neutral.textBody
+                    }
+                    val textStyle = if (isSelected) {
+                        SplitTheme.typography.heading.xxs
+                    } else {
+                        SplitTheme.typography.body.s
+                    }
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .shadow(
+                                    elevation = if (isSelected) 16.dp else 0.dp,
+                                    shape = CircleShape
+                                )
+                                .clip(CircleShape)
+                                .background(
+                                    color = backgroundColor
+                                )
+                                .clickable {
+                                    onCategoriesSelected(
+                                        if (isSelected) {
+                                            selectedCategories.filter { it != category }
+                                        } else {
+                                            selectedCategories + category
+                                        }
+                                    )
+                                }
+                        ) {
+                            Image(
+                                modifier = Modifier
+                                    .size(56.dp)
+                                    .padding(8.dp),
+                                painter = painterResource(
+                                    id = getEmojiByName(category.icon)
+                                ),
+                                contentDescription = null
+                            )
+                        }
+                        Spacer(modifier = Modifier.size(4.dp))
+                        Text(
+                            text = category.title,
+                            style = textStyle,
+                            color = textColor,
+                        )
+                    }
+                }
+            }
+            Spacer(modifier = Modifier.size(16.dp))
+            PrimaryLargeButton(
+                modifier = Modifier
+                    .padding(horizontal = 24.dp),
+                onClick = { onDismiss() },
+                text = R.string.apply
+            )
+            Spacer(modifier = Modifier.size(16.dp))
+        }
+    }
+}
+
+@OptIn(ExperimentalGlideComposeApi::class)
+@Composable
+fun FilterByPayerMemberDialog(
+    membersAvailable: List<Member>,
+    onDismiss: () -> Unit,
+    onPayerMemberSelected: (List<Member>) -> Unit,
+    selectedMembers: List<Member>,
+) {
+    Dialog(
+        onDismissRequest = { onDismiss() }
+    ) {
+        ElevatedCard(
+            modifier = Modifier
+                .fillMaxWidth(),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.elevatedCardColors(
+                containerColor = SplitTheme.colors.neutral.backgroundExtraWeak
+            )
+        ) {
+            Text(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .align(Alignment.CenterHorizontally),
+                text = stringResource(id = R.string.filter_by_payer),
+                style = SplitTheme.typography.heading.m,
+            )
+            LazyRow(
+                contentPadding = PaddingValues(horizontal = 8.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                itemsIndexed(membersAvailable) { _, member ->
+                    val memberIdIsSelected = selectedMembers.any { it.id == member.id }
+                    val hexColor = member.color?.removePrefix("0x")?.toLong(16) ?: 0xFF000000
+                    val color =
+                        if (memberIdIsSelected) SplitTheme.colors.primary.backgroundStrong else Color(
+                            hexColor
+                        )
+                    ConstraintLayout(
+                        modifier = Modifier
+                            .shadow(
+                                elevation = 8.dp,
+                                shape = CircleShape
+                            )
+                    ) {
+                        val (image, name, degrade) = createRefs()
+                        GlideImage(
+                            model = member.profileImage,
+                            contentDescription = stringResource(
+                                id = R.string.user_profile_image_description
+                            ),
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .constrainAs(image) {
+                                    top.linkTo(parent.top)
+                                    bottom.linkTo(parent.bottom)
+                                    start.linkTo(parent.start)
+                                    end.linkTo(parent.end)
+                                }
+                                .clickable {
+                                    onPayerMemberSelected(
+                                        if (memberIdIsSelected) {
+                                            selectedMembers.filter { it.id != member.id }
+                                        } else {
+                                            selectedMembers + member
+                                        }
+                                    )
+                                }
+                                .size(120.dp)
+                                .background(
+                                    color,
+                                    CircleShape
+                                )
+                                .clip(CircleShape)
+                        )
+                        Box(
+                            modifier = Modifier
+                                .size(120.dp)
+                                .clip(CircleShape)
+                                .background(
+                                    brush = Brush.verticalGradient(
+                                        colors = listOf(
+                                            Color.Transparent,
+                                            Color.Black
+                                        )
+                                    )
+                                )
+                                .constrainAs(degrade) {
+                                    top.linkTo(image.top)
+                                    start.linkTo(image.start)
+                                    end.linkTo(image.end)
+                                    bottom.linkTo(image.bottom)
+                                }
+                        )
+                        Text(
+                            modifier = Modifier
+                                .constrainAs(name) {
+                                    start.linkTo(image.start)
+                                    end.linkTo(image.end)
+                                    bottom.linkTo(image.bottom, 30.dp)
+                                },
+                            text = member.name,
+                            color = Color.White,
+                            textAlign = TextAlign.Center,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            style = SplitTheme.typography.heading.m
+                        )
+                    }
+                }
+            }
+            Spacer(modifier = Modifier.size(16.dp))
+            PrimaryLargeButton(
+                modifier = Modifier
+                    .padding(horizontal = 24.dp),
+                onClick = { onDismiss() },
+                text = R.string.apply
+            )
+            Spacer(modifier = Modifier.size(16.dp))
+        }
+    }
+}
+
+@Composable
+fun FilterByAmountDialog(
+    minAmount: Double,
+    maxAmount: Double,
+    minAmountSelected: Double,
+    maxAmountSelected: Double,
+    onDismiss: () -> Unit,
+    currency: Currency,
+    onAmountSelected: (Double, Double) -> Unit,
+) {
+    Dialog(onDismissRequest = { onDismiss() }) {
+        ElevatedCard(
+            modifier = Modifier
+                .fillMaxWidth(),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.elevatedCardColors(
+                containerColor = SplitTheme.colors.neutral.backgroundExtraWeak
+            )
+        ) {
+            Text(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .align(Alignment.CenterHorizontally),
+                text = stringResource(id = R.string.filter_by_amount),
+                style = SplitTheme.typography.heading.m,
+            )
+            Spacer(modifier = Modifier.size(8.dp))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                BlobWithAmount(
+                    modifier = Modifier.size(125.dp),
+                    amountValue = minAmountSelected,
+                    currency = currency
+                )
+                Spacer(modifier = Modifier.size(16.dp))
+                BlobWithAmount(
+                    modifier = Modifier.size(125.dp),
+                    amountValue = maxAmountSelected,
+                    currency = currency
+                )
+            }
+            Spacer(modifier = Modifier.size(8.dp))
+            AmountSlider(
+                minAmount = minAmount,
+                maxAmount = maxAmount,
+                onAmountSelected = onAmountSelected
+            )
+            Spacer(modifier = Modifier.size(16.dp))
+            PrimaryLargeButton(
+                modifier = Modifier
+                    .padding(horizontal = 24.dp),
+                onClick = { onDismiss() },
+                text = R.string.apply
+            )
+            Spacer(modifier = Modifier.size(16.dp))
+        }
+
+    }
+}
+
+@Preview
+@Composable
+fun FilterByAmountDialogPreview() {
+    FilterByAmountDialog(
+        minAmount = 0.0,
+        maxAmount = 100.0,
+        minAmountSelected = 0.0,
+        maxAmountSelected = 100.0,
+        onDismiss = {},
+        currency = Currency("USD", "$", "€"),
+        onAmountSelected = { _, _ -> }
+    )
+}
+
+@Preview
+@Composable
+fun FilterByPayerMemberDialogPreview() {
+    FilterByPayerMemberDialog(
+        membersAvailable = listOf(
+            Member(
+                id = 1,
+                name = "John",
+                profileImage = "",
+                color = "0xFF55FD01",
+                user = 3,
+                joinedDate = "",
+                groupId = 3
+            ),
+            Member(
+                id = 2,
+                name = "Jane",
+                profileImage = "",
+                color = "0xFF8EE189",
+                user = 3,
+                joinedDate = "",
+                groupId = 3
+            ),
+            Member(
+                id = 3,
+                name = "Doe",
+                profileImage = "",
+                color = "0xFFF91439",
+                user = 3,
+                joinedDate = "",
+                groupId = 3
+            ),
+            Member(
+                id = 4,
+                name = "Doe",
+                profileImage = "",
+                color = "0xFFE9A22B",
+                user = 3,
+                joinedDate = "",
+                groupId = 3
+            ),
+        ),
+        onDismiss = { /*TODO*/ },
+        onPayerMemberSelected = {},
+        selectedMembers = listOf(
+            Member(
+                id = 1,
+                name = "John",
+                profileImage = "https://i.pravatar.cc/150?img=1",
+                color = "#FF0000",
+                user = 3,
+                joinedDate = "",
+                groupId = 3
+            ),
+            Member(
+                id = 2,
+                name = "Jane",
+                profileImage = "https://i.pravatar.cc/150?img=2",
+                color = "#00FF00",
+                user = 3,
+                joinedDate = "",
+                groupId = 3
+            ),
+        )
+    )
+}
+
+@Preview
+@Composable
+fun FilterByCategoriesPreview(
+
+) {
+    FilterByCategoriesDialog(
+        categoriesAvailable = listOf(
+            ExpenseType(1, "Food", "hamburger"),
+            ExpenseType(1, "Accommodation", "housewithgarden"),
+            ExpenseType(2, "Transport", "trolleybus"),
+            ExpenseType(3, "Entertainment", "joystick"),
+            ExpenseType(4, "Groceries", "shoppingcart"),
+            ExpenseType(5, "Health", "rescueworkershelmet"),
+            ExpenseType(6, "Restaurants", "forkandknifewithplate"),
+            ExpenseType(7, "Shopping", "shoppingbags"),
+            ExpenseType(8, "Travel", "airplane"),
+            ExpenseType(9, "Fuel", "fuelpump"),
+            ExpenseType(10, "Bars", "clinkingbeermugs"),
+            ExpenseType(9, "Other", "questionmark"),
+        ),
+        onDismiss = {},
+        onCategoriesSelected = {
+        },
+        selectedCategories = listOf(
+            ExpenseType(1, "Accommodation", "housewithgarden"),
+        )
+    )
 }
 
 @Preview

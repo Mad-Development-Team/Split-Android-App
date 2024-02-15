@@ -19,4 +19,5 @@ sealed class Screens(
     data object GroupBalanceScreen : Screens("group_balance_screen")
     data object InviteCodeScreen : Screens("invite_code_screen")
     data object CreateExpenseScreen : Screens("create_expense_screen")
+    data object ExpenseDetailScreen : Screens("expense_detail_screen")
 }

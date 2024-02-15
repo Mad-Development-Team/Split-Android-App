@@ -8,7 +8,11 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.room.Room
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import com.madteam.split.data.database.currency.CurrencyDatabase
+import com.madteam.split.data.database.expense.ExpenseDatabase
 import com.madteam.split.data.database.group.ExpenseTypeDatabase
 import com.madteam.split.data.database.group.GroupDatabase
 import com.madteam.split.data.database.user.UserDatabase
@@ -88,5 +92,21 @@ object StorageModule {
             context,
             ExpenseTypeDatabase::class.java, "expense_type_database"
         ).build()
+    }
+
+    @Provides
+    @Singleton
+    @Named("ExpenseDatabase")
+    fun provideExpenseDatabase(@ApplicationContext context: Context): ExpenseDatabase {
+        return Room.databaseBuilder(
+            context,
+            ExpenseDatabase::class.java, "expense_database"
+        ).build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideFirebaseDatabase(): FirebaseDatabase {
+        return Firebase.database
     }
 }

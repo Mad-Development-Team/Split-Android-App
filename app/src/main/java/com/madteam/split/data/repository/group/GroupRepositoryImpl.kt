@@ -9,13 +9,14 @@ import com.madteam.split.utils.network.Resource
 import javax.inject.Inject
 
 class GroupRepositoryImpl @Inject constructor(
-    private val createGroupDataSource: GroupDataSourceContract.Local,
-    private val createGroupRemoteDataSource: GroupDataSourceContract.Remote,
+    private val groupDataSource: GroupDataSourceContract.Local,
+    private val groupRemoteDataSource: GroupDataSourceContract.Remote,
 ) : GroupRepository {
 
     private var newGroup: Group
     private var userGroups: List<Group> = listOf()
     private var currentGroupId: Int? = null
+    private var currentExpenseId: Int? = null
 
     init {
         newGroup = Group(
@@ -53,7 +54,7 @@ class GroupRepositoryImpl @Inject constructor(
 
     override suspend fun createGroup(): Resource<Group> {
         try {
-            val response = createGroupRemoteDataSource.createGroup(
+            val response = groupRemoteDataSource.createGroup(
                 name = newGroup.name,
                 description = newGroup.description,
                 members = newGroup.members,
@@ -78,7 +79,7 @@ class GroupRepositoryImpl @Inject constructor(
     override suspend fun getUserGroups(update: Boolean): Resource<List<Group>> {
         if (update || userGroups.isEmpty()) {
             try {
-                val response = createGroupDataSource.getUserGroups(true)
+                val response = groupDataSource.getUserGroups(true)
                 if (response is Resource.Success) {
                     userGroups = response.data
                     return Resource.Success(userGroups)
@@ -101,11 +102,22 @@ class GroupRepositoryImpl @Inject constructor(
         currentGroupId = groupId
     }
 
+    override fun setCurrentExpense(expenseId: Int) {
+        currentExpenseId = expenseId
+    }
+
+    override fun getCurrentExpenseId(): Int? = currentExpenseId
+
     override fun getCurrentGroup(): Int? = currentGroupId
 
     override suspend fun getGroupExpenseTypes(
         update: Boolean,
     ): Resource<List<ExpenseType>> {
-        return createGroupDataSource.getGroupExpenseTypes(currentGroupId ?: 0, update)
+        return groupDataSource.getGroupExpenseTypes(currentGroupId ?: 0, update)
+    }
+
+    override suspend fun deleteAllGroups() {
+        groupDataSource.deleteAllUserGroups()
+        groupDataSource.deleteExpenseTypes()
     }
 }

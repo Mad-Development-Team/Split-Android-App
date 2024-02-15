@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.madteam.split.domain.model.Currency
 import com.madteam.split.ui.utils.round
@@ -19,6 +20,7 @@ fun AmountTextView(
     modifier: Modifier = Modifier,
     amount: Double,
     currency: Currency,
+    color: Color,
 ) {
     val amountRounded = amount.round(2)
     val decimalPart = amountRounded.toString().split(".")[1]
@@ -39,7 +41,7 @@ fun AmountTextView(
             Text(
                 modifier = Modifier,
                 text = animatedAmountValue.absoluteValue.toString(),
-                color = SplitTheme.colors.neutral.textExtraWeak,
+                color = color,
                 style = SplitTheme.typography.display.s
             )
         }
@@ -58,7 +60,7 @@ fun AmountTextView(
                     .padding(top = 4.dp),
                 text = if (decimalPart == "0" || decimalPart == "00") ""
                 else animatedDecimalValue.toString(),
-                color = SplitTheme.colors.neutral.textExtraWeak,
+                color = color,
                 style = SplitTheme.typography.heading.s
             )
         }
@@ -66,7 +68,7 @@ fun AmountTextView(
             modifier = Modifier
                 .padding(top = 4.dp),
             text = currency.symbol,
-            color = SplitTheme.colors.neutral.textExtraWeak,
+            color = color,
             style = SplitTheme.typography.heading.s
         )
     }
