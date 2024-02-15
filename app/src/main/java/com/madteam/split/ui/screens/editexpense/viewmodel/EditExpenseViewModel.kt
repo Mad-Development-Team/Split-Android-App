@@ -2,6 +2,7 @@ package com.madteam.split.ui.screens.editexpense.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.madteam.split.data.repository.expense.ExpenseRepository
 import com.madteam.split.data.repository.group.GroupRepository
 import com.madteam.split.domain.model.Expense
 import com.madteam.split.domain.model.ExpenseType
@@ -22,6 +23,7 @@ import javax.inject.Inject
 @HiltViewModel
 class EditExpenseViewModel @Inject constructor(
     private val groupRepository: GroupRepository,
+    private val expenseRepository: ExpenseRepository,
 ) : ViewModel() {
 
     private val _state: MutableStateFlow<EditExpenseUIState> =
@@ -105,11 +107,46 @@ class EditExpenseViewModel @Inject constructor(
     }
 
     private fun updateExpense() {
-        TODO("Not yet implemented")
+        viewModelScope.launch {
+            showLoading(true)
+            val response = expenseRepository.editGroupExpense(
+                expense = _state.value.expense,
+            )
+            if (response is Resource.Success) {
+                showLoading(false)
+                _state.value = _state.value.copy(
+                    isSuccess = true
+                )
+            } else {
+                showLoading(false)
+                showErrorDialog(true)
+            }
+        }
     }
 
     private fun deleteExpense() {
-        TODO("Not yet implemented")
+        viewModelScope.launch {
+            showLoading(true)
+            val response = expenseRepository.deleteGroupExpense(
+                expenseId = _state.value.expense.id,
+                groupId = _state.value.groupInfo.id
+            )
+            if (response is Resource.Success) {
+                showLoading(false)
+                _state.value = _state.value.copy(
+                    isSuccess = true
+                )
+            } else {
+                showLoading(false)
+                showErrorDialog(true)
+            }
+        }
+    }
+
+    private fun showLoading(state: Boolean) {
+        _state.value = _state.value.copy(
+            isLoading = state
+        )
     }
 
     private fun showDeleteDialog(state: Boolean) {

@@ -19,4 +19,5 @@ data class EditExpenseUIState(
     val paidBySelectedMembers: List<Int> = listOf(),
     val needsToPaySelectedMember: List<Int> = listOf(),
     val deleteDialog: Boolean = false,
+    val isSuccess: Boolean = false,
 )

@@ -126,6 +126,13 @@ fun EditExpenseScreen(
                         inclusive = true
                     )
                 },
+                popUpBackToGroupExpenses = {
+                    navController.navigateWithPopUpTo(
+                        route = Screens.GroupExpensesScreen.route,
+                        popUpTo = Screens.EditExpenseScreen.route,
+                        inclusive = true
+                    )
+                },
                 onExpenseTitleChanged = { title ->
                     viewModel.onEvent(EditExpenseUIEvent.OnExpenseTitleChange(title))
                 },
@@ -186,6 +193,7 @@ fun EditExpenseScreen(
 fun EditExpenseContent(
     state: EditExpenseUIState,
     popUpBack: () -> Unit,
+    popUpBackToGroupExpenses: () -> Unit,
     onExpenseTitleChanged: (String) -> Unit,
     onShowExpenseTypeDialog: (Boolean) -> Unit,
     onExpenseDescriptionChanged: (String) -> Unit,
@@ -202,6 +210,11 @@ fun EditExpenseContent(
     onDeleteDialogShowChanged: (Boolean) -> Unit,
     onDeleteExpense: () -> Unit,
 ) {
+    LaunchedEffect(state.isSuccess) {
+        if (state.isSuccess) {
+            popUpBackToGroupExpenses()
+        }
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()

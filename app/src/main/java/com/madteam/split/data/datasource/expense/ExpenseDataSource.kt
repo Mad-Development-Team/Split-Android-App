@@ -50,6 +50,30 @@ class ExpenseDataSource @Inject constructor(
         }
     }
 
+    override suspend fun deleteGroupExpense(groupId: Int, expenseId: Int): Resource<List<Balance>> {
+        return try {
+            val response = api.deleteGroupExpense(groupId, expenseId)
+            Resource.Success(response.toDomain())
+        } catch (e: HttpException) {
+            Resource.Error(
+                exception = Exception("Error"),
+                errorMessage = "Error trying to delete group expense: ${e.message}"
+            )
+        }
+    }
+
+    override suspend fun editGroupExpense(expense: Expense): Resource<List<Balance>> {
+        return try {
+            val response = api.editGroupExpense(expense.toDto())
+            Resource.Success(response.toDomain())
+        } catch (e: HttpException) {
+            Resource.Error(
+                exception = Exception("Error"),
+                errorMessage = "Error trying to edit group expense: ${e.message}"
+            )
+        }
+    }
+
     override suspend fun deleteAllExpenses() {
         dao.deleteAllGroupExpenses()
     }
