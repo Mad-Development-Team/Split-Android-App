@@ -59,6 +59,10 @@ class GroupViewModel @Inject constructor(
             is GroupUIEvent.OnExpenseClick -> {
                 onExpenseClicked(event.expense)
             }
+
+            is GroupUIEvent.ReloadGroupExpenses -> {
+                getGroupExpenses(update = false)
+            }
         }
     }
 
@@ -122,10 +126,6 @@ class GroupViewModel @Inject constructor(
                 )
             }
         }
-    }
-
-    private fun resetLastTimeGroupUpdatedFromLocalToZero() = viewModelScope.launch {
-        datastore.saveString(_state.value.currentGroupId.toString(), "0")
     }
 
     private fun obtainLastTimeGroupUpdated() {

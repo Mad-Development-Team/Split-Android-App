@@ -244,6 +244,7 @@ fun GroupInfoContent(
             enabled = false,
             text = R.string.manage_members
         )
+        Spacer(modifier = Modifier.size(24.dp))
     }
 }
 

@@ -48,6 +48,44 @@ class ExpenseRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun deleteGroupExpense(groupId: Int, expenseId: Int): Resource<List<Balance>> {
+        return try {
+            val response = remoteDataSource.deleteGroupExpense(groupId, expenseId)
+            return if (response is Resource.Success) {
+                Resource.Success(response.data)
+            } else {
+                Resource.Error(
+                    exception = Exception("Error"),
+                    errorMessage = "Error trying to delete expense"
+                )
+            }
+        } catch (e: Exception) {
+            Resource.Error(
+                exception = Exception("Error"),
+                errorMessage = "Error trying to delete expense: ${e.message}"
+            )
+        }
+    }
+
+    override suspend fun editGroupExpense(expense: Expense): Resource<List<Balance>> {
+        return try {
+            val response = remoteDataSource.editGroupExpense(expense)
+            return if (response is Resource.Success) {
+                Resource.Success(response.data)
+            } else {
+                Resource.Error(
+                    exception = Exception("Error"),
+                    errorMessage = "Error trying to edit expense"
+                )
+            }
+        } catch (e: Exception) {
+            Resource.Error(
+                exception = Exception("Error"),
+                errorMessage = "Error trying to edit expense: ${e.message}"
+            )
+        }
+    }
+
     override suspend fun deleteAllExpenses() {
         localDataSource.deleteAllExpenses()
     }
