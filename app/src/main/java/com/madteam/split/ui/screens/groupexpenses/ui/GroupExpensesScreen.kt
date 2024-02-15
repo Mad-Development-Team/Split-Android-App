@@ -27,6 +27,8 @@ import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -73,6 +75,7 @@ import com.madteam.split.ui.utils.formatSmallDateBasedOnLocale
 import com.madteam.split.utils.ui.BackPressHandler
 import com.madteam.split.utils.ui.getEmojiByName
 import com.madteam.split.utils.ui.navigateWithPopUpTo
+import kotlinx.coroutines.delay
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -86,7 +89,7 @@ fun GroupExpensesScreen(
         //Do nothing on back press
     }
 
-    val commonState by commonViewModel.state.collectAsStateWithLifecycle()
+    val commonState by commonViewModel.state.collectAsState()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     if (state.groupsModalIsVisible) {
@@ -209,6 +212,11 @@ fun GroupExpensesScreen(
                         )
                     )
                     navController.navigate(Screens.ExpenseDetailScreen.route)
+                },
+                reloadExpenses = {
+                    commonViewModel.onEvent(
+                        GroupUIEvent.ReloadGroupExpenses
+                    )
                 }
             )
         }
@@ -220,6 +228,7 @@ fun GroupExpensesContent(
     state: GroupExpensesUIState,
     commonState: GroupUIState,
     retryUpdateExpenses: () -> Unit,
+    reloadExpenses: () -> Unit,
     onFilterByCategoriesDialogShow: (Boolean) -> Unit,
     onFilterByPayerDialogShow: (Boolean) -> Unit,
     onFilterByAmountDialogShow: (Boolean) -> Unit,
@@ -251,6 +260,12 @@ fun GroupExpensesContent(
 
         categoryFilterPassed && payerFilterPassed && amountFilterPassed
     }
+
+    LaunchedEffect(Unit) {
+        delay(1000)
+        reloadExpenses()
+    }
+
     Column(
         modifier = Modifier
             .fillMaxWidth(),
