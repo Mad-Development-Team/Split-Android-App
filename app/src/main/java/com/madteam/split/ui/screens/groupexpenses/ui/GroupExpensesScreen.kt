@@ -299,7 +299,7 @@ fun GroupExpensesContent(
             ),
             currency = "€"
         )
-        Spacer(modifier = Modifier.size(16.dp))
+        Spacer(modifier = Modifier.size(8.dp))
         LazyRow(
             modifier = Modifier
                 .fillMaxWidth(),
@@ -327,7 +327,7 @@ fun GroupExpensesContent(
                 )
             }
         }
-        Spacer(modifier = Modifier.size(16.dp))
+        Spacer(modifier = Modifier.size(8.dp))
         if (commonState.errorRetrievingExpenses) {
             Column(
                 modifier = Modifier
@@ -363,6 +363,25 @@ fun GroupExpensesContent(
             }
         }
         if (commonState.groupExpenses.isEmpty() && !commonState.isLoading && !commonState.errorRetrievingExpenses) {
+            Image(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(250.dp)
+                    .padding(24.dp),
+                painter = painterResource(id = R.drawable.image_skating_sticker),
+                contentDescription = null
+            )
+            Text(
+                text = stringResource(id = R.string.time_to_spent),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.CenterHorizontally),
+                style = SplitTheme.typography.body.l,
+                color = SplitTheme.colors.neutral.textBody,
+                textAlign = TextAlign.Center
+            )
+        }
+        if (filteredExpenses.isEmpty() && state.isAnyFilterActive) {
             Image(
                 modifier = Modifier
                     .fillMaxWidth()

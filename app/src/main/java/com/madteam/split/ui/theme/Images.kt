@@ -114,6 +114,24 @@ fun BlobWithAmount(
     val indexOfDecimal = amountValue.toString().indexOf('.')
     val amountDecimalPart =
         amountValue.toString().substring(indexOfDecimal + 1)
+    var intStyle = SplitTheme.typography.display.s
+    var decimalStyle = SplitTheme.typography.heading.s
+    when {
+        amountValue > 9999 -> {
+            intStyle = SplitTheme.typography.display.s
+            decimalStyle = SplitTheme.typography.heading.m
+        }
+
+        amountValue > 999 -> {
+            intStyle = SplitTheme.typography.display.m
+            decimalStyle = SplitTheme.typography.heading.s
+        }
+
+        amountValue < 9 -> {
+            intStyle = SplitTheme.typography.display.l
+            decimalStyle = SplitTheme.typography.heading.l
+        }
+    }
     ConstraintLayout(
         modifier = modifier
     ) {
@@ -153,7 +171,7 @@ fun BlobWithAmount(
                     modifier = Modifier,
                     text = animatedAmountValue.absoluteValue.toString(),
                     color = SplitTheme.colors.neutral.textExtraWeak,
-                    style = SplitTheme.typography.display.s
+                    style = intStyle
                 )
             }
             AnimatedContent(
@@ -172,7 +190,7 @@ fun BlobWithAmount(
                     text = if (amountDecimalPart == "0" || amountDecimalPart == "00") ""
                     else animatedDecimalValue.toString(),
                     color = SplitTheme.colors.neutral.textExtraWeak,
-                    style = SplitTheme.typography.heading.s
+                    style = decimalStyle
                 )
             }
             Text(
