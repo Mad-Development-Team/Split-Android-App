@@ -4,6 +4,7 @@ import com.madteam.split.data.config.EndpointsConstants.CREATE_GROUP
 import com.madteam.split.data.config.EndpointsConstants.CREATE_GROUP_EXPENSE
 import com.madteam.split.data.config.EndpointsConstants.DELETE_GROUP_EXPENSE
 import com.madteam.split.data.config.EndpointsConstants.EDIT_GROUP_EXPENSE
+import com.madteam.split.data.config.EndpointsConstants.GET_GROUP_BALANCES
 import com.madteam.split.data.config.EndpointsConstants.GET_GROUP_EXPENSES
 import com.madteam.split.data.config.EndpointsConstants.GET_GROUP_EXPENSE_TYPES
 import com.madteam.split.data.config.EndpointsConstants.GET_USER_GROUPS
@@ -51,5 +52,10 @@ interface GroupApi {
     @POST(EDIT_GROUP_EXPENSE)
     suspend fun editGroupExpense(
         @Body request: ExpenseDTO,
+    ): List<BalanceDTO>
+
+    @GET(GET_GROUP_BALANCES)
+    suspend fun getGroupBalances(
+        @Query("groupId") groupId: Int,
     ): List<BalanceDTO>
 }

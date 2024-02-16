@@ -6,6 +6,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.madteam.split.data.repository.balance.BalanceRepository
 import com.madteam.split.data.repository.datastore.DatastoreManager
 import com.madteam.split.data.repository.expense.ExpenseRepository
 import com.madteam.split.data.repository.group.GroupRepository
@@ -24,7 +25,8 @@ import javax.inject.Inject
 @HiltViewModel
 class GroupViewModel @Inject constructor(
     private val groupRepository: GroupRepository,
-    private val realtime: FirebaseDatabase,
+    private val balanceRepository: BalanceRepository,
+    realtime: FirebaseDatabase,
     private val datastore: DatastoreManager,
     private val expenseRepository: ExpenseRepository,
 ) : ViewModel() {
@@ -39,8 +41,30 @@ class GroupViewModel @Inject constructor(
         getUserGroups()
         getCurrentGroup()
         getGroupExpenses(update = false)
+        getGroupBalances(update = false)
         getCurrentExpense()
         obtainLastTimeGroupUpdated()
+    }
+
+    private fun getGroupBalances(update: Boolean) {
+        viewModelScope.launch {
+            if (update) {
+                isLoadingState(true)
+            }
+            val response = balanceRepository.getGroupBalances(
+                groupId = _state.value.currentGroupId!!,
+                update = update
+            )
+            if (response is Resource.Success) {
+                if (update) {
+                    isLoadingState(false)
+                    showSuccessState()
+                }
+                _state.value = _state.value.copy(
+                    groupBalances = response.data
+                )
+            }
+        }
     }
 
     private fun getCurrentExpense() {
@@ -63,6 +87,7 @@ class GroupViewModel @Inject constructor(
             is GroupUIEvent.ReloadGroupExpenses -> {
                 getGroupExpenses(update = false)
             }
+
         }
     }
 

@@ -16,4 +16,5 @@ object EndpointsConstants {
     const val GET_GROUP_EXPENSES = "getGroupExpenses"
     const val DELETE_GROUP_EXPENSE = "deleteExpense"
     const val EDIT_GROUP_EXPENSE = "editExpense"
+    const val GET_GROUP_BALANCES = "getGroupBalances"
 }

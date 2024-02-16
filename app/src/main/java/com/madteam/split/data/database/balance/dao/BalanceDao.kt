@@ -23,4 +23,7 @@ interface BalanceDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertBalance(balance: BalanceEntity)
+
+    @Query("DELETE FROM $BALANCE_TABLE_NAME WHERE groupId = :groupId")
+    suspend fun deleteGroupBalances(groupId: Int)
 }
