@@ -12,6 +12,7 @@ data class GroupUIState(
     val groupExpenses: List<Expense> = listOf(),
     val groupBalances: List<Balance> = listOf(),
     val errorRetrievingExpenses: Boolean = false,
+    val errorRetrievingBalances: Boolean = false,
     val isSuccess: Boolean = false,
     val currentExpense: Int? = null,
 )

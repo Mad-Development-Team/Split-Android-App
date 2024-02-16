@@ -63,6 +63,10 @@ class GroupViewModel @Inject constructor(
                 _state.value = _state.value.copy(
                     groupBalances = response.data
                 )
+            } else {
+                _state.value = _state.value.copy(
+                    errorRetrievingBalances = true
+                )
             }
         }
     }
@@ -177,6 +181,7 @@ class GroupViewModel @Inject constructor(
         val needsUpdate = lastUpdated > localLastUpdated
         if (needsUpdate) {
             getGroupExpenses(update = true)
+            getGroupBalances(update = true)
             updateDatastoreLastUpdatedIfNoError(lastUpdated)
         }
     }
