@@ -11,6 +11,7 @@ import androidx.room.Room
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.madteam.split.data.database.balance.BalanceDatabase
 import com.madteam.split.data.database.currency.CurrencyDatabase
 import com.madteam.split.data.database.expense.ExpenseDatabase
 import com.madteam.split.data.database.group.ExpenseTypeDatabase
@@ -101,6 +102,16 @@ object StorageModule {
         return Room.databaseBuilder(
             context,
             ExpenseDatabase::class.java, "expense_database"
+        ).build()
+    }
+
+    @Provides
+    @Singleton
+    @Named("BalanceDatabase")
+    fun provideBalanceDatabase(@ApplicationContext context: Context): BalanceDatabase {
+        return Room.databaseBuilder(
+            context,
+            BalanceDatabase::class.java, "balance_database"
         ).build()
     }
 

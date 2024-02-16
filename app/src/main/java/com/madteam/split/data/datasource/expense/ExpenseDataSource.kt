@@ -1,11 +1,13 @@
 package com.madteam.split.data.datasource.expense
 
 import com.madteam.split.data.api.GroupApi
+import com.madteam.split.data.database.balance.dao.BalanceDao
 import com.madteam.split.data.database.expense.dao.ExpenseDAO
 import com.madteam.split.data.database.expense.entity.toDomainModel
 import com.madteam.split.data.model.request.toDomainModel
 import com.madteam.split.data.model.request.toEntity
 import com.madteam.split.data.model.response.toDomain
+import com.madteam.split.data.model.response.toEntity
 import com.madteam.split.domain.model.Balance
 import com.madteam.split.domain.model.Expense
 import com.madteam.split.domain.model.toDto
@@ -16,10 +18,13 @@ import javax.inject.Inject
 class ExpenseDataSource @Inject constructor(
     private val api: GroupApi,
     private val dao: ExpenseDAO,
+    private val balanceDao: BalanceDao,
 ) : ExpenseDataSourceContract.Remote, ExpenseDataSourceContract.Local {
+
     override suspend fun createGroupExpense(newExpense: Expense): Resource<List<Balance>> {
         try {
             val response = api.createGroupExpense(newExpense.toDto())
+            balanceDao.insertBalances(response.toEntity())
             return Resource.Success(response.toDomain())
         } catch (e: HttpException) {
             Resource.Error(
